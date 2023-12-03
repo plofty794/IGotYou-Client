@@ -39,17 +39,17 @@ function ForgotPassword() {
 
   return (
     <div className="bg-[#F2F2F2] min-h-screen flex flex-col gap-4 max-sm:gap-2 items-center justify-center">
-      <Card className="flex max-md:flex-col max-md:p-4 items-center justify-center p-8">
+      <Card className="flex max-md:flex-col max-md:p-4 items-center justify-center p-8 max-sm:w-5/6">
         <CardHeader>
           <Lottie
             animationData={forgotPassword}
             className="w-80 max-md:w-44 h-2/6"
           />
         </CardHeader>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <CardContent className="w-full flex flex-col items-center gap-4 h-full p-8 max-sm:p-4">
+        <form className="w-full" onSubmit={handleSubmit(handleFormSubmit)}>
+          <CardContent className="flex flex-col items-center gap-4 h-full p-8 max-sm:p-4">
             <div className="w-full flex flex-col items-center justify-center gap-3">
-              <span className="text-3xl max-sm:text-xl font-bold">
+              <span className="text-3xl max-md:2xl max-sm:text-xl font-bold">
                 Forgot your password?
               </span>
               <Input
