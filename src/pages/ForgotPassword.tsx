@@ -47,8 +47,8 @@ function ForgotPassword() {
           />
         </CardHeader>
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <CardContent className="flex flex-col items-center gap-4 h-full p-8 max-sm:p-6">
-            <div className="flex flex-col items-center justify-center gap-3">
+          <CardContent className="w-full flex flex-col items-center gap-4 h-full p-8 max-sm:p-4">
+            <div className="w-full flex flex-col items-center justify-center gap-3">
               <span className="text-3xl max-sm:text-xl font-bold">
                 Forgot your password?
               </span>
@@ -56,7 +56,7 @@ function ForgotPassword() {
                 {...register("email")}
                 autoFocus
                 placeholder="Enter your email"
-                className="text-sm font-medium max-sm:text-xs max-sm:p-2"
+                className="w-full text-sm font-medium max-sm:text-xs max-sm:p-2"
               />
               {errors.email && <ErrorMessage message={errors.email?.message} />}
               <Button
