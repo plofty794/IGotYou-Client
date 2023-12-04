@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatValue } from "react-currency-input-field";
-import { compareAsc, formatDistance } from "date-fns";
+import { compareAsc } from "date-fns";
 import { useContext, useEffect, useState } from "react";
 import Lottie from "lottie-react";
 import noRequest from "../../../assets/no-pending-payments.json";
@@ -78,6 +78,8 @@ function BookingsTabs({ bookingRequests }: { bookingRequests: any[] }) {
       senderName: auth.currentUser?.displayName,
     });
   }
+
+  console.log(pendingRequests);
 
   return (
     <Tabs defaultValue="all" className="mt-6 full">
@@ -220,12 +222,6 @@ function BookingsTabs({ bookingRequests }: { bookingRequests: any[] }) {
                         ).toDateString()}{" "}
                         -{" "}
                         {new Date(v.requestedBookingDateEndsAt).toDateString()}{" "}
-                        (
-                        {formatDistance(
-                          new Date(v.requestedBookingDateStartsAt),
-                          new Date(v.requestedBookingDateEndsAt)
-                        )}
-                        )
                       </span>
                     </div>
                   </div>
@@ -239,37 +235,41 @@ function BookingsTabs({ bookingRequests }: { bookingRequests: any[] }) {
                         },
                       })}{" "}
                     </span>
-                    {compareAsc(
-                      new Date(v.requestedBookingDateStartsAt).getDate(),
-                      new Date().getDate()
-                    ) === 0 &&
-                    compareAsc(
-                      new Date(v.requestedBookingDateEndsAt).getDate(),
-                      new Date().getDate()
-                    ) === 1 ? (
-                      <Badge
-                        variant={"outline"}
-                        className="font-bold text-sm uppercase text-green-600"
-                      >
-                        Ongoing
-                      </Badge>
-                    ) : compareAsc(
+                    {v.status === "approved" ? (
+                      compareAsc(
                         new Date(v.requestedBookingDateStartsAt).getDate(),
                         new Date().getDate()
-                      ) === -1 ? (
-                      <Badge
-                        variant={"outline"}
-                        className="font-bold text-sm uppercase text-amber-600"
-                      >
-                        Upcoming
-                      </Badge>
+                      ) === 0 &&
+                      compareAsc(
+                        new Date(v.requestedBookingDateEndsAt).getDate(),
+                        new Date().getDate()
+                      ) === 1 ? (
+                        <Badge
+                          variant={"outline"}
+                          className="font-bold text-sm uppercase text-green-600"
+                        >
+                          Ongoing
+                        </Badge>
+                      ) : compareAsc(
+                          new Date(v.requestedBookingDateStartsAt).getDate(),
+                          new Date().getDate()
+                        ) === -1 ? (
+                        <Badge
+                          variant={"outline"}
+                          className="font-bold text-sm uppercase text-amber-600"
+                        >
+                          Upcoming
+                        </Badge>
+                      ) : (
+                        <Badge
+                          variant={"outline"}
+                          className="font-bold text-sm uppercase text-rose-600"
+                        >
+                          Done
+                        </Badge>
+                      )
                     ) : (
-                      <Badge
-                        variant={"outline"}
-                        className="font-bold text-sm uppercase text-rose-600"
-                      >
-                        Done
-                      </Badge>
+                      ""
                     )}
                   </div>
                 </CardContent>
@@ -343,7 +343,7 @@ function BookingsTabs({ bookingRequests }: { bookingRequests: any[] }) {
                                 </Label>
                                 <div className="w-max mr-auto">
                                   <span className="p-2 text-sm focus-visible:ring-0 focus-visible:border-none border-none outline-none shadow-none font-semibold">
-                                    {v.fromUserID.username}
+                                    {v.hostID.username}
                                   </span>
                                 </div>
                               </div>
@@ -399,12 +399,6 @@ function BookingsTabs({ bookingRequests }: { bookingRequests: any[] }) {
                         ).toDateString()}{" "}
                         -{" "}
                         {new Date(v.requestedBookingDateEndsAt).toDateString()}{" "}
-                        (
-                        {formatDistance(
-                          new Date(v.requestedBookingDateStartsAt),
-                          new Date(v.requestedBookingDateEndsAt)
-                        )}
-                        )
                       </span>
                     </div>
                   </div>
@@ -417,13 +411,6 @@ function BookingsTabs({ bookingRequests }: { bookingRequests: any[] }) {
                           currency: "PHP",
                         },
                       })}{" "}
-                      x{" "}
-                      {parseInt(
-                        formatDistance(
-                          new Date(v.requestedBookingDateStartsAt),
-                          new Date(v.requestedBookingDateEndsAt)
-                        )
-                      )}
                     </span>
                   </div>
                 </CardContent>
@@ -558,12 +545,6 @@ function BookingsTabs({ bookingRequests }: { bookingRequests: any[] }) {
                         ).toDateString()}{" "}
                         -{" "}
                         {new Date(v.requestedBookingDateEndsAt).toDateString()}{" "}
-                        (
-                        {formatDistance(
-                          new Date(v.requestedBookingDateStartsAt),
-                          new Date(v.requestedBookingDateEndsAt)
-                        )}
-                        )
                       </span>
                     </div>
                   </div>
@@ -742,12 +723,6 @@ function BookingsTabs({ bookingRequests }: { bookingRequests: any[] }) {
                         ).toDateString()}{" "}
                         -{" "}
                         {new Date(v.requestedBookingDateEndsAt).toDateString()}{" "}
-                        (
-                        {formatDistance(
-                          new Date(v.requestedBookingDateStartsAt),
-                          new Date(v.requestedBookingDateEndsAt)
-                        )}
-                        )
                       </span>
                     </div>
                   </div>
@@ -760,13 +735,6 @@ function BookingsTabs({ bookingRequests }: { bookingRequests: any[] }) {
                           currency: "PHP",
                         },
                       })}{" "}
-                      x{" "}
-                      {parseInt(
-                        formatDistance(
-                          new Date(v.requestedBookingDateStartsAt),
-                          new Date(v.requestedBookingDateEndsAt)
-                        )
-                      )}
                     </span>
                   </div>
                 </CardContent>

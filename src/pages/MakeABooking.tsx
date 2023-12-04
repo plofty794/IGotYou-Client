@@ -14,11 +14,12 @@ import { SocketContextProvider } from "@/context/SocketContext";
 import { auth } from "@/firebase config/config";
 import DatePicker from "@/partials/components/DatePicker";
 import { format, formatDistanceToNow } from "date-fns";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { formatValue } from "react-currency-input-field";
 import { DateRange } from "react-day-picker";
 import { Navigate, useOutletContext } from "react-router-dom";
 import { dotPulse } from "ldrs";
+import { Badge } from "@/components/ui/badge";
 dotPulse.register();
 
 function MakeABooking() {
@@ -33,10 +34,31 @@ function MakeABooking() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const { socket } = useContext(SocketContextProvider);
+  const [isDateReserved, setIsDateReserved] = useState(false);
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
     to: undefined,
   });
+
+  useMemo(() => {
+    const fromDateString = listing.reservedDates.map(
+      (date: { from: string | number | Date }) =>
+        new Date(date.from).toDateString()
+    );
+    const toDateString = listing.reservedDates.map(
+      (date: { to: string | number | Date }) => new Date(date.to).toDateString()
+    );
+    const reservedDates = fromDateString.concat(toDateString);
+
+    if (
+      reservedDates.includes(date?.from?.toDateString()) ||
+      reservedDates.includes(date?.to?.toDateString())
+    ) {
+      setIsDateReserved(true);
+    } else {
+      setIsDateReserved(false);
+    }
+  }, [date?.from, date?.to, listing.reservedDates]);
 
   function sendEmitter({
     guestName,
@@ -99,7 +121,11 @@ function MakeABooking() {
               <div className="mt-4 w-full flex justify-between items-start">
                 <div className="flex flex-col text-base font-semibold gap-1">
                   <span className="text-lg">Dates</span>
-                  <span className="text-gray-600 font-semibold">
+                  <span
+                    className={`${
+                      isDateReserved ? "text-red-600" : "text-gray-600"
+                    } font-semibold`}
+                  >
                     {date?.from ? (
                       date.to ? (
                         <>
@@ -113,6 +139,14 @@ function MakeABooking() {
                       <span>Pick a date</span>
                     )}
                   </span>
+                  {isDateReserved && (
+                    <Badge
+                      variant={"destructive"}
+                      className="text-xs rounded-full w-max mx-auto"
+                    >
+                      Dates are already taken
+                    </Badge>
+                  )}
                 </div>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -162,7 +196,13 @@ function MakeABooking() {
               />
             </div>
             <Button
-              disabled={!message.length || loading || !date?.from || !date?.to}
+              disabled={
+                !message.length ||
+                loading ||
+                !date?.from ||
+                !date?.to ||
+                isDateReserved
+              }
               className="bg-gray-950 rounded-full w-max ml-auto text-lg font-medium p-6"
               onClick={() => {
                 setLoading(true);

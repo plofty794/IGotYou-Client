@@ -25,7 +25,7 @@ function PhotoUploader() {
       cloudName: "dop5kqpod",
       uploadPreset: "s6lymwwh",
       folder: "IGotYou-Listings",
-      resourceType: "image",
+      resourceType: "auto",
       multiple: true,
     },
     (_, result) => {
@@ -111,7 +111,7 @@ function PhotoUploader() {
             >
               <LiaCloudUploadAltSolid />
               <span className="text-base font-semibold text-gray-600 w-[195px]">
-                Click to upload images
+                Click to upload your works
               </span>
             </Button>
           </>
