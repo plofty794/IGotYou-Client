@@ -3,6 +3,7 @@ import useGetCurrentUserProfile from "@/hooks/useGetUserProfile";
 import ProfileLoader from "@/partials/loaders/ProfileLoader";
 import PromptUsername from "@/partials/components/PromptUsername";
 import { lineSpinner } from "ldrs";
+import { auth } from "@/firebase config/config";
 lineSpinner.register();
 
 const ProfileContent = lazy(
@@ -11,6 +12,8 @@ const ProfileContent = lazy(
 
 function Profile() {
   const { data, status } = useGetCurrentUserProfile();
+
+  console.log(auth.currentUser?.emailVerified);
 
   useEffect(() => {
     document.title = "IGotYou - Profile";

@@ -27,6 +27,8 @@ function DigitalAdvertisingAndMarketing() {
     document.title = "Digital and Audio Services - IGotYou";
   }, []);
 
+  data?.pages.map((page) => console.log(page?.data.categorizedListings.length));
+
   return (
     <>
       {isPending ? (
@@ -42,7 +44,8 @@ function DigitalAdvertisingAndMarketing() {
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                       // @ts-ignore
                       (v, i) =>
-                        v.serviceType === "Digital Audio Services" && (
+                        v.serviceType ===
+                          "Digital Advertising and Marketing" && (
                           <Card
                             key={v._id}
                             className="border-none shadow-none overflow-hidden w-full"

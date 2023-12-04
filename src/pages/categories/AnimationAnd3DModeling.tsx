@@ -24,7 +24,7 @@ function AnimationAnd3DModeling() {
   const [wishlist, setWishlist] = useState(false);
 
   useEffect(() => {
-    document.title = "Digital and Audio Services - IGotYou";
+    document.title = "Digital Audio Services - IGotYou";
   }, []);
 
   return (
