@@ -24,7 +24,7 @@ function LiveEventsAndConcerts() {
   const [wishlist, setWishlist] = useState(false);
 
   useEffect(() => {
-    document.title = "Digital and Audio Services - IGotYou";
+    document.title = "Live Events and Concerts - IGotYou";
   }, []);
 
   return (
@@ -42,7 +42,7 @@ function LiveEventsAndConcerts() {
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                       // @ts-ignore
                       (v, i) =>
-                        v.serviceType === "Digital Audio Services" && (
+                        v.serviceType === "Live Events and Concerts" && (
                           <Card
                             key={v._id}
                             className="border-none shadow-none overflow-hidden w-full"

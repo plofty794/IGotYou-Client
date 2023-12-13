@@ -61,6 +61,7 @@ import AnimationAnd3DModeling from "./pages/categories/AnimationAnd3DModeling";
 import LiveEventsAndConcerts from "./pages/categories/LiveEventsAndConcerts";
 import DigitalAdvertisingAndMarketing from "./pages/categories/DigitalAdvertisingAndMarketing";
 import Listing from "./pages/Listing";
+import MessagesLayout from "./root layouts/MessagesLayout";
 
 function App() {
   const [User, setUser] = useState<User | null>();
@@ -108,16 +109,6 @@ function App() {
             element={
               User ?? token ?? identifier ? (
                 <Profile />
-              ) : (
-                <Navigate replace to={"/login"} />
-              )
-            }
-          />
-          <Route
-            path="messages"
-            element={
-              User ?? token ?? identifier ? (
-                <Messages />
               ) : (
                 <Navigate replace to={"/login"} />
               )
@@ -315,6 +306,20 @@ function App() {
         <Route path="/booking" element={<BookingLayout />}>
           <Route path="show/:id" element={<VisitListing />} />
           <Route path="create/:id" element={<MakeABooking />} />
+        </Route>
+
+        {/* MESSAGES Route */}
+        <Route path="/messages" element={<MessagesLayout />}>
+          <Route
+            path="conversation/:conversationId"
+            element={
+              User ?? token ?? identifier ? (
+                <Messages />
+              ) : (
+                <Navigate replace to={"/login"} />
+              )
+            }
+          />
         </Route>
 
         {/* BOOKINGS Route */}

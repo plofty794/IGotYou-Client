@@ -9,7 +9,7 @@ import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 import { formatValue } from "react-currency-input-field";
 import { Link } from "react-router-dom";
-import { Keyboard, Mousewheel, Navigation, Pagination } from "swiper/modules";
+import { Mousewheel, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import noListing from "../../assets/no-listings.json";
 import useGetListingsPerCategory from "@/hooks/useGetListingsPerCategory";
@@ -24,7 +24,7 @@ function AnimationAnd3DModeling() {
   const [wishlist, setWishlist] = useState(false);
 
   useEffect(() => {
-    document.title = "Digital Audio Services - IGotYou";
+    document.title = "Animation and 3D Modeling - IGotYou";
   }, []);
 
   return (
@@ -42,7 +42,7 @@ function AnimationAnd3DModeling() {
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                       // @ts-ignore
                       (v, i) =>
-                        v.serviceType === "Digital Audio Services" && (
+                        v.serviceType === "Animation and 3D Modeling" && (
                           <Card
                             key={v._id}
                             className="border-none shadow-none overflow-hidden w-full"
@@ -65,13 +65,7 @@ function AnimationAnd3DModeling() {
                                   }}
                                   pagination={true}
                                   mousewheel={true}
-                                  keyboard={true}
-                                  modules={[
-                                    Navigation,
-                                    Pagination,
-                                    Mousewheel,
-                                    Keyboard,
-                                  ]}
+                                  modules={[Navigation, Pagination, Mousewheel]}
                                 >
                                   {v.listingPhotos.map(
                                     (photo: TListingPhotos) => (

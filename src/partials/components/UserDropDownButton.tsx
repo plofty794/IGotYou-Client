@@ -49,11 +49,8 @@ export function UserDropDownButton() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 font-medium" align="end">
         <DropdownMenuGroup>
-          <DropdownMenuItem
-            disabled={!auth.currentUser?.emailVerified}
-            className="p-4 font-semibold text-gray-600"
-          >
-            <Link to={"/users/messages"} className="w-full" replace>
+          <DropdownMenuItem className="p-4 font-semibold text-gray-600">
+            <Link to={"/messages"} className="w-full" replace>
               Messages
             </Link>
           </DropdownMenuItem>

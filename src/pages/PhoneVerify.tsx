@@ -73,6 +73,13 @@ function VerifyPhone() {
     try {
       await confirmation?.confirm(OTP);
       mutate({ mobileVerified: true });
+      toast({
+        title: "Success!",
+        description: "Your phone has been verified.",
+      });
+      setTimeout(() => {
+        history.back();
+      }, 1000);
     } catch (err) {
       const error = err as FirebaseError;
       const message = (

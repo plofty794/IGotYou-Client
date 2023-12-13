@@ -57,6 +57,8 @@ function Inbox() {
     resolver: zodResolver(ZodComposeMessageSchema),
   });
 
+  console.log(data?.data.notifications);
+
   function handleSearchUsername(data: ComposeMessageSchema) {
     if (!receiverName) return;
     socket?.emit("chat-message", {
@@ -197,7 +199,6 @@ function Inbox() {
             <>
               <Tabs
                 defaultValue="inbox"
-                onValueChange={(value) => console.log(value)}
                 className="bg-[#F5F5F5] rounded-md p-1 shadow-lg border w-full"
               >
                 <TabsList className="bg-white mb-1">
@@ -251,19 +252,17 @@ function Inbox() {
                 </TabsList>
                 <div className="flex">
                   <ScrollArea className="h-[70vh]">
-                    <TabsContent
-                      className="grid grid-cols-1 gap-1"
-                      value="inbox"
-                    >
-                      {data?.data.notifications.map((notification: unknown) => (
-                        <AllInbox
-                          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                          // @ts-ignore
-                          key={notification._id}
-                          notification={notification}
-                        />
-                      ))}
-                    </TabsContent>
+                    {data?.data.notifications.map((notification: unknown) => (
+                      <TabsContent
+                        className="grid grid-cols-1 gap-1"
+                        value="inbox"
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        key={notification._id}
+                      >
+                        <AllInbox notification={notification} />
+                      </TabsContent>
+                    ))}
                   </ScrollArea>
                   <ScrollArea className="h-[70vh]">
                     <TabsContent

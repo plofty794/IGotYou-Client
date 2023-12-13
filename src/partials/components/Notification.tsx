@@ -32,7 +32,7 @@ function Notification() {
   useEffect(() => {
     setNotifications(userNotifications.data?.data.notifications);
     setNewNotifications(
-      userNotifications.data?.data.notifications.filter(
+      userNotifications.data?.data.notifications?.filter(
         (v: { read: boolean }) => !v.read
       )
     );
@@ -46,13 +46,17 @@ function Notification() {
   useMemo(() => {
     socket?.on("pong", (data) => {
       setNotifications((prev) => [data.notifications, ...prev]);
-      setNewNotifications((prev) => [
-        data.notifications?.filter((v: { read: boolean }) => !v.read),
-        ...prev,
-      ]);
+      console.log(data);
+      setNewNotifications((prev) => [{ ...data.notifications }, ...prev]);
     });
-    socket?.on("res", (data) => console.log(data));
+    socket?.on("res", (data) => {
+      setNotifications((prev) => [data.notifications, ...prev]);
+      console.log(data);
+      setNewNotifications((prev) => [{ ...data.notifications }, ...prev]);
+    });
   }, [socket]);
+
+  console.log(notifications);
 
   return (
     <>
@@ -118,7 +122,11 @@ function Notification() {
                       <>
                         <Link
                           key={v._id}
-                          to={"/hosting-inbox"}
+                          to={`${
+                            v.paymentStatus === "reject"
+                              ? "/"
+                              : "/hosting-inbox"
+                          } `}
                           className="hover:bg-[#F5F5F5] p-3"
                         >
                           <div className="w-full flex items-center gap-2">
@@ -142,6 +150,7 @@ function Notification() {
                                 {(v.notificationType as string)
                                   .split("-")
                                   .join(" ")}{" "}
+                                {v.paymentStatus ? v.paymentStatus : ""}
                               </p>
                               <span className="text-xs font-bold text-rose-600">
                                 {formatDistanceToNow(

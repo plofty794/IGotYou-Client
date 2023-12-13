@@ -4,10 +4,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useState } from "react";
+import useAddToWishlist from "@/hooks/useAddToWishlist";
+import useGetWishlists from "@/hooks/useGetWishlists";
+import { useMemo, useState } from "react";
 
-function WishlistDialog() {
-  const [wishlist, setWishlist] = useState(false);
+function WishlistDialog({ listingID }: { listingID: string }) {
+  const wishlistsData = useGetWishlists();
+  const { mutate } = useAddToWishlist();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [wishlists, setWishlists] = useState<any[]>([]);
+
+  useMemo(() => {
+    setWishlists(wishlistsData.data?.data.wishlists ?? []);
+  }, [wishlistsData.data?.data.wishlists]);
 
   return (
     <TooltipProvider>
@@ -19,9 +28,11 @@ function WishlistDialog() {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             className={`w-7 h-7 stroke-gray-500 hover:stroke-slate-600 cursor-pointer ${
-              wishlist ? "fill-red-600" : "fill-none"
+              wishlists.length > 0 && wishlists.find((v) => v._id === listingID)
+                ? "fill-red-600"
+                : "fill-none"
             }`}
-            onClick={() => setWishlist((prev) => !prev)}
+            onClick={() => mutate(listingID)}
           >
             <path
               strokeLinecap="round"

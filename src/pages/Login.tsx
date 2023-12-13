@@ -54,7 +54,7 @@ function Login() {
       <section className="flex max-lg:flex-col max-lg:gap-5 gap-10 justify-between items-center w-3/5 max-lg:w-1/3 max-sm:w-3/4">
         <span className="h-full w-full max-lg:w-32 max-md:w-20">
           <img
-            className="hover:scale-105 transition-all max-w-full max-h-full object-cover block mx-auto"
+            className="hover:scale-105 transition-transform max-w-full max-h-full object-cover block mx-auto"
             loading="lazy"
             src="https://uploads.turbologo.com/uploads/icon/preview_image/2880304/draw_svg20200612-15006-1ioouzj.svg.png"
             alt="logo"
@@ -78,7 +78,7 @@ function Login() {
                 id="email"
                 className="font-medium border-gray-400"
                 autoFocus
-                autoComplete="email"
+                autoComplete="off"
                 type="text"
                 {...register("email")}
               />

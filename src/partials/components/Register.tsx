@@ -37,8 +37,6 @@ function Register() {
     }
   }
 
-  console.log(isHidden);
-
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -52,7 +50,7 @@ function Register() {
           <Input
             id="email"
             className="border-slate-400 font-medium"
-            autoComplete="email"
+            autoComplete="off"
             type="text"
             {...register("email")}
           />

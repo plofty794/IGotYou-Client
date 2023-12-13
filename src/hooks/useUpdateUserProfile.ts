@@ -43,7 +43,7 @@ function useUpdateUserProfile() {
       });
       queryClient.invalidateQueries({ queryKey: ["profile", id] });
       toast({
-        title: "Success!",
+        title: "Success! 🎉",
         description: "Your profile has been updated.",
         className: "bg-[#FFF] font-bold",
       });

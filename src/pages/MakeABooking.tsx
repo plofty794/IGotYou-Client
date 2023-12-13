@@ -34,6 +34,10 @@ function MakeABooking() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const { socket } = useContext(SocketContextProvider);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [fromDateString, setFromDateString] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [toDateString, setToDateString] = useState<any[]>([]);
   const [isDateReserved, setIsDateReserved] = useState(false);
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
@@ -45,9 +49,11 @@ function MakeABooking() {
       (date: { from: string | number | Date }) =>
         new Date(date.from).toDateString()
     );
+    setFromDateString(fromDateString);
     const toDateString = listing.reservedDates.map(
       (date: { to: string | number | Date }) => new Date(date.to).toDateString()
     );
+    setToDateString(toDateString);
     const reservedDates = fromDateString.concat(toDateString);
 
     if (
@@ -165,6 +171,8 @@ function MakeABooking() {
                     </DialogHeader>
                     <div className="mt-4">
                       <DatePicker
+                        fromDateString={fromDateString}
+                        toDateString={toDateString}
                         date={date}
                         setDate={setDate}
                         listingEndsAt={listing.endsAt}

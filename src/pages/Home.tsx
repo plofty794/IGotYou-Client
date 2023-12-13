@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Keyboard, Mousewheel, Navigation, Pagination } from "swiper/modules";
+import { Mousewheel, Navigation, Pagination } from "swiper/modules";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Lottie from "lottie-react";
 import { useEffect } from "react";
@@ -33,6 +33,8 @@ function Home() {
   useEffect(() => {
     document.title = "IGotYou";
   }, []);
+
+  listings.pages.map((v) => console.log(v.data.listings));
 
   return (
     <>
@@ -127,13 +129,7 @@ function Home() {
                           }}
                           pagination={true}
                           mousewheel={true}
-                          keyboard={true}
-                          modules={[
-                            Navigation,
-                            Pagination,
-                            Mousewheel,
-                            Keyboard,
-                          ]}
+                          modules={[Navigation, Pagination, Mousewheel]}
                         >
                           {v.listingPhotos.map((photo) => (
                             <SwiperSlide key={photo.public_id}>
@@ -195,7 +191,9 @@ function Home() {
                               : "No rating"}
                           </span>
                         </div>
-                        <WishlistDialog />
+                        {v.host.uid !== auth.currentUser?.uid && (
+                          <WishlistDialog listingID={v._id} />
+                        )}
                       </div>
                     </CardContent>
                   </Card>

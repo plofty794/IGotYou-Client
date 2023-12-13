@@ -25,6 +25,7 @@ import {
   ZodComposeMessageSchema,
 } from "@/zod/composeMessageSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { format, formatDistanceToNow } from "date-fns";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -38,6 +39,7 @@ function BookingRequestCard({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   socket: any;
 }) {
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
@@ -71,6 +73,7 @@ function BookingRequestCard({
       bookingRequestID,
       notificationID,
     });
+    queryClient.invalidateQueries({ queryKey: ["notifications"] });
   }
 
   function handleSendMessage(data: ComposeMessageSchema) {
@@ -82,7 +85,7 @@ function BookingRequestCard({
   }
 
   return (
-    <Card className="px-4" key={notification._id}>
+    <Card className="px-4">
       <CardHeader className="w-full flex-row items-start justify-between">
         <div className="flex gap-4 ">
           <Avatar>

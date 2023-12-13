@@ -23,7 +23,7 @@ function PhotographyServices() {
   const [wishlist, setWishlist] = useState(false);
 
   useEffect(() => {
-    document.title = "Digital and Audio Services - IGotYou";
+    document.title = "Photography Services - IGotYou";
   }, []);
 
   return (
@@ -41,7 +41,7 @@ function PhotographyServices() {
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                       // @ts-ignore
                       (v, i) =>
-                        v.serviceType === "Digital Audio Services" && (
+                        v.serviceType === "Photography Services" && (
                           <Card
                             key={v._id}
                             className="border-none shadow-none overflow-hidden w-full"
