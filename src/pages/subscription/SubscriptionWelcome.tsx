@@ -20,7 +20,7 @@ function SubscriptionWelcome() {
     <div
       className={`${
         isFadingIn ? "opacity-0" : "opacity-100"
-      } transition-opacity w-full flex lg:flex-row max-md:flex-col items-center justify-evenly gap-8 p-12 pb-20`}
+      } transition-opacity w-full flex lg:flex-row max-md:flex-col items-center justify-evenly gap-8 pb-16 px-12`}
     >
       <div className="w-full text-center text-5xl font-semibold text-[#222222]">
         <h1>Welcome to IGotYou Subscription</h1>

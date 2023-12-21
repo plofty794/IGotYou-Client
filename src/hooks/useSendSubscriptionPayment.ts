@@ -5,24 +5,28 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useParams } from "react-router-dom";
 
-type TData = {
-  subscriptionStatus: "pending";
-  paymentProofPhoto: string;
+type TPaymentProofPhoto = {
+  public_id: string;
+  secure_url: string;
 };
 
-function usePaymentProof() {
+function useSendSubscriptionPayment() {
   const { toast } = useToast();
   const { id } = useParams();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: TData) => {
-      return await axiosPrivateRoute.post("/api/payments/send-payment-proof", {
-        ...data,
-      });
+    mutationFn: async (data: TPaymentProofPhoto) => {
+      return await axiosPrivateRoute.post(
+        "/api/payments/send-subscription-photos",
+        {
+          paymentProofPhoto: data.secure_url,
+          subscriptionStatus: "pending",
+          paymentStatus: "pending",
+        }
+      );
     },
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ["profile", id] });
-      console.log("Success");
     },
     onError: async (err) => {
       const error = err as AxiosError;
@@ -46,4 +50,4 @@ function usePaymentProof() {
   });
 }
 
-export default usePaymentProof;
+export default useSendSubscriptionPayment;

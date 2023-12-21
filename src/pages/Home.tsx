@@ -34,8 +34,6 @@ function Home() {
     document.title = "IGotYou";
   }, []);
 
-  listings.pages.map((v) => console.log(v.data.listings));
-
   return (
     <>
       {!auth.currentUser?.emailVerified && (
@@ -116,7 +114,7 @@ function Home() {
                       to={`${
                         uid === v.host.uid
                           ? `/users/show/${v.host.uid}`
-                          : `/booking/show/${v._id}`
+                          : `/listings/show/${v._id}`
                       } `}
                     >
                       <CardHeader className="p-0 flex flex-col gap-1">

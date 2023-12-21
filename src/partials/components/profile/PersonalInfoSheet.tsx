@@ -15,7 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import CollapsibleUsername from "./collapsibles/CollapsibleUsername";
 import CollapsibleEmail from "./collapsibles/CollapsibleEmail";
 import { Suspense, lazy } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const CollapsiblePhoneNumber = lazy(
   () => import("./collapsibles/CollapsiblePhoneNumber")
@@ -33,6 +33,7 @@ type TUserData = {
     emailVerified: boolean;
     mobilePhone: string;
     mobileVerified: boolean;
+    identityVerified: boolean;
   };
 };
 
@@ -69,6 +70,15 @@ function PersonalInfoSheet() {
           <Suspense fallback={<h1>Loading...</h1>}>
             <CollapsiblePhoneNumber data={data} />
           </Suspense>
+          <Separator />
+          {!data?.data?.user.identityVerified && (
+            <Button className="bg-gray-950">
+              <Link to={"/verify-identity"} reloadDocument>
+                Verify your identity
+              </Link>
+            </Button>
+          )}
+
           <Separator />
         </div>
         <SheetFooter>

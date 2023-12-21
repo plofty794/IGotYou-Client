@@ -1,4 +1,4 @@
-import { Dispatch } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LiaCloudUploadAltSolid } from "react-icons/lia";
@@ -18,35 +18,42 @@ type TSetServiceProps = {
   service: TListing;
 };
 
-function PhotoUploader() {
+function ServiceUploader() {
   const { setService, service } = useOutletContext<TSetServiceProps>();
-  const cloudinaryWidget = window.cloudinary.createUploadWidget(
-    {
-      cloudName: "dop5kqpod",
-      uploadPreset: "s6lymwwh",
-      folder: "IGotYou-Listings",
-      resourceType: "auto",
-      multiple: true,
-    },
-    (_, result) => {
-      if (result.event === "success") {
-        setService((prev) => ({
-          ...prev,
-          listingPhotos: [
-            ...prev.listingPhotos,
-            {
-              public_id: result.info.public_id,
-              secure_url: result.info.secure_url,
-              original_filename: result.info.original_filename,
-              bytes: result.info.bytes,
-              thumbnail_url: result.info.thumbnail_url,
-              format: result.info.format,
-            },
-          ],
-        }));
+  const [cloudinaryWidget, setCloudinaryWidget] =
+    useState<CloudinaryUploadWidget>();
+
+  useEffect(() => {
+    if (cloudinaryWidget) return;
+    const widget = window.cloudinary.createUploadWidget(
+      {
+        cloudName: "dop5kqpod",
+        uploadPreset: "s6lymwwh",
+        folder: "IGotYou-Listings",
+        resourceType: "auto",
+        multiple: true,
+      },
+      (_, result) => {
+        if (result.event === "success") {
+          setService((prev) => ({
+            ...prev,
+            listingPhotos: [
+              ...prev.listingPhotos,
+              {
+                public_id: result.info.public_id,
+                secure_url: result.info.secure_url,
+                original_filename: result.info.original_filename,
+                bytes: result.info.bytes,
+                thumbnail_url: result.info.thumbnail_url,
+                format: result.info.format,
+              },
+            ],
+          }));
+        }
       }
-    }
-  );
+    );
+    widget && setCloudinaryWidget(widget);
+  }, [cloudinaryWidget, setService]);
 
   return (
     <>
@@ -55,7 +62,7 @@ function PhotoUploader() {
           type="button"
           variant={"outline"}
           className="font-semibold text-lg mb-2"
-          onClick={() => cloudinaryWidget.open()}
+          onClick={() => cloudinaryWidget?.open()}
         >
           <MdOutlineAddAPhoto />
         </Button>
@@ -107,7 +114,7 @@ function PhotoUploader() {
             <Button
               className="shadow-none text-4xl text-rose-400 bg-zinc-100 hover:bg-zinc-100 hover:text-rose-500 flex flex-col items-center justify-center w-full h-full"
               type="button"
-              onClick={() => cloudinaryWidget.open()}
+              onClick={() => cloudinaryWidget?.open()}
             >
               <LiaCloudUploadAltSolid />
               <span className="text-base font-semibold text-gray-600 w-[195px]">
@@ -121,7 +128,7 @@ function PhotoUploader() {
   );
 }
 
-export default PhotoUploader;
+export default ServiceUploader;
 
 type TParamsProps = {
   cloudName?: string;

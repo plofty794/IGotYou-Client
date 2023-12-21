@@ -42,7 +42,7 @@ function Bookings() {
                   multimedia experience!
                 </span>
                 <Button className="w-max p-6 text-lg font-semibold bg-gray-950 rounded-full">
-                  <Link to={"/"} reloadDocument replace>
+                  <Link to={"/"} replace>
                     Start searching
                   </Link>
                 </Button>

@@ -3,48 +3,43 @@ import { useOutletContext } from "react-router-dom";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import useRemoveAsset from "@/hooks/useRemoveAsset";
-
-type TPaymentProofPhoto = {
-  public_id?: string;
-  secure_url?: string;
-};
-
-type TOutletContext = {
-  paymentProofPhoto: TPaymentProofPhoto;
-  setPaymentProofPhoto: React.Dispatch<
-    React.SetStateAction<TPaymentProofPhoto>
-  >;
-};
+import { TStatePaymentPhoto } from "../../root layouts/SubscriptionLayout";
 
 function ConfirmPayment() {
   const [isFadingIn, setIsFadingIn] = useState(true);
   const { mutate } = useRemoveAsset();
-  const { paymentProofPhoto, setPaymentProofPhoto } =
-    useOutletContext<TOutletContext>();
+  const { paymentProof, setPaymentProof } =
+    useOutletContext<TStatePaymentPhoto>();
+  const [cloudinaryWidget, setCloudinaryWidget] =
+    useState<CloudinaryUploadWidget>();
+
+  useEffect(() => {
+    if (cloudinaryWidget) return;
+    const widget = window.cloudinary.createUploadWidget(
+      {
+        cloudName: "dop5kqpod",
+        uploadPreset: "s6lymwwh",
+        folder: "IGotYou-Subscriptions",
+        resourceType: "image",
+        multiple: false,
+        cropping: false,
+      },
+      (_, res) => {
+        if (res.event === "success") {
+          setPaymentProof({
+            public_id: res.info.public_id,
+            secure_url: res.info.secure_url,
+          });
+        }
+      }
+    );
+    widget && setCloudinaryWidget(widget);
+  }, [cloudinaryWidget, setPaymentProof]);
 
   useEffect(() => {
     const Timeout = setTimeout(() => setIsFadingIn(false), 800);
     return () => clearTimeout(Timeout);
   }, []);
-
-  const cloudinaryWidget = window.cloudinary.createUploadWidget(
-    {
-      cloudName: "dop5kqpod",
-      uploadPreset: "s6lymwwh",
-      folder: "IGotYou-Subscriptions",
-      resourceType: "image",
-      multiple: false,
-      cropping: false,
-    },
-    (_, res) => {
-      if (res.event === "success") {
-        setPaymentProofPhoto({
-          public_id: res.info.public_id,
-          secure_url: res.info.secure_url,
-        });
-      }
-    }
-  );
 
   return (
     <>
@@ -66,19 +61,22 @@ function ConfirmPayment() {
             </p>
           </div>
           <div className="overflow-hidden w-3/4 rounded-lg border-dashed border border-zinc-600">
-            {paymentProofPhoto.secure_url ? (
+            {paymentProof?.secure_url ? (
               <div className="relative bg-[#222222d6]">
                 <CrossCircledIcon
                   onClick={() => {
                     mutate({
-                      publicId: paymentProofPhoto.public_id,
+                      publicId: paymentProof?.public_id,
                     });
-                    setPaymentProofPhoto({ public_id: "", secure_url: "" });
+                    setPaymentProof({
+                      public_id: "",
+                      secure_url: "",
+                    });
                   }}
                   className="absolute right-0 w-[25px] h-[25px] text-zinc-300 hover:text-zinc-100 m-1 cursor-pointer"
                 />
                 <img
-                  src={paymentProofPhoto.secure_url}
+                  src={paymentProof.secure_url}
                   className="mx-auto h-48 object-cover max-w-full hover:scale-110 transition-transform"
                   alt="proof_of_payment"
                   loading="lazy"
@@ -107,9 +105,9 @@ function ConfirmPayment() {
             )}
           </div>
           <Button
-            disabled={!!paymentProofPhoto.public_id}
+            disabled={!!paymentProof?.public_id}
             type="button"
-            onClick={() => cloudinaryWidget.open()}
+            onClick={() => cloudinaryWidget?.open()}
             className="bg-gray-950 rounded-full font-medium flex gap-2"
             size={"lg"}
           >
@@ -136,3 +134,73 @@ function ConfirmPayment() {
 }
 
 export default ConfirmPayment;
+
+interface CloudinaryImageUploadResponse {
+  access_mode: string;
+  asset_id: string;
+  batchId: string;
+  bytes: number;
+  created_at: string;
+  etag: string;
+  folder: string;
+  format: string;
+  height: number;
+  id: string;
+  original_filename: string;
+  path: string;
+  placeholder: boolean;
+  public_id: string;
+  resource_type: string;
+  secure_url: string;
+  signature: string;
+  tags: string[];
+  thumbnail_url: string;
+  type: string;
+  url: string;
+  version: number;
+  version_id: string;
+  width: number;
+}
+
+interface CloudinaryUploadWidget {
+  open(): void;
+  close(): void;
+  destroy(): void;
+  setFolder(folder: string): void;
+  setUploadPreset(uploadPreset: string): void;
+  setMultiple(multiple: boolean): void;
+  setCropping(cropping: boolean): void;
+  setResultCallback(
+    callback: (
+      error: Error | null,
+      result: CloudinaryImageUploadResponse
+    ) => void
+  ): void;
+}
+
+type TResult = {
+  event: string;
+  info: CloudinaryImageUploadResponse;
+};
+
+type TFn = (err: unknown, res: TResult) => void;
+
+declare global {
+  interface Window {
+    cloudinary: {
+      createUploadWidget: (
+        { cloudName, uploadPreset, folder, cropping }: TParamsProps,
+        fn: TFn
+      ) => CloudinaryUploadWidget;
+    };
+  }
+}
+
+type TParamsProps = {
+  cloudName?: string;
+  uploadPreset?: string;
+  folder?: string;
+  cropping?: boolean;
+  resourceType?: string;
+  multiple?: boolean;
+};

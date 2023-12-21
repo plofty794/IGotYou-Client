@@ -16,7 +16,7 @@ function Profile() {
   console.log(auth.currentUser?.emailVerified);
 
   useEffect(() => {
-    document.title = "IGotYou - Profile";
+    document.title = " Users Profile - IGotYou";
   }, []);
 
   return (

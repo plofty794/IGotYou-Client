@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import useGetNotifications from "@/hooks/useGetNotifications";
+import useGetNotifications from "@/hooks/useGetGuestNotifications";
 import { useContext, useEffect, useMemo, useState } from "react";
 import AllInbox from "./inbox/AllInbox";
 import BookingRequests from "./inbox/BookingRequests";

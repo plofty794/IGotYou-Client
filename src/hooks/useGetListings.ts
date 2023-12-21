@@ -29,8 +29,8 @@ function useGetListings() {
           });
         }
         if (error.response?.status === 401) {
-          await auth.signOut();
           document.location.reload();
+          await auth.signOut();
           localStorage.clear();
           dispatch({ type: "USER_LOGOUT", payload: null });
         }

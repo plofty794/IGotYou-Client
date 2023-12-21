@@ -11,11 +11,14 @@ export const ZodRegisterSchema = z
       .string()
       .min(1, { message: "Password is required" })
       .min(8, { message: "Password is too short" })
-      .max(20, { message: "Password must contain at least 20 characters" })
-      // .regex(/^([a-z][A-Z][0-9][\W])+$/, {
-      //   message:
-      //     "Password must contain at least 1 uppercase letter, and one non-word character. Note: @ and _ are not considered non word characters.",
-      // })
+      .max(15, { message: "Password must contain at least 15 characters" })
+      // .regex(
+      //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]*$/,
+      //   {
+      //     message:
+      //       "Password must contain at least 1 number, 1 lower, 1 uppercase letter, and 1 special character",
+      //   }
+      // )
       .trim(),
     confirmPassword: z.string().min(1, { message: "Field required" }).trim(),
   })

@@ -6,7 +6,6 @@ import Loader from "@/partials/loaders/Loader";
 import { Suspense, lazy } from "react";
 import ListingsNavigation from "@/partials/components/ListingsNavigation";
 import useGetListings from "@/hooks/useGetListings";
-import Notification from "@/partials/components/Notification";
 
 const AlertVerifyEmail = lazy(
   () => import("@/partials/components/AlertVerifyEmail")
@@ -32,6 +31,7 @@ function RootLayout() {
               </span>
             </Link>
             <span className="flex justify-center items-center gap-4">
+              {/* outline-1 outline outline-[#FF385C] hover:text-[#FF385C]  */}
               {auth.currentUser?.emailVerified ? (
                 <Button
                   className="text-sm font-semibold hover:bg-zinc-100 rounded-full"
@@ -47,7 +47,7 @@ function RootLayout() {
                   <AlertVerifyEmail User={auth.currentUser} />
                 </Suspense>
               )}
-              <Notification />
+
               <UserDropDownButton />
             </span>
           </nav>

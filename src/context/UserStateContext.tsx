@@ -39,9 +39,11 @@ function UserStateContext({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, { token: null });
 
   return (
-    <UserStateContextProvider.Provider value={{ dispatch, state }}>
-      {children}
-    </UserStateContextProvider.Provider>
+    <>
+      <UserStateContextProvider.Provider value={{ dispatch, state }}>
+        {children}
+      </UserStateContextProvider.Provider>
+    </>
   );
 }
 

@@ -23,7 +23,7 @@ function PaymentSuccessful() {
         isFadingIn ? "opacity-0" : "opacity-100"
       } transition-opacity py-12 px-24`}
     >
-      <Card className="w-full mx-auto flex flex-col items-center justify-center shadow-none border-0 mb-12">
+      <Card className="w-full mx-auto flex flex-col items-center justify-center shadow-none border-0">
         <CardHeader>
           <Lottie animationData={success} className="w-2/3 h-[130px] mx-auto" />
           <CardDescription className="text-center text-4xl font-bold text-[#3ABC5E]">
@@ -33,7 +33,7 @@ function PaymentSuccessful() {
         <CardContent className="w-2/3 px-12 text-center">
           <span className="text-lg font-bold text-gray-600">
             Thank you for your subscription payment. We are processing your
-            payment and it will be activated within 5-10 minutes.
+            payment and it will be activated within 3-5 minutes.
           </span>
         </CardContent>
         <Alert className="w-max text-center border-0">
@@ -54,10 +54,13 @@ function PaymentSuccessful() {
             </svg>
           </AlertTitle>
           <AlertDescription className="text-sm font-semibold text-gray-600">
-            In the meantime, you can continue browsing our website or using our
-            app.
-            <br /> Once your subscription is activated, you will receive a
-            notification.
+            In the meantime, you can continue browsing our website.
+            <br /> Once your subscription payment has been checked, you will
+            receive an email.
+            <span className="block mt-1 font-bold text-sm text-amber-600 underline underline-offset-2">
+              Note: Check your spam if you haven't receive any emails from your
+              inbox.
+            </span>
           </AlertDescription>
         </Alert>
       </Card>

@@ -11,8 +11,6 @@ function useGetConversations() {
       );
     },
     enabled: auth.currentUser != null,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
   });
 }
 

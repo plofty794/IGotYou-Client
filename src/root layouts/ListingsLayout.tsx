@@ -3,7 +3,7 @@ import useVisitListing from "@/hooks/useVisitListing";
 import Loader from "@/partials/loaders/Loader";
 import { Link, Outlet } from "react-router-dom";
 
-function BookingLayout() {
+function ListingsLayout() {
   const userProfileData = useGetCurrentUserProfile();
   const { data, isPending } = useVisitListing();
 
@@ -39,4 +39,4 @@ function BookingLayout() {
   );
 }
 
-export default BookingLayout;
+export default ListingsLayout;

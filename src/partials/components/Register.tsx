@@ -71,7 +71,7 @@ function Register() {
             <div className="absolute top-0 right-0 flex justify-between w-max">
               <Toggle
                 onPressedChange={(v) => setIsHidden(v)}
-                className="ml-auto rounded-full p-2"
+                className="ml-auto rounded-full p-2 !bg-transparent"
               >
                 {isHidden ? (
                   <svg
@@ -131,7 +131,7 @@ function Register() {
             <div className="absolute top-0 right-0 flex justify-between w-max">
               <Toggle
                 onPressedChange={(v) => setIsHidden2(v)}
-                className="ml-auto rounded-full p-2"
+                className="ml-auto rounded-full p-2 !bg-transparent"
               >
                 {isHidden2 ? (
                   <svg

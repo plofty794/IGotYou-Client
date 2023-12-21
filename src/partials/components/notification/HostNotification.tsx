@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
-import useGetNotifications from "@/hooks/useGetNotifications";
+import useGetNotifications from "@/hooks/useGetGuestNotifications";
 import { Separator } from "@/components/ui/separator";
 import { formatDistanceToNow } from "date-fns";
 import { pulsar } from "ldrs";
@@ -21,7 +21,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CircleIcon } from "@radix-ui/react-icons";
 pulsar.register();
 
-function Notification() {
+function HostNotification() {
   const userNotifications = useGetNotifications();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -41,17 +41,15 @@ function Notification() {
     userNotifications.data?.data.notifications,
   ]);
 
-  console.log(notifications);
-
   useMemo(() => {
     socket?.on("pong", (data) => {
       setNotifications((prev) => [data.notifications, ...prev]);
-      console.log(data);
+
       setNewNotifications((prev) => [{ ...data.notifications }, ...prev]);
     });
     socket?.on("res", (data) => {
       setNotifications((prev) => [data.notifications, ...prev]);
-      console.log(data);
+
       setNewNotifications((prev) => [{ ...data.notifications }, ...prev]);
     });
   }, [socket]);
@@ -100,14 +98,15 @@ function Notification() {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <PopoverContent align="center" className="p-0 w-80">
-            <div className="flex flex-col gap-2 p-4">
-              <span className="text-xl font-extrabold text-gray-600">
-                Notifications
+          <PopoverContent align="end" className="rounded-lg mt-10 p-0 w-80">
+            <div className="flex flex-col">
+              <span className="text-base font-semibold p-4">
+                Booking Notifications
               </span>
+              <Separator />
               {notifications?.length < 1 && (
                 <>
-                  <span className="m-2 mx-auto w-max text-xs font-bold text-gray-600">
+                  <span className="p-4 m-2 mx-auto w-max text-xs font-semibold ">
                     No notifications
                   </span>
                 </>
@@ -182,4 +181,4 @@ function Notification() {
   );
 }
 
-export default Notification;
+export default HostNotification;

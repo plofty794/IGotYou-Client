@@ -1,4 +1,3 @@
-import Notification from "@/partials/components/Notification";
 import UserDropDownButton from "@/partials/components/UserDropDownButton";
 import { Link, Outlet } from "react-router-dom";
 
@@ -17,7 +16,6 @@ function BookingsLayout() {
           </span>
         </Link>
         <div className="flex items-center justify-center gap-4">
-          <Notification />
           <UserDropDownButton />
         </div>
       </nav>

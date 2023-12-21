@@ -1,8 +1,8 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
-import PhotoUploader from "@/pages/become a host/PhotoUploader";
+import ServiceUploader from "@/pages/become a host/ServiceUploader";
 import { useEffect, useState } from "react";
 
-function Photos() {
+function ServiceAssets() {
   const [isFadingIn, setIsFadingIn] = useState(true);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function Photos() {
             </p>
           </div>
           <div className="flex flex-col items-center gap-2 w-[600px]">
-            <PhotoUploader />
+            <ServiceUploader />
           </div>
         </section>
       </ScrollArea>
@@ -36,4 +36,4 @@ function Photos() {
   );
 }
 
-export default Photos;
+export default ServiceAssets;

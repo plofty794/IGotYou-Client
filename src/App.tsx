@@ -21,7 +21,6 @@ import AboutYourService from "./pages/become a host/steps/AboutYourService";
 import Service from "./pages/become a host/Service";
 import ServiceDescription from "./pages/become a host/ServiceDescription";
 import MakeItStandOut from "./pages/become a host/steps/MakeItStandOut";
-import Photos from "./pages/become a host/steps/Photos";
 import Price from "./pages/become a host/Price";
 import Success from "./pages/become a host/steps/Success";
 import VisitProfile from "./pages/VisitProfile";
@@ -51,7 +50,7 @@ const Inbox = lazy(() => import("./pages/Inbox"));
 const Messages = lazy(() => import("./pages/Messages"));
 
 import { SocketContextProvider } from "./context/SocketContext";
-import BookingLayout from "./root layouts/BookingLayout";
+import ListingsLayout from "./root layouts/ListingsLayout";
 import MakeABooking from "./pages/MakeABooking";
 import BookingsLayout from "./root layouts/BookingsLayout";
 import Bookings from "./pages/Bookings";
@@ -62,6 +61,8 @@ import LiveEventsAndConcerts from "./pages/categories/LiveEventsAndConcerts";
 import DigitalAdvertisingAndMarketing from "./pages/categories/DigitalAdvertisingAndMarketing";
 import Listing from "./pages/Listing";
 import MessagesLayout from "./root layouts/MessagesLayout";
+import IdentityVerification from "./pages/IdentityVerification";
+import ServiceAssets from "./pages/become a host/steps/ServiceAssets";
 
 function App() {
   const [User, setUser] = useState<User | null>();
@@ -77,20 +78,13 @@ function App() {
         return setUser(null);
       } else {
         setUser(user);
-        socket &&
-          socket.emit("user-connect", {
-            name: user.displayName,
-            uid: user.uid,
-          });
+        socket?.emit("user-connect", {
+          name: user.displayName,
+          uid: user.uid,
+        });
       }
     });
-  }, [User, socket]);
-
-  useEffect(() => {
-    if (auth == null) {
-      console.log("YES");
-    }
-  }, []);
+  }, [socket]);
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -124,6 +118,11 @@ function App() {
                 <Navigate replace to={"/login"} />
               )
             }
+          />
+
+          <Route
+            path="identity-verification/:id"
+            element={<IdentityVerification />}
           />
         </Route>
 
@@ -261,10 +260,10 @@ function App() {
             }
           />
           <Route
-            path="photos"
+            path="service-assets"
             element={
               User ?? token ?? identifier ? (
-                <Photos />
+                <ServiceAssets />
               ) : (
                 <Navigate to={"/login"} replace />
               )
@@ -303,7 +302,7 @@ function App() {
         </Route>
 
         {/* BOOKING Route */}
-        <Route path="/booking" element={<BookingLayout />}>
+        <Route path="/listings" element={<ListingsLayout />}>
           <Route path="show/:id" element={<VisitListing />} />
           <Route path="create/:id" element={<MakeABooking />} />
         </Route>

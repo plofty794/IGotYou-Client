@@ -48,6 +48,7 @@ type TProps = {
     work: string;
     emailVerified: boolean;
     mobileVerified: boolean;
+    identityVerified: boolean;
     mobilePhone: string;
     photoUrl: string;
     listings: TListings[];
@@ -74,6 +75,8 @@ function ProfileContent({ profileData, activeListings }: TProps) {
   const { mutate, isPending, isSuccess } = useVerifyEmail();
   const updateUserProfile = useUpdateUserProfile();
   const [photo, setPhoto] = useState("");
+  const [cloudinaryWidget, setCloudinaryWidget] =
+    useState<CloudinaryUploadWidget>();
 
   useMemo(() => {
     auth.currentUser?.emailVerified &&
@@ -88,23 +91,27 @@ function ProfileContent({ profileData, activeListings }: TProps) {
     }
   }, [profileData?.photoUrl, queryClient, updateUserProfile.isSuccess]);
 
-  const cloudinaryWidget = window.cloudinary.createUploadWidget(
-    {
-      cloudName: "dop5kqpod",
-      uploadPreset: "s6lymwwh",
-      folder: "IGotYou-Avatars",
-      resourceType: "image",
-      cropping: true,
-    },
-    async (_, res) => {
-      if (res.event === "success") {
-        updateUserProfile.mutate({ photoUrl: res.info.secure_url });
-        setPhoto(res.info.secure_url);
-        updateProfile(auth.currentUser!, { photoURL: res.info.secure_url });
+  useEffect(() => {
+    if (cloudinaryWidget) return;
+    const widget = window.cloudinary.createUploadWidget(
+      {
+        cloudName: "dop5kqpod",
+        uploadPreset: "s6lymwwh",
+        folder: "IGotYou-Avatars",
+        resourceType: "image",
+        cropping: true,
+      },
+      async (_, res) => {
+        if (res.event === "success") {
+          updateUserProfile.mutate({ photoUrl: res.info.secure_url });
+          setPhoto(res.info.secure_url);
+          updateProfile(auth.currentUser!, { photoURL: res.info.secure_url });
+        }
+        return;
       }
-      return;
-    }
-  );
+    );
+    widget && setCloudinaryWidget(widget);
+  }, [cloudinaryWidget, updateUserProfile]);
 
   return (
     <>
@@ -126,7 +133,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <Button
-                onClick={() => cloudinaryWidget.open()}
+                onClick={() => cloudinaryWidget?.open()}
                 type="button"
                 className="px-[0.70rem] py-2 rounded-full border absolute z-10 mx-auto bottom-2 right-2 text-center bg-zinc-600 text-zinc-200"
               >
@@ -172,9 +179,34 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                 )}
               </span>
             </CardHeader>
-            <CardContent className="flex flex-col">
+            <CardContent className="flex flex-col gap-2">
+              {profileData.identityVerified ? (
+                <div className="font-medium">
+                  <CheckCircledIcon
+                    color="#FFF"
+                    width={22}
+                    height={22}
+                    className="inline-block bg-[#39c152] rounded-full"
+                  />{" "}
+                  <span className="text-gray-600 ml-2 text-sm font-semibold">
+                    Identity (verified)
+                  </span>
+                </div>
+              ) : (
+                <div className="font-medium">
+                  <CrossCircledIcon
+                    color="#FFF"
+                    width={22}
+                    height={22}
+                    className="inline-block bg-[#e94242] rounded-full"
+                  />{" "}
+                  <span className="text-gray-600  ml-2 text-sm font-semibold">
+                    Identity (not verified)
+                  </span>
+                </div>
+              )}
               {profileData?.emailVerified ? (
-                <div className="my-1 font-medium">
+                <div className="font-medium">
                   <CheckCircledIcon
                     color="#FFF"
                     width={22}
@@ -186,7 +218,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                   </span>
                 </div>
               ) : (
-                <div className="my-1 font-medium">
+                <div className="font-medium">
                   <CrossCircledIcon
                     color="#FFF"
                     width={22}
@@ -199,7 +231,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                 </div>
               )}
               {profileData?.mobileVerified ? (
-                <div className="my-1 font-medium">
+                <div className="font-medium">
                   <CheckCircledIcon
                     color="#FFF"
                     width={22}
@@ -211,7 +243,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                   </span>
                 </div>
               ) : (
-                <div className="my-1 font-medium">
+                <div className="font-medium">
                   <CrossCircledIcon
                     color="#FFF"
                     width={22}
@@ -404,3 +436,73 @@ function ProfileContent({ profileData, activeListings }: TProps) {
 }
 
 export default ProfileContent;
+
+type TParamsProps = {
+  cloudName?: string;
+  uploadPreset?: string;
+  folder?: string;
+  cropping?: boolean;
+  resourceType?: string;
+  multiple?: boolean;
+};
+
+interface CloudinaryImageUploadResponse {
+  access_mode: string;
+  asset_id: string;
+  batchId: string;
+  bytes: number;
+  created_at: string;
+  etag: string;
+  folder: string;
+  format: string;
+  height: number;
+  id: string;
+  original_filename: string;
+  path: string;
+  placeholder: boolean;
+  public_id: string;
+  resource_type: string;
+  secure_url: string;
+  signature: string;
+  tags: string[];
+  thumbnail_url: string;
+  type: string;
+  url: string;
+  version: number;
+  version_id: string;
+  width: number;
+}
+
+interface CloudinaryUploadWidget {
+  open(): void;
+  close(): void;
+  destroy(): void;
+  setFolder(folder: string): void;
+  setUploadPreset(uploadPreset: string): void;
+  setMultiple(multiple: boolean): void;
+  setCropping(cropping: boolean): void;
+  setResultCallback(
+    callback: (
+      error: Error | null,
+      result: CloudinaryImageUploadResponse
+    ) => void
+  ): void;
+}
+
+type TResult = {
+  event: string;
+  info: CloudinaryImageUploadResponse;
+};
+
+type TFn = (err: unknown, res: TResult) => void;
+
+declare global {
+  interface Window {
+    cloudinary: {
+      createUploadWidget: (
+        { cloudName, uploadPreset, folder, cropping }: TParamsProps,
+        fn: TFn
+      ) => CloudinaryUploadWidget;
+    };
+  }
+}

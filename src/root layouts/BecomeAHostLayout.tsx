@@ -2,7 +2,7 @@ import { Link, Navigate, Outlet } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import useMultistepForm from "@/hooks/useMultistepForm";
 import { auth } from "@/firebase config/config";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import UserDropDownButton from "@/partials/components/UserDropDownButton";
 import useUploadListing from "@/hooks/useUploadListing";
 import { BASE_PRICE, PRICE_CAP } from "@/constants/price";
@@ -18,6 +18,18 @@ import {
 import Pending from "@/pages/subscription/Pending";
 import Loader from "@/partials/loaders/Loader";
 import { DateRange } from "react-day-picker";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { CircleBackslashIcon } from "@radix-ui/react-icons";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 dotPulse.register();
 
@@ -69,13 +81,13 @@ function BecomeAHostLayout() {
     "service-description",
     "service-location",
     "make-it-standout",
-    "photos",
+    "service-assets",
     "price",
     "listing-date",
     "success",
   ]);
 
-  useEffect(() => {
+  useMemo(() => {
     if (status === "success") {
       next();
     }
@@ -89,9 +101,7 @@ function BecomeAHostLayout() {
         <main className="relative overflow-hidden h-screen">
           {
             <Navigate
-              to={`/become-a-host/${
-                auth.currentUser && auth.currentUser.uid
-              }/${step}`}
+              to={`/become-a-host/${auth.currentUser?.uid}/${step}`}
               replace
             />
           }
@@ -407,16 +417,86 @@ function BecomeAHostLayout() {
               </span>
             </CardContent>
             <CardFooter className="w-max mx-auto">
-              <Button className="text-sm font-bold bg-gray-950 text-white rounded-full py-5 px-6">
-                <Link
-                  to={`/subscription/${
-                    auth.currentUser && auth.currentUser.uid
-                  }`}
-                  replace
-                >
-                  Click to subscribe
-                </Link>
-              </Button>
+              {userProfile.data?.data.user.identityVerified ? (
+                <Button className="text-sm font-bold bg-gray-950 rounded-full py-5 px-6">
+                  {" "}
+                  <Link
+                    to={`/subscription/${
+                      auth.currentUser && auth.currentUser.uid
+                    }`}
+                    replace
+                  >
+                    Click to subscribe
+                  </Link>{" "}
+                </Button>
+              ) : (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button className="text-sm font-bold bg-gray-950 rounded-full py-5 px-6">
+                      {" "}
+                      Click to subscribe
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="p-0 gap-0">
+                    <AlertDialogHeader>
+                      <div className="flex items-center gap-2 p-6">
+                        <CircleBackslashIcon
+                          color="red"
+                          width={25}
+                          height={25}
+                        />
+                        <AlertDialogTitle className="font-semibold text-base">
+                          Oops! Your identity isn't verified yet.
+                        </AlertDialogTitle>
+                      </div>
+                    </AlertDialogHeader>
+                    <Separator className="w-full bg-gray-300 h-[1px]" />
+                    <div className="px-6 py-4">
+                      <div className="flex flex-col justify-center gap-2">
+                        <span className="text-sm ">
+                          We hope this message finds you well. In order to
+                          enhance the{" "}
+                          <span className="font-bold text-red-500 underline underline-offset-2">
+                            security
+                          </span>{" "}
+                          and{" "}
+                          <span className="font-bold text-red-500 underline underline-offset-2">
+                            reliability
+                          </span>{" "}
+                          of our platform, we appreciate your cooperation in
+                          verifying your identity before subscribing to our
+                          services. This step is crucial to ensure a secure and
+                          trustworthy environment for all users.
+                        </span>
+                        <span className="text-sm">
+                          Before you can proceed with subscribing to our
+                          service, we kindly request you to complete the
+                          identity verification process. This involves providing
+                          necessary information and possibly uploading
+                          identification documents.
+                        </span>
+                        <span className="text-sm">
+                          Thank you for your understanding and cooperation.
+                        </span>
+                      </div>
+                    </div>
+                    <Separator className="w-full bg-gray-300 h-[1px]" />
+                    <AlertDialogFooter className="p-4">
+                      <AlertDialogCancel className="font-medium text-sm rounded-full">
+                        Close
+                      </AlertDialogCancel>
+                      <AlertDialogAction className="font-medium text-sm bg-gray-950 text-white rounded-full">
+                        <Link
+                          to={`/users/identity-verification/${userProfile.data?.data.user.uid}`}
+                          replace
+                        >
+                          Verify your identity
+                        </Link>
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
             </CardFooter>
           </Card>
           <Button variant={"link"} className="text-sm font-bold text-gray-600">

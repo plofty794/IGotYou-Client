@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Notification from "@/partials/components/Notification";
+import HostNotification from "@/partials/components/notification/HostNotification";
 
 function HostingLayout() {
   const userProfileData = useGetCurrentUserProfile();
@@ -91,7 +91,7 @@ function HostingLayout() {
               </DropdownMenu>
             </div>
             <div className="flex items-center justify-center gap-4">
-              <Notification />
+              <HostNotification />
               <HostingDropdownMenu />
             </div>
           </nav>

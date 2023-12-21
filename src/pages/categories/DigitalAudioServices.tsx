@@ -57,10 +57,9 @@ function DigitalAudioServices() {
                           >
                             <Link
                               to={`${
-                                auth.currentUser &&
-                                auth.currentUser.uid === v.host.uid
+                                auth.currentUser?.uid === v.host.uid
                                   ? `/users/show/${v.host.uid}`
-                                  : `/booking/show/${v._id}`
+                                  : `/listings/show/${v._id}`
                               } `}
                             >
                               <CardHeader className="p-0 flex flex-col gap-1">
