@@ -13,6 +13,16 @@ import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import PoliteChicky from "../assets/Polite Chicky.json";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type TIdentityPhoto = {
   public_id: string;
@@ -20,6 +30,7 @@ type TIdentityPhoto = {
 };
 
 function IdentityVerification() {
+  const [isAgreed, setIsAgreed] = useState(false);
   const { data } = useGetCurrentUserProfile();
   const [isFadingIn, setIsFadingIn] = useState(true);
   const { mutate } = useRemoveAsset();
@@ -91,8 +102,7 @@ function IdentityVerification() {
               </span>
               <span>
                 We're here to help you with any concerns or inquiries you may
-                have. Thank you for choosing IGotYou as your subscription
-                provider. We look forward to providing you with the best service
+                have. We look forward to providing you with the best service
                 once your subscription is fully processed.
               </span>
             </CardContent>
@@ -109,9 +119,9 @@ function IdentityVerification() {
         <div
           className={`${
             isFadingIn ? "opacity-0" : "opacity-100"
-          } transition-opacity flex justify-center items-center gap-12 h-full`}
+          } transition-opacity flex flex-col justify-center items-center h-[70vh] mt-12 gap-4`}
         >
-          <div className="w-3/6 flex flex-col items-center justify-center gap-2 p-8 pt-12">
+          <div className="w-3/6 flex flex-col items-center justify-center gap-2">
             <div className="text-center flex flex-col gap-4 p-2">
               <h1 className="text-4xl font-semibold ">Identity Verification</h1>
               <p className="text-lg font-semibold text-gray-600">
@@ -194,7 +204,7 @@ function IdentityVerification() {
             ) : (
               <Button
                 type="button"
-                disabled={identityPhoto?.public_id !== ""}
+                disabled={identityPhoto?.public_id !== "" || !isAgreed}
                 onClick={() => cloudinaryWidget?.open()}
                 className="bg-gray-950 rounded-full font-medium flex gap-2"
                 size={"lg"}
@@ -217,6 +227,110 @@ function IdentityVerification() {
               </Button>
             )}
           </div>
+          {!isAgreed && (
+            <Dialog defaultOpen={!isAgreed}>
+              <DialogTrigger asChild>
+                <Button variant={"link"} type="button">
+                  <span className="text-xs font-bold">
+                    View Terms and Agreements for Identity Verification
+                  </span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="p-0">
+                <DialogHeader className="p-4">
+                  <div className="flex items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                      stroke="blue"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                      />
+                    </svg>
+                    <DialogTitle className="font-semibold">
+                      Identity Verification Terms and Agreements
+                    </DialogTitle>
+                  </div>
+                </DialogHeader>
+                <Separator />
+                <DialogFooter>
+                  <ScrollArea className="h-72">
+                    <div className="px-6 py-4">
+                      <div className="flex flex-col justify-between gap-2">
+                        <div className="text-sm flex flex-col gap-2">
+                          <span className="font-bold">
+                            1. Acceptance of Terms
+                          </span>
+                          <span>
+                            By subscribing to IGotYou, you agree to the terms
+                            and conditions outlined in this document. These
+                            terms govern your use of our services and the
+                            collection of personal information.
+                          </span>
+                        </div>
+                        <div className="text-sm flex flex-col gap-2">
+                          <span className="font-bold">
+                            2. Collection of Information
+                          </span>
+                          <span>
+                            As part of the identity verification process, you
+                            may be required to submit a scanned copy or a clear
+                            photo of your government issued ID, including your
+                            name, ID validity, address, and your picture.
+                          </span>
+                        </div>
+                        <div className="text-sm flex flex-col gap-2">
+                          <span className="font-bold">
+                            3. Use of Information
+                          </span>
+                          <span>
+                            We will use the collected information for the
+                            purpose of verifying your identity. Your information
+                            will be treated with the utmost confidentiality and
+                            will not be shared with third parties unless
+                            required by law.
+                          </span>
+                        </div>
+                        <div className="text-sm flex flex-col gap-2">
+                          <span className="font-bold">
+                            4. Security Measures
+                          </span>
+                          <span>
+                            We employ reasonable security measures to protect
+                            your personal information from unauthorized access,
+                            disclosure, alteration, and destruction. However, no
+                            method of transmission over the internet or
+                            electronic storage is completely secure, and we
+                            cannot guarantee absolute security.
+                          </span>
+                        </div>
+                        <span className="text-sm">
+                          By acknowledging to our services, you acknowledge that
+                          you have read, understood, and agreed to these terms
+                          and conditions.
+                        </span>
+                      </div>
+                    </div>
+                  </ScrollArea>
+                </DialogFooter>
+                <Separator />
+                <div className="m-2 p-2 flex items-center justify-center gap-2 w-max ml-auto">
+                  <Button
+                    onClick={() => setIsAgreed(true)}
+                    className="rounded-full font-medium w-max bg-gray-950"
+                  >
+                    Agree
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
       )}
     </>

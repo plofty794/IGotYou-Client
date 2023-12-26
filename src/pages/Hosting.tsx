@@ -1,19 +1,23 @@
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import HostingTabs from "@/partials/components/hosting/HostingTabs";
 import { useEffect } from "react";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, Outlet, useNavigate, useOutletContext } from "react-router-dom";
 
 function Hosting() {
+  const navigate = useNavigate();
   const {
     userData: { user },
   } = useOutletContext<TUserData>();
 
   useEffect(() => {
     document.title = "Host Dashboard - IGotYou";
-  }, []);
+
+    navigate("/hosting/current-reservations");
+  }, [navigate]);
 
   return (
-    <section className="p-20 flex flex-col gap-14">
+    <section className="p-16 flex flex-col gap-14">
       <h1 className="font-semibold text-3xl">Welcome back, {user.username}</h1>
       <div className="w-full">
         <div className="flex justify-between items-center">
@@ -23,6 +27,9 @@ function Hosting() {
           </Button>
         </div>
         <HostingTabs />
+        <Card className="mt-4 py-4 border-none shadow-none bg-[#F5F5F5]">
+          {<Outlet />}
+        </Card>
       </div>
     </section>
   );

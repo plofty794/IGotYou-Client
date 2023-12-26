@@ -40,8 +40,10 @@ function Price() {
       >
         <section className="my-8 h-[400px] flex flex-wrap flex-col items-center justify-center gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="text-6xl font-bold">Now, set your price.</h1>
-            <span className="text-lg font-medium text-gray-600">
+            <h1 className="text-5xl font-bold">
+              Now, set your price per day of service.
+            </h1>
+            <span className="text-center text-lg font-semibold text-gray-600">
               You can change it anytime.
             </span>
           </div>

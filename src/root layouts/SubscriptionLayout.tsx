@@ -6,13 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import {
-  Link,
-  Navigate,
-  Outlet,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { Link, Navigate, Outlet, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CheckIcon } from "@radix-ui/react-icons";
 import useSendSubscriptionPayment from "@/hooks/useSendSubscriptionPayment";
@@ -40,7 +34,6 @@ export type TStatePaymentPhoto = {
 };
 
 function SubscriptionLayout() {
-  const navigate = useNavigate();
   const [isAgreed, setIsAgreed] = useState(false);
   const { mutate, isPending } = useSendSubscriptionPayment();
   const { id } = useParams();
@@ -74,7 +67,7 @@ function SubscriptionLayout() {
     mutate({
       ...paymentProof,
     });
-    navigate(`/users/show/${id}`, { replace: true });
+    window.location.href = `/become-a-host/${id}`;
   }
 
   return (

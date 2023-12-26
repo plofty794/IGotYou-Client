@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { Dispatch, useEffect, useState } from "react";
+import { Dispatch, useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { addDays, format, parseISO } from "date-fns";
 import pickADate from "../../assets/pick-a-date.json";
@@ -31,12 +31,12 @@ function ListingDate() {
   ]);
   const { setService } = useOutletContext<TSetServiceProps>();
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 10),
+    from: new Date(new Date().setHours(0, 0, 0, 0)),
+    to: addDays(new Date().setHours(0, 0, 0, 0), 10),
   });
   const [isFadingIn, setIsFadingIn] = useState(true);
 
-  useEffect(() => {
+  useMemo(() => {
     setService((prev) => ({
       ...prev,
       date: { from: date?.from, to: date?.to },
@@ -44,7 +44,7 @@ function ListingDate() {
   }, [date, setService]);
 
   useEffect(() => {
-    document.title = "IGotYou - Price";
+    document.title = "Listing Price - IGotYou";
     setTimeout(() => setIsFadingIn(false), 400);
   }, []);
 
@@ -74,8 +74,8 @@ function ListingDate() {
               {date?.from ? (
                 date.to ? (
                   <>
-                    {format(date.from, "LLL dd, y")} -{" "}
-                    {format(date.to, "LLL dd, y")}
+                    {format(date.from, "LLL dd y")} -{" "}
+                    {format(date.to, "LLL dd y")}
                   </>
                 ) : (
                   format(date.from, "LLL dd, y")

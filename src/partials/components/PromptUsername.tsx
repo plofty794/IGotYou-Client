@@ -42,9 +42,10 @@ function PromptUsername() {
 
   async function usernameSubmit(data: PromptUsernameSchema) {
     try {
-      auth.currentUser &&
-        (await updateProfile(auth.currentUser, { displayName: data.username }));
-      mutate({ ...data });
+      if (auth.currentUser) {
+        mutate({ ...data });
+        await updateProfile(auth.currentUser, { displayName: data.username });
+      }
     } catch (error) {
       console.error(error);
     }

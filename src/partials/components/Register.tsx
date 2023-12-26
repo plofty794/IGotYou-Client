@@ -72,6 +72,7 @@ function Register() {
               <Toggle
                 onPressedChange={(v) => setIsHidden(v)}
                 className="ml-auto rounded-full p-2 !bg-transparent"
+                tabIndex={-1}
               >
                 {isHidden ? (
                   <svg
@@ -132,6 +133,7 @@ function Register() {
               <Toggle
                 onPressedChange={(v) => setIsHidden2(v)}
                 className="ml-auto rounded-full p-2 !bg-transparent"
+                tabIndex={-1}
               >
                 {isHidden2 ? (
                   <svg

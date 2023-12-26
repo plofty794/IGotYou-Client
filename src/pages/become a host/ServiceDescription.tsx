@@ -14,8 +14,10 @@ function ServiceDescription() {
   const [isFadingIn, setIsFadingIn] = useState(true);
 
   useEffect(() => {
-    document.title = "IGotYou - Service";
-    setTimeout(() => setIsFadingIn(false), 400);
+    document.title = "Service Description - IGotYou";
+    const timeout = setTimeout(() => setIsFadingIn(false), 400);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   return (

@@ -2,8 +2,7 @@ import { Link, Navigate, Outlet } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import useMultistepForm from "@/hooks/useMultistepForm";
 import { auth } from "@/firebase config/config";
-import { Suspense, useMemo, useState } from "react";
-import UserDropDownButton from "@/partials/components/UserDropDownButton";
+import { Suspense, useEffect, useState } from "react";
 import useUploadListing from "@/hooks/useUploadListing";
 import { BASE_PRICE, PRICE_CAP } from "@/constants/price";
 import useGetCurrentUserProfile from "@/hooks/useGetUserProfile";
@@ -30,6 +29,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { CircleBackslashIcon } from "@radix-ui/react-icons";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import HostingDropdownMenu from "@/partials/components/HostingDropdownMenu";
+import HostNotification from "@/partials/components/notification/HostNotification";
 
 dotPulse.register();
 
@@ -49,10 +50,11 @@ export type TListing = {
   price: number;
   date: DateRange;
   serviceLocation: string;
+  cancellationPolicy: string;
 };
 
 function BecomeAHostLayout() {
-  const { mutate, isPending, status } = useUploadListing();
+  const { mutate, isPending, status, data } = useUploadListing();
   const userProfile = useGetCurrentUserProfile();
   const [service, setService] = useState<TListing>({
     serviceType: "",
@@ -64,6 +66,7 @@ function BecomeAHostLayout() {
       to: undefined,
     },
     serviceLocation: "",
+    cancellationPolicy: "",
   });
 
   const {
@@ -84,10 +87,11 @@ function BecomeAHostLayout() {
     "service-assets",
     "price",
     "listing-date",
+    "cancellation-policy",
     "success",
   ]);
 
-  useMemo(() => {
+  useEffect(() => {
     if (status === "success") {
       next();
     }
@@ -109,14 +113,17 @@ function BecomeAHostLayout() {
             <Link to={"/hosting"}>
               <span>
                 <img
-                  className="w-[30px] h-[30px]"
+                  className="object-cover w-[30px] max-h-full max-w-full"
                   loading="lazy"
                   src="https://uploads.turbologo.com/uploads/icon/preview_image/2880304/draw_svg20200612-15006-1ioouzj.svg.png"
                   alt="logo"
                 />
               </span>
             </Link>
-            <UserDropDownButton />
+            <div className="flex items-center justify-center gap-6">
+              <HostNotification />
+              <HostingDropdownMenu />
+            </div>
           </nav>
           <form
             onSubmit={(e) => {
@@ -152,6 +159,7 @@ function BecomeAHostLayout() {
                 currentStepIndex !== 6 &&
                 currentStepIndex !== 7 &&
                 currentStepIndex !== 8 &&
+                currentStepIndex !== 9 &&
                 !isLastPage && (
                   <>
                     <Button
@@ -348,9 +356,39 @@ function BecomeAHostLayout() {
                     Back
                   </Button>
                   <Button
+                    type="button"
+                    onClick={next}
                     disabled={
-                      service.price < BASE_PRICE || service.price > PRICE_CAP
+                      service.date.from == null && service.date.to == null
                     }
+                    size={"lg"}
+                    className="bg-gray-950 rounded-full text-lg font-semibold p-6"
+                  >
+                    {isFetching ? ( // Default values shown
+                      <l-dot-pulse
+                        size="43"
+                        speed="1.3"
+                        color="white"
+                      ></l-dot-pulse>
+                    ) : (
+                      "Next"
+                    )}
+                  </Button>
+                </>
+              )}
+              {currentStepIndex === 9 && (
+                <>
+                  <Button
+                    type="button"
+                    onClick={previous}
+                    size={"lg"}
+                    variant={"link"}
+                    className="text-sm font-medium p-6"
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    disabled={!service.cancellationPolicy}
                     size={"lg"}
                     className="bg-gray-950 rounded-full text-lg font-semibold p-6"
                   >
@@ -373,16 +411,11 @@ function BecomeAHostLayout() {
                     size={"lg"}
                     className="bg-gray-950 rounded-full text-lg font-semibold p-6"
                   >
-                    {isPending ? (
-                      // Default values shown
-                      <l-dot-pulse
-                        size="43"
-                        speed="1.3"
-                        color="white"
-                      ></l-dot-pulse>
-                    ) : (
-                      "Check your listing"
-                    )}
+                    <Link
+                      to={`/manage-your-service/${data?.data.newListingID}/details`}
+                    >
+                      Check your listing
+                    </Link>
                   </Button>
                 </>
               )}

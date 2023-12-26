@@ -1,44 +1,25 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { NavLink } from "react-router-dom";
 
 function HostingTabs() {
   return (
-    <Tabs defaultValue="current" className="mt-6 full">
-      <TabsList className="justify-between bg-white w-1/3">
-        <TabsTrigger
-          className="rounded-full px-4 py-2 border font-semibold"
-          value="current"
-        >
-          Currently hosting
-        </TabsTrigger>
-        <TabsTrigger
-          className="rounded-full px-4 py-2 border font-semibold"
-          value="upcoming"
-        >
-          Upcoming
-        </TabsTrigger>
-        <TabsTrigger
-          className="rounded-full px-4 py-2 border font-semibold"
-          value="previous"
-        >
-          Previous
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent className="mt-6 p-4 rounded-md bg-[#F7F7F7]" value="current">
-        Currently hosting
-      </TabsContent>
-      <TabsContent
-        className="mt-6 p-4 rounded-md bg-[#F7F7F7]"
-        value="previous"
-      >
-        Previous reservations
-      </TabsContent>
-      <TabsContent
-        className="mt-6 p-4 rounded-md bg-[#F7F7F7]"
-        value="upcoming"
-      >
-        Upcoming reservations
-      </TabsContent>
-    </Tabs>
+    <div className="w-2/4 flex items-center justify-between py-2">
+      <NavLink to={"current-reservations"}>
+        <Button variant={"outline"} className="rounded-full font-medium">
+          Current reservations
+        </Button>
+      </NavLink>
+      <NavLink to={"upcoming-reservations"}>
+        <Button variant={"outline"} className="rounded-full font-medium">
+          Upcoming reservations
+        </Button>
+      </NavLink>
+      <NavLink to={"previous-reservations"}>
+        <Button variant={"outline"} className="rounded-full font-medium">
+          Previous reservations
+        </Button>
+      </NavLink>
+    </div>
   );
 }
 

@@ -16,7 +16,7 @@ import PersonalInfoSheet from "./PersonalInfoSheet";
 import { Button } from "@/components/ui/button";
 import useVerifyEmail from "@/hooks/useVerifyEmail";
 import { auth } from "@/firebase config/config";
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import useUpdateUserProfile from "@/hooks/useUpdateUserProfile";
 import { useQueryClient } from "@tanstack/react-query";
 import { updateProfile } from "firebase/auth";
@@ -78,7 +78,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
   const [cloudinaryWidget, setCloudinaryWidget] =
     useState<CloudinaryUploadWidget>();
 
-  useMemo(() => {
+  useEffect(() => {
     auth.currentUser?.emailVerified &&
       profileData.emailVerified == false &&
       mutate({ emailVerified: true });

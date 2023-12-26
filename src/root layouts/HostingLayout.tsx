@@ -45,10 +45,10 @@ function HostingLayout() {
                 Calendar
               </NavLink>
               <NavLink
-                to={"/hosting-listing"}
+                to={"/hosting-listings"}
                 className="font-medium text-gray-600"
               >
-                Listing
+                Listings
               </NavLink>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

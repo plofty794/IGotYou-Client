@@ -7,7 +7,7 @@ function Success() {
   const [isFadingIn, setIsFadingIn] = useState(true);
 
   useEffect(() => {
-    document.title = "IGotYou - Make it Stand out";
+    document.title = "Congratulations- IGotYou";
     const Timeout = setTimeout(() => setIsFadingIn(false), 400);
 
     return () => clearTimeout(Timeout);

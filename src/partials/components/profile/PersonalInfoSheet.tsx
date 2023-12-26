@@ -34,6 +34,7 @@ type TUserData = {
     mobilePhone: string;
     mobileVerified: boolean;
     identityVerified: boolean;
+    uid: string;
   };
 };
 
@@ -73,7 +74,10 @@ function PersonalInfoSheet() {
           <Separator />
           {!data?.data?.user.identityVerified && (
             <Button className="bg-gray-950">
-              <Link to={"/verify-identity"} reloadDocument>
+              <Link
+                to={`/users/identity-verification/${data?.data?.user.uid}`}
+                reloadDocument
+              >
                 Verify your identity
               </Link>
             </Button>

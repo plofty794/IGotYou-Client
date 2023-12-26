@@ -59,10 +59,14 @@ import PhotographyServices from "./pages/categories/PhotographyServices";
 import AnimationAnd3DModeling from "./pages/categories/AnimationAnd3DModeling";
 import LiveEventsAndConcerts from "./pages/categories/LiveEventsAndConcerts";
 import DigitalAdvertisingAndMarketing from "./pages/categories/DigitalAdvertisingAndMarketing";
-import Listing from "./pages/Listing";
 import MessagesLayout from "./root layouts/MessagesLayout";
 import IdentityVerification from "./pages/IdentityVerification";
 import ServiceAssets from "./pages/become a host/steps/ServiceAssets";
+import CurrentReservations from "./partials/components/hosting/reservations/CurrentReservations";
+import UpcomingReservations from "./partials/components/hosting/reservations/UpcomingReservations";
+import PreviousReservations from "./partials/components/hosting/reservations/PreviousReservations";
+import CancellationPolicy from "./pages/become a host/CancellationPolicy";
+import Listings from "./pages/Listings";
 
 function App() {
   const [User, setUser] = useState<User | null>();
@@ -290,6 +294,16 @@ function App() {
             }
           />
           <Route
+            path="cancellation-policy"
+            element={
+              User ?? token ?? identifier ? (
+                <CancellationPolicy />
+              ) : (
+                <Navigate to={"/login"} replace />
+              )
+            }
+          />
+          <Route
             path="success"
             element={
               User ?? token ?? identifier ? (
@@ -328,9 +342,22 @@ function App() {
 
         {/* HOSTING Route */}
         <Route path="/" element={<HostingLayout />}>
-          <Route path="hosting" element={<Hosting />} />
+          <Route path="hosting" element={<Hosting />}>
+            <Route
+              path="current-reservations"
+              element={<CurrentReservations />}
+            />
+            <Route
+              path="upcoming-reservations"
+              element={<UpcomingReservations />}
+            />
+            <Route
+              path="previous-reservations"
+              element={<PreviousReservations />}
+            />
+          </Route>
           <Route path="hosting-inbox" element={<Inbox />} />
-          <Route path="hosting-listing" element={<Listing />} />
+          <Route path="hosting-listings" element={<Listings />} />
           <Route path="hosting" element={<Hosting />} />
         </Route>
 

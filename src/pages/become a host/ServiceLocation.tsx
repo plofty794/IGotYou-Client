@@ -45,11 +45,10 @@ function ServiceLocation() {
                 addDetails
                 limit={10}
                 filterByCountryCode={["ph"]}
-                debounceDelay={700}
+                debounceDelay={300}
                 value={service.serviceLocation}
                 allowNonVerifiedHouseNumber={false}
                 skipIcons={true}
-                placeholder="Enter the barangay, and city/municipality of your service"
                 postprocessHook={(value) => {
                   setService((prev) => ({
                     ...prev,

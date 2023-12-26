@@ -43,7 +43,8 @@ function BecomeAHostOverview() {
             <span className="font-medium">
               3. Finish up and publish{" "}
               <p className="ml-7 text-base font-normal text-zinc-500">
-                Set a starting price, and publish your listing.
+                Set a starting price, cancellation policy, and publish your
+                listing.
               </p>
             </span>
           </div>

@@ -13,16 +13,16 @@ import {
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
-import useGetNotifications from "@/hooks/useGetGuestNotifications";
 import { Separator } from "@/components/ui/separator";
 import { formatDistanceToNow } from "date-fns";
 import { pulsar } from "ldrs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CircleIcon } from "@radix-ui/react-icons";
+import useGetHostNotifications from "@/hooks/useGetHostNotifications";
 pulsar.register();
 
 function HostNotification() {
-  const userNotifications = useGetNotifications();
+  const hostNotifications = useGetHostNotifications();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [notifications, setNotifications] = useState<any[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,35 +30,28 @@ function HostNotification() {
   const { socket } = useContext(SocketContextProvider);
 
   useEffect(() => {
-    setNotifications(userNotifications.data?.data.notifications);
+    setNotifications(hostNotifications.data?.data.hostNotifications);
     setNewNotifications(
-      userNotifications.data?.data.notifications?.filter(
+      hostNotifications.data?.data.hostNotifications?.filter(
         (v: { read: boolean }) => !v.read
       )
     );
-  }, [
-    userNotifications.data?.data.notification,
-    userNotifications.data?.data.notifications,
-  ]);
+  }, [hostNotifications.data?.data.hostNotifications]);
 
   useMemo(() => {
     socket?.on("pong", (data) => {
       setNotifications((prev) => [data.notifications, ...prev]);
-
       setNewNotifications((prev) => [{ ...data.notifications }, ...prev]);
     });
     socket?.on("res", (data) => {
       setNotifications((prev) => [data.notifications, ...prev]);
-
       setNewNotifications((prev) => [{ ...data.notifications }, ...prev]);
     });
   }, [socket]);
 
-  console.log(notifications);
-
   return (
     <>
-      {userNotifications.isPending ? (
+      {hostNotifications.isPending ? (
         <l-pulsar size="10" speed="1" color="gray"></l-pulsar>
       ) : (
         <Popover>
@@ -98,7 +91,7 @@ function HostNotification() {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <PopoverContent align="end" className="rounded-lg mt-10 p-0 w-80">
+          <PopoverContent align="end" className="rounded-lg p-0 w-80">
             <div className="flex flex-col">
               <span className="text-base font-semibold p-4">
                 Booking Notifications

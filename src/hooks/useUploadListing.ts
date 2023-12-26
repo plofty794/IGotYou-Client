@@ -23,9 +23,10 @@ function useUploadListing() {
         ...data,
       });
     },
-    onSuccess() {
+    onSuccess(data) {
       queryClient.invalidateQueries({ queryKey: ["profile", id], exact: true });
       queryClient.invalidateQueries({ queryKey: ["listings"] });
+      console.log(data.data);
     },
     onError(error) {
       console.error(error);
