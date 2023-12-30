@@ -12,7 +12,7 @@ function Bookings() {
   const [bookingRequests, setBookingRequests] = useState<any[]>([]);
 
   useEffect(() => {
-    document.title = "Bookings - IGotYou";
+    document.title = "Your Bookings - IGotYou";
     if (status === "success") {
       data?.pages.map((page) => setBookingRequests(page.data.bookingRequests));
     }
@@ -20,19 +20,19 @@ function Bookings() {
 
   return (
     <>
-      <section className="flex flex-col gap-4 px-16 py-8">
-        <div className="flex flex-col gap-6">
-          <h1 className="text-3xl font-semibold">Bookings</h1>
-          <Separator />
-        </div>
+      {isPending ? (
+        <ListingsLoader />
+      ) : (
+        <>
+          {bookingRequests?.length > 0 ? (
+            <BookingsTabs bookingRequests={bookingRequests} />
+          ) : (
+            <section className="flex flex-col gap-4 px-16 py-8">
+              <div className="flex flex-col gap-6">
+                <h1 className="text-3xl font-semibold">Bookings</h1>
+                <Separator />
+              </div>
 
-        {isPending ? (
-          <ListingsLoader />
-        ) : (
-          <>
-            {status === "success" && bookingRequests?.length > 0 ? (
-              <BookingsTabs bookingRequests={bookingRequests} />
-            ) : (
               <div className="flex flex-col gap-4 py-6">
                 <h3 className="font-semibold text-2xl ">
                   No listings booked...yet!
@@ -47,11 +47,10 @@ function Bookings() {
                   </Link>
                 </Button>
               </div>
-            )}
-            <Separator />{" "}
-          </>
-        )}
-      </section>
+            </section>
+          )}
+        </>
+      )}
     </>
   );
 }

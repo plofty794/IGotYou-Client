@@ -5,22 +5,37 @@ import ListingsTable, {
   TListings,
 } from "@/partials/components/listings/ListingsTable";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 
 function Listings() {
   const { data, isPending } = useGetHostListings();
+  const { listingID } = useParams();
+  const location = useLocation();
 
   useEffect(() => {
-    document.title = "Host Listings - IGotYou";
-  }, []);
+    document.title = `${
+      listingID != null && location.pathname.includes("renew")
+        ? "Renew Listing"
+        : listingID != null && location.pathname.includes("edit")
+        ? "Edit listing"
+        : "Host Listings"
+    } - IGotYou`;
+  }, [listingID, location.pathname]);
 
   return (
     <div className="p-8 w-full">
       <div className="flex justify-between items-center w-full">
-        <span className="text-xl font-bold ">
-          # of listings:{" "}
-          {data?.pages.flatMap((page) => page.data.hostListings).length}
-        </span>
+        {listingID != null && location.pathname.includes("renew") ? (
+          <span className="text-2xl font-bold ">Renew listing</span>
+        ) : listingID != null && location.pathname.includes("edit") ? (
+          <span className="text-2xl font-bold ">Edit listing</span>
+        ) : (
+          <span className="text-xl font-bold ">
+            # of listings:{" "}
+            {data?.pages.flatMap((page) => page.data.hostListings).length}
+          </span>
+        )}
+
         <Button variant={"outline"} className="py-5 font-medium border-black">
           <Link
             to={`/become-a-host/${auth.currentUser?.uid}`}
@@ -48,6 +63,8 @@ function Listings() {
 
       {isPending ? (
         "Loading..."
+      ) : listingID ? (
+        <Outlet />
       ) : (
         <ListingsTable
           data={

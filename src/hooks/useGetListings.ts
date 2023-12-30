@@ -41,7 +41,6 @@ function useGetListings() {
     },
     initialPageParam: 1,
     enabled: auth.currentUser != null && localStorage.getItem("token") != null,
-    refetchOnWindowFocus: false,
   });
 }
 

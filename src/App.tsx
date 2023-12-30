@@ -67,6 +67,8 @@ import UpcomingReservations from "./partials/components/hosting/reservations/Upc
 import PreviousReservations from "./partials/components/hosting/reservations/PreviousReservations";
 import CancellationPolicy from "./pages/become a host/CancellationPolicy";
 import Listings from "./pages/Listings";
+import RenewListing from "./pages/host/listings/RenewListing";
+import EditListing from "./pages/host/listings/EditListing";
 
 function App() {
   const [User, setUser] = useState<User | null>();
@@ -318,7 +320,7 @@ function App() {
         {/* BOOKING Route */}
         <Route path="/listings" element={<ListingsLayout />}>
           <Route path="show/:id" element={<VisitListing />} />
-          <Route path="create/:id" element={<MakeABooking />} />
+          <Route path="create-booking/:id" element={<MakeABooking />} />
         </Route>
 
         {/* MESSAGES Route */}
@@ -357,7 +359,10 @@ function App() {
             />
           </Route>
           <Route path="hosting-inbox" element={<Inbox />} />
-          <Route path="hosting-listings" element={<Listings />} />
+          <Route path="hosting-listings" element={<Listings />}>
+            <Route path="renew/:listingID" element={<RenewListing />} />
+            <Route path="edit/:listingID" element={<EditListing />} />
+          </Route>
           <Route path="hosting" element={<Hosting />} />
         </Route>
 

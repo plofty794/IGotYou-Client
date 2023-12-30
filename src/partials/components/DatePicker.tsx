@@ -6,10 +6,6 @@ type TProps = {
   listingEndsAt: string;
   date: DateRange | undefined;
   setDate: Dispatch<SetStateAction<DateRange | undefined>>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fromDateString?: any[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  toDateString?: any[];
 };
 
 function DatePicker({ listingEndsAt, date, setDate }: TProps) {

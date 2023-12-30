@@ -21,6 +21,7 @@ import { useQueryClient } from "@tanstack/react-query";
 function ListingFilters({ table }: { table: Table<TListings> }) {
   const queryClient = useQueryClient();
   const [cancellationPolicyFilter, setCancellationPolicyFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   return (
     <>
       <div className="py-4 flex items-center gap-4">
@@ -97,11 +98,51 @@ function ListingFilters({ table }: { table: Table<TListings> }) {
             </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="font-medium rounded-full">
+              Status <ChevronDownIcon className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuCheckboxItem
+              checked={statusFilter === "Active"}
+              onClick={() => {
+                setStatusFilter("Active");
+                table.getColumn("status")?.setFilterValue("Active");
+              }}
+              className="capitalize"
+            >
+              Active
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={statusFilter === "Inactive"}
+              onClick={() => {
+                setStatusFilter("Inactive");
+                table.getColumn("status")?.setFilterValue("Inactive");
+              }}
+              className="capitalize"
+            >
+              Inactive
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={statusFilter === "Ended"}
+              onClick={() => {
+                setStatusFilter("Ended");
+                table.getColumn("status")?.setFilterValue("Ended");
+              }}
+              className="capitalize"
+            >
+              Ended
+            </DropdownMenuCheckboxItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <Button
           variant={"outline"}
           className="flex items-center gap-2 rounded-full"
           onClick={() => {
             setCancellationPolicyFilter("");
+            setStatusFilter("");
             table.reset();
           }}
         >

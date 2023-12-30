@@ -193,8 +193,7 @@ function VisitListing() {
             <CardHeader>
               <CardTitle className="text-xl font-semibold">
                 {formatValue({
-                  value: listing.price.toString(),
-                  prefix: "₱",
+                  value: String(listing.price),
                   intlConfig: {
                     locale: "PH",
                     currency: "php",
@@ -231,7 +230,7 @@ function VisitListing() {
                   ) : (
                     <Link
                       className="w-full"
-                      to={`/booking/create/${listing._id}`}
+                      to={`/listings/create-booking/${listing._id}`}
                     >
                       Continue
                     </Link>

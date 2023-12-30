@@ -16,12 +16,23 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
 } from "@tanstack/react-table";
-import { compareAsc, compareDesc } from "date-fns";
 import { formatValue } from "react-currency-input-field";
 import { Button } from "@/components/ui/button";
-import { CaretSortIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import ListingFilters from "./ListingFilters";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Link } from "react-router-dom";
+import DeleteListingDialog from "./partials/DeleteListingDialog";
+import RenewListingDialog from "./partials/RenewListingDialog";
+import DisableListingDialog from "./partials/DisableListingDialog";
+import { differenceInDays } from "date-fns";
+import EnableListing from "./partials/EnableListing";
 
 const columns: ColumnDef<TListings>[] = [
   {
@@ -32,13 +43,14 @@ const columns: ColumnDef<TListings>[] = [
     ),
   },
   {
-    header: "",
-    accessorKey: "listingPhotos",
-    cell: (props) => (
+    id: "listingPhoto",
+    cell: ({ row }) => (
       <div className="w-22">
         <img
-          className="h-10 w-full object-cover rounded-md"
-          src={`${(props.getValue() as TListingPhotos[])[0].secure_url}`}
+          className="h-10 w-full shadow object-cover rounded-md"
+          src={`${
+            (row.original.listingPhotos as TListingPhotos[])[0].secure_url
+          }`}
         />
       </div>
     ),
@@ -48,7 +60,9 @@ const columns: ColumnDef<TListings>[] = [
     header: "Type",
     cell: (props) => (
       <ScrollArea className="w-28">
-        <p className="font-semibold w-max py-2">{props.getValue() as string}</p>
+        <p className="font-semibold text-xs w-max py-2">
+          {props.getValue() as string}
+        </p>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
     ),
@@ -68,7 +82,7 @@ const columns: ColumnDef<TListings>[] = [
       );
     },
     cell: (props) => (
-      <p>
+      <p className="font-semibold text-sm text-center">
         {formatValue({
           value: String(props.getValue()),
           intlConfig: {
@@ -84,7 +98,9 @@ const columns: ColumnDef<TListings>[] = [
     header: "Location",
     cell: (props) => (
       <ScrollArea className="w-36 py-2">
-        <p className="font-semibold w-max">{props.getValue() as string}</p>
+        <p className="text-xs font-semibold w-max">
+          {props.getValue() as string}
+        </p>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
     ),
@@ -93,21 +109,27 @@ const columns: ColumnDef<TListings>[] = [
     accessorKey: "availableAt",
     header: "Available at",
     cell: (props) => (
-      <p>{new Date(props.getValue() as string).toDateString()}</p>
+      <p className="font-semibold text-xs">
+        {new Date(props.getValue() as string).toDateString()}
+      </p>
     ),
   },
   {
     accessorKey: "endsAt",
     header: "Ends at",
     cell: (props) => (
-      <p>{new Date(props.getValue() as string).toDateString()}</p>
+      <p className="font-semibold text-xs">
+        {new Date(props.getValue() as string).toDateString()}
+      </p>
     ),
   },
   {
     accessorKey: "createdAt",
     header: "Created",
     cell: (props) => (
-      <p>{new Date(props.getValue() as string).toDateString()}</p>
+      <p className="font-semibold text-xs">
+        {new Date(props.getValue() as string).toDateString()}
+      </p>
     ),
   },
   {
@@ -128,11 +150,11 @@ const columns: ColumnDef<TListings>[] = [
     ),
   },
   {
-    id: "status",
+    accessorKey: "status",
     header: ({ column }) => {
       return (
         <Button
-          className="font-medium"
+          className="font-medium p-2"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -144,23 +166,62 @@ const columns: ColumnDef<TListings>[] = [
     cell: ({ row }) => (
       <Badge
         variant={`${
-          compareAsc(new Date(row.original.endsAt), new Date()) >= 0 &&
-          compareDesc(new Date(row.original.availableAt), new Date()) >= 0
-            ? "default"
-            : "destructive"
+          row.original.status === "Active" ? "default" : "destructive"
         }`}
       >
-        {compareAsc(new Date(row.original.endsAt), new Date()) >= 0 &&
-        compareDesc(new Date(row.original.availableAt), new Date()) >= 0
-          ? "Active"
-          : "Inactive"}
+        {row.original.status}
       </Badge>
     ),
-    accessorFn: (row) =>
-      compareAsc(new Date(row.endsAt), new Date()) >= 0 &&
-      compareDesc(new Date(row.availableAt), new Date()) >= 0
-        ? "Active"
-        : "Inactive",
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <DotsHorizontalIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="py-1 px-0" align="end">
+            {row.original.status === "Ended" ? (
+              <RenewListingDialog
+                listingDuration={differenceInDays(
+                  new Date(row.original.endsAt),
+                  new Date(row.original.availableAt)
+                )}
+                listingID={row.original._id}
+              />
+            ) : row.original.status === "Active" ? (
+              <DisableListingDialog
+                listingID={row.original._id}
+                serviceDescription={row.original.serviceDescription}
+              />
+            ) : (
+              <EnableListing listingID={row.original._id} />
+            )}
+
+            <DropdownMenuItem className="p-0">
+              <Button
+                variant={"ghost"}
+                className="w-full p-2 font-semibold text-sm text-gray-600"
+              >
+                <Link
+                  reloadDocument
+                  replace
+                  to={`/hosting-listings/edit/${row.original._id}`}
+                >
+                  Edit listing
+                </Link>
+              </Button>
+            </DropdownMenuItem>
+            <DeleteListingDialog />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];
 
@@ -245,6 +306,7 @@ export type TListings = {
   serviceLocation: string;
   updatedAt: string;
   _id: string;
+  status: string;
 };
 
 type TListingPhotos = {

@@ -10,92 +10,65 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { SocketContextProvider } from "@/context/SocketContext";
-import { auth } from "@/firebase config/config";
 import DatePicker from "@/partials/components/DatePicker";
-import { format, formatDistanceToNow } from "date-fns";
-import { useContext, useMemo, useState } from "react";
+import { format, formatDistance, formatDistanceToNow } from "date-fns";
+import { useEffect, useState } from "react";
 import { formatValue } from "react-currency-input-field";
 import { DateRange } from "react-day-picker";
-import { Navigate, useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { dotPulse } from "ldrs";
 import { Badge } from "@/components/ui/badge";
+import { useForm } from "react-hook-form";
+import {
+  ComposeMessageSchema,
+  ZodComposeMessageSchema,
+} from "@/zod/composeMessageSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import useSendBookingRequest from "@/hooks/useSendBookingRequest";
 dotPulse.register();
 
 function MakeABooking() {
+  const { mutate, isPending } = useSendBookingRequest();
   const {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     listing: { listing },
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    userProfileData: { user },
   } = useOutletContext();
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const { socket } = useContext(SocketContextProvider);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [fromDateString, setFromDateString] = useState<any[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [toDateString, setToDateString] = useState<any[]>([]);
-  const [isDateReserved, setIsDateReserved] = useState(false);
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: undefined,
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    watch,
+  } = useForm<ComposeMessageSchema>({
+    defaultValues: {
+      message: "",
+    },
+    resolver: zodResolver(ZodComposeMessageSchema),
   });
 
-  useMemo(() => {
-    const fromDateString = listing.reservedDates.map(
-      (date: { from: string | number | Date }) =>
-        new Date(date.from).toDateString()
-    );
-    setFromDateString(fromDateString);
-    const toDateString = listing.reservedDates.map(
-      (date: { to: string | number | Date }) => new Date(date.to).toDateString()
-    );
-    setToDateString(toDateString);
-    const reservedDates = fromDateString.concat(toDateString);
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: new Date(new Date().setHours(0, 0, 0, 0)),
+    to: new Date(new Date(listing.endsAt).setHours(0, 0, 0, 0)),
+  });
 
-    if (
-      reservedDates.includes(date?.from?.toDateString()) ||
-      reservedDates.includes(date?.to?.toDateString())
-    ) {
-      setIsDateReserved(true);
-    } else {
-      setIsDateReserved(false);
-    }
-  }, [date?.from, date?.to, listing.reservedDates]);
+  useEffect(() => {
+    document.title = "Make A Request - IGotYou";
+  }, []);
 
-  function sendEmitter({
-    guestName,
-    hostName,
-    hostID,
-    listingID,
-  }: {
-    guestName: string;
-    hostName: string;
-    hostID: string;
-    listingID: string;
-  }) {
-    socket?.emit("send-bookingRequest", {
-      guestName,
-      hostName,
-      date,
-      hostID,
-      message,
-      type: "Booking-Request",
-      listingID,
+  function sendBookingRequest(message: ComposeMessageSchema) {
+    mutate({
+      message: message.message,
+      hostID: listing.host._id,
+      listingID: listing._id,
+      requestedBookingDateStartsAt: date?.from,
+      requestedBookingDateEndsAt: date?.to,
     });
-    document.location.reload();
   }
 
   return (
     <>
-      {user.bookingRequests.find(
-        (v: { listingID: string }) => v.listingID === listing._id
-      ) ? (
-        <Navigate replace to="/bookings" />
-      ) : null}
       <section className="py-12 px-24">
         <div className="w-full flex items-center">
           <Button
@@ -127,11 +100,7 @@ function MakeABooking() {
               <div className="mt-4 w-full flex justify-between items-start">
                 <div className="flex flex-col text-base font-semibold gap-1">
                   <span className="text-lg">Dates</span>
-                  <span
-                    className={`${
-                      isDateReserved ? "text-red-600" : "text-gray-600"
-                    } font-semibold`}
-                  >
+                  <span className="text-gray-600 font-semibold">
                     {date?.from ? (
                       date.to ? (
                         <>
@@ -145,14 +114,6 @@ function MakeABooking() {
                       <span>Pick a date</span>
                     )}
                   </span>
-                  {isDateReserved && (
-                    <Badge
-                      variant={"destructive"}
-                      className="text-xs rounded-full w-max mx-auto"
-                    >
-                      Dates are already taken
-                    </Badge>
-                  )}
                 </div>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -171,8 +132,6 @@ function MakeABooking() {
                     </DialogHeader>
                     <div className="mt-4">
                       <DatePicker
-                        fromDateString={fromDateString}
-                        toDateString={toDateString}
                         date={date}
                         setDate={setDate}
                         listingEndsAt={listing.endsAt}
@@ -183,54 +142,44 @@ function MakeABooking() {
               </div>
             </div>
             <Separator />
-            <div className="w-full">
-              <div className="w-full flex items-center justify-between">
-                <Label className="text-xl font-semibold" htmlFor="message">
-                  Message{" "}
-                  <span className="text-sm text-gray-600 font-semibold">
-                    (required)
-                  </span>
-                </Label>
-                <span className="font-semibold text-sm text-gray-600">
-                  {message.length} / 100
-                </span>
+            <form onSubmit={handleSubmit(sendBookingRequest)}>
+              <div className="flex flex-col gap-2 w-full">
+                <div className="w-full flex items-center justify-between">
+                  <Label className="text-xl font-semibold" htmlFor="message">
+                    Message{" "}
+                  </Label>
+                  <Badge
+                    variant={`${
+                      errors.message?.message ? "destructive" : "secondary"
+                    }`}
+                  >
+                    {watch().message.length} / 100
+                  </Badge>
+                </div>
+                <Textarea
+                  {...register("message")}
+                  placeholder="Type your message here."
+                  id="message"
+                  className="font-semibold"
+                />
+                {errors.message && (
+                  <Badge variant={"destructive"} className="block w-max">
+                    {errors.message.message}
+                  </Badge>
+                )}
+                <Button
+                  disabled={
+                    date?.from == null ||
+                    date.to == null ||
+                    errors.message?.message != null ||
+                    isPending
+                  }
+                  className="bg-gray-950 rounded-full w-max ml-auto text-lg font-medium p-6"
+                >
+                  Send
+                </Button>
               </div>
-              <Textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type your message here."
-                maxLength={100}
-                id="message"
-              />
-            </div>
-            <Button
-              disabled={
-                !message.length ||
-                loading ||
-                !date?.from ||
-                !date?.to ||
-                isDateReserved
-              }
-              className="bg-gray-950 rounded-full w-max ml-auto text-lg font-medium p-6"
-              onClick={() => {
-                setLoading(true);
-                setTimeout(() => {
-                  setLoading(false);
-                  sendEmitter({
-                    guestName: auth.currentUser?.displayName as string,
-                    hostName: listing.host.username as string,
-                    listingID: listing._id as string,
-                    hostID: listing.host._id,
-                  });
-                }, 1000);
-              }}
-            >
-              {loading ? (
-                <l-dot-pulse size="40" speed="1.3" color="white"></l-dot-pulse>
-              ) : (
-                "Send request"
-              )}
-            </Button>
+            </form>
           </div>
           <div className="px-12">
             <Card className="p-6">
@@ -238,7 +187,7 @@ function MakeABooking() {
                 <span className="w-32 h-32 overflow-hidden rounded-md border">
                   <img
                     src={listing.listingPhotos[1].secure_url}
-                    className="max-w-full object-cover w-full h-full hover:scale-110 transition-transform"
+                    className="object-cover w-full h-full hover:scale-110 transition-transform"
                     alt=""
                   />
                 </span>
@@ -246,31 +195,81 @@ function MakeABooking() {
                   <span className="text-lg font-bold">
                     {listing.serviceDescription}
                   </span>
-                  <span className="text-sm font-semibold text-gray-600">
+                  <Link
+                    to={`https://www.google.com/maps/place/${listing.serviceLocation}`}
+                    target="_blank"
+                    className="hover:underline text-sm font-bold text-gray-600"
+                  >
                     {listing.serviceLocation}
-                  </span>
-                  <span className="text-sm font-semibold text-gray-600">
+                  </Link>
+                  <Badge className="w-max">
                     {formatDistanceToNow(new Date(listing.endsAt))} before
-                    service ends
-                  </span>
+                    listing ends
+                  </Badge>
+                  <div className="mt-4 w-full flex items-center justify-between">
+                    <Badge variant={"outline"}>Cancellation policy</Badge>
+                    <span
+                      className={`text-sm font-bold underline ${
+                        listing.cancellationPolicy === "Flexible"
+                          ? "text-green-600"
+                          : listing.cancellationPolicy === "Moderate"
+                          ? "text-amber-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {listing.cancellationPolicy}
+                    </span>
+                  </div>
                 </div>
               </CardHeader>
               <Separator />
               <CardContent className="px-2 py-4">
                 <span className="text-2xl font-semibold">Price details</span>
-                <div className="mt-4 w-full flex justify-between items-center">
-                  <span className="font-semibold text-gray-600">
-                    Total (PHP)
-                  </span>
-                  <span className="font-semibold">
-                    {formatValue({
-                      value: listing.price.toString(),
-                      intlConfig: {
-                        locale: "PH",
-                        currency: "php",
-                      },
-                    })}
-                  </span>
+                <div className="mt-4 flex flex-col gap-2">
+                  <div className="w-full flex justify-between items-center">
+                    <span className="font-semibold text-gray-600">Price</span>
+                    <span className="font-semibold text-gray-600">
+                      {formatValue({
+                        value: String(listing.price),
+                        intlConfig: {
+                          locale: "PH",
+                          currency: "php",
+                        },
+                      })}
+                    </span>
+                  </div>
+                  <div className="w-full flex justify-between items-center">
+                    <span className="font-semibold text-gray-600">
+                      {date?.from != null && date.to != null
+                        ? listing.price +
+                          " x " +
+                          formatDistance(date.from, date.to)
+                        : "No dates"}
+                    </span>
+                    <span className="font-semibold text-gray-600">
+                      {date?.from != null && date.to != null
+                        ? formatDistance(date?.to, date?.from)
+                        : "?"}
+                    </span>
+                  </div>
+                  <Separator />
+                  <div className="w-full flex justify-between items-center">
+                    <span className="text-lg font-semibold">Total</span>
+                    <span className="font-semibold">
+                      {date?.from != null && date.to != null
+                        ? formatValue({
+                            value: String(
+                              listing.price *
+                                parseInt(formatDistance(date?.to, date?.from))
+                            ),
+                            intlConfig: {
+                              locale: "PH",
+                              currency: "php",
+                            },
+                          })
+                        : "0"}
+                    </span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
