@@ -5,25 +5,25 @@ import { sendEmailVerification } from "firebase/auth";
 import { auth } from "@/firebase config/config";
 import { FirebaseError } from "firebase/app";
 import { axiosPrivateRoute } from "@/api/axiosRoute";
+import { useParams } from "react-router-dom";
 
 type TUserUpdates = {
-  address?: string;
-  school?: string;
-  work?: string;
-  funFact?: string;
   emailVerified?: boolean;
 };
 
 function useVerifyEmail() {
+  const { id } = useParams();
   const queryClient = useQueryClient();
-  const id = auth.currentUser?.uid;
   return useMutation({
     mutationFn: async (data: TUserUpdates) => {
       try {
-        await sendEmailVerification(auth.currentUser!);
-        axiosPrivateRoute.patch("/api/users/current-user/update/", {
-          ...data,
-        });
+        if (!data.emailVerified) {
+          await sendEmailVerification(auth.currentUser!);
+        } else {
+          axiosPrivateRoute.patch("/api/users/current-user/verify-email", {
+            ...data,
+          });
+        }
       } catch (err) {
         const error = err as FirebaseError;
         const message = (
@@ -39,13 +39,21 @@ function useVerifyEmail() {
         });
       }
     },
-    onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ["profile", id] });
-      toast({
-        title: "Verification email has been sent",
-        description: "After verifying your email click the reload button",
-        className: "bg-[#FFF] ",
-      });
+    onSuccess: async (_, { emailVerified }) => {
+      if (!emailVerified) {
+        toast({
+          title: "Verification email has been sent",
+          description: "After verifying your email click the reload button.",
+          className: "bg-[#FFF] ",
+        });
+      } else {
+        toast({
+          title: "Success! 🎉",
+          description: "Your email has been verified.",
+          className: "bg-[#FFF]",
+        });
+        queryClient.invalidateQueries({ queryKey: ["profile", id] });
+      }
     },
     onError(err) {
       const error = err as AxiosError;

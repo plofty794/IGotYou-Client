@@ -34,6 +34,7 @@ function PromptUsername() {
     register,
     formState: { errors },
   } = useForm<PromptUsernameSchema>({
+    mode: "onChange",
     defaultValues: {
       username: "",
     },
@@ -55,7 +56,7 @@ function PromptUsername() {
     <section className="mt-16 flex flex-col items-center justify-center gap-2">
       <Card className="flex flex-col items-center border-0 shadow-none">
         <CardHeader>
-          <Lottie animationData={wait} className="w-48 h-48" />
+          <Lottie animationData={wait} className="h-48 w-48" />
         </CardHeader>
         <CardContent>
           <h1 className="text-xl font-bold text-gray-600">
@@ -65,7 +66,7 @@ function PromptUsername() {
       </Card>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="text-lg p-6 font-semibold bg-gray-950 rounded-full">
+          <Button className="rounded-full bg-gray-950 p-6 text-lg font-semibold">
             Proceed
           </Button>
         </DialogTrigger>
@@ -78,12 +79,14 @@ function PromptUsername() {
           </DialogHeader>
           <form onSubmit={handleSubmit(usernameSubmit)}>
             <div className="mt-4 flex flex-col gap-2">
-              <Label htmlFor="username" className="text-gray-600 font-semibold">
+              <Label htmlFor="username" className="font-semibold text-gray-600">
                 Username
               </Label>
               <Input
+                spellCheck="true"
                 {...register("username")}
                 id="username"
+                autoComplete="off"
                 className="col-span-3"
               />
               {errors.username && (
@@ -92,7 +95,7 @@ function PromptUsername() {
             </div>
             <DialogFooter className="mt-4">
               <Button
-                className="text-sm font-medium bg-gray-950 rounded-full"
+                className="rounded-full bg-gray-950 text-sm font-medium"
                 type="submit"
               >
                 {isPending ? (

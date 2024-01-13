@@ -100,3 +100,7 @@
 .swiper-pagination-bullet {
   background-color: rgb(42, 41, 41) !important;
 }
+
+.vjs-poster {
+  opacity: 0;
+}

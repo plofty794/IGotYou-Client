@@ -4,11 +4,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import useAddToWishlist from "@/hooks/useAddToWishlist";
+import useAddToWishlist from "@/hooks/useUpdateWishlist";
 import useGetWishlists from "@/hooks/useGetWishlists";
 import { useMemo, useState } from "react";
 
-function WishlistDialog({ listingID }: { listingID: string }) {
+function UpdateWishlist({ listingID }: { listingID: string }) {
   const wishlistsData = useGetWishlists();
   const { mutate } = useAddToWishlist();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,4 +49,4 @@ function WishlistDialog({ listingID }: { listingID: string }) {
   );
 }
 
-export default WishlistDialog;
+export default UpdateWishlist;

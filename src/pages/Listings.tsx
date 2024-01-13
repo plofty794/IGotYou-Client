@@ -13,21 +13,15 @@ function Listings() {
   const location = useLocation();
 
   useEffect(() => {
-    document.title = `${
-      listingID != null && location.pathname.includes("renew")
-        ? "Renew Listing"
-        : listingID != null && location.pathname.includes("edit")
-        ? "Edit listing"
-        : "Host Listings"
-    } - IGotYou`;
-  }, [listingID, location.pathname]);
+    document.title = location.pathname.includes("edit")
+      ? "Edit Listing - IGotYou"
+      : "Host Listings - IGotYou";
+  }, [location.pathname]);
 
   return (
-    <div className="p-8 w-full">
-      <div className="flex justify-between items-center w-full">
-        {listingID != null && location.pathname.includes("renew") ? (
-          <span className="text-2xl font-bold ">Renew listing</span>
-        ) : listingID != null && location.pathname.includes("edit") ? (
+    <div className="w-full p-8">
+      <div className="flex w-full items-center justify-between">
+        {listingID != null && location.pathname.includes("edit") ? (
           <span className="text-2xl font-bold ">Edit listing</span>
         ) : (
           <span className="text-xl font-bold ">
@@ -36,11 +30,11 @@ function Listings() {
           </span>
         )}
 
-        <Button variant={"outline"} className="py-5 font-medium border-black">
+        <Button variant={"outline"} className="border-black py-5 font-medium">
           <Link
             to={`/become-a-host/${auth.currentUser?.uid}`}
             replace
-            className="w-full flex items-center justify-center gap-2 "
+            className="flex w-full items-center justify-center gap-2 "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +42,7 @@ function Listings() {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-5 h-5"
+              className="h-5 w-5"
             >
               <path
                 strokeLinecap="round"

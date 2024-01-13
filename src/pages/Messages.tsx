@@ -22,24 +22,19 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { SocketContextProvider } from "@/context/SocketContext";
+import useChatMessage from "@/hooks/useChatMessage";
 import useDeleteConversation from "@/hooks/useDeleteConversation";
 import useGetConversation from "@/hooks/useGetConversation";
 import ListingsLoader from "@/partials/loaders/ListingsLoader";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-type TMessage = {
-  content: string;
-  conversationID: string;
-  senderID: string;
-  receiverName: string;
-};
-
 function Messages() {
-  const { conversationId } = useParams();
+  const { conversationID } = useParams();
   const navigate = useNavigate();
+  const chatMessage = useChatMessage();
   const { mutate } = useDeleteConversation();
   const queryClient = useQueryClient();
   const { socket } = useContext(SocketContextProvider);
@@ -52,20 +47,20 @@ function Messages() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [conversation, setConversation] = useState<any[]>();
 
-  useMemo(() => {
+  useEffect(() => {
     data?.data.conversation.length &&
       data?.data.conversation?.map(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (v: { participants: any[] }) =>
           setParticipant(
             v.participants.filter(
-              (u: { _id: string }) => u._id !== data.data.currentUserID
-            )
-          )
+              (u: { _id: string }) => u._id !== data.data.currentUserID,
+            ),
+          ),
       );
     setConversation(data?.data.conversation);
     data?.data.conversation.map((v: { messages: [] }) =>
-      setMessages(v.messages)
+      setMessages(v.messages),
     );
   }, [data?.data.conversation, data?.data.currentUserID]);
 
@@ -74,47 +69,22 @@ function Messages() {
       `/api/users/current-user/conversations/read-message/${messageId}`,
       {
         read: true,
-      }
+      },
     );
     queryClient.invalidateQueries({ queryKey: ["conversations"] });
     queryClient.invalidateQueries({ queryKey: ["guest-notifications"] });
   }
 
-  useMemo(() => {
-    socket?.on("receive-message", (data) => {
-      setMessages((prev) => [...prev, data.conversation]);
+  useEffect(() => {
+    socket?.on("receive-message", () => {
       queryClient.invalidateQueries({
-        queryKey: ["conversation", conversationId],
+        queryKey: ["conversation", conversationID],
       });
       queryClient.invalidateQueries({
         queryKey: ["conversations"],
       });
     });
-  }, [conversationId, queryClient, socket]);
-
-  function sendMessage({
-    content,
-    conversationID,
-    senderID,
-    receiverName,
-  }: TMessage) {
-    socket?.emit("chat-message", {
-      content,
-      conversationID,
-      senderID,
-      receiverName,
-    });
-    setMessages((prev) => [
-      ...prev,
-      {
-        content,
-        conversation,
-        senderID: { _id: senderID },
-        createdAt: Date.now(),
-      },
-    ]);
-    setContent("");
-  }
+  }, [conversationID, queryClient, socket]);
 
   return (
     <div className="px-8 py-6">
@@ -122,7 +92,7 @@ function Messages() {
         <ListingsLoader />
       ) : (
         <>
-          <div className="w-full flex justify-between items-center mb-4">
+          <div className="mb-4 flex w-full items-center justify-between">
             <div className="flex items-center gap-2">
               <Avatar>
                 <AvatarImage
@@ -131,7 +101,7 @@ function Messages() {
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <span className="font-semibold text-lg">
+              <span className="text-lg font-semibold">
                 {participant[0]?.username}
               </span>
             </div>
@@ -147,7 +117,7 @@ function Messages() {
                           viewBox="0 0 24 24"
                           strokeWidth={1.5}
                           stroke="white"
-                          className="w-6 h-6"
+                          className="h-6 w-6"
                         >
                           <path
                             strokeLinecap="round"
@@ -162,7 +132,7 @@ function Messages() {
                         <AlertDialogTitle>
                           Are you absolutely sure?
                         </AlertDialogTitle>
-                        <AlertDialogDescription className="font-medium">
+                        <AlertDialogDescription className="font-semibold text-gray-600">
                           This action cannot be undone. This will{" "}
                           <span className="font-bold text-red-600 underline">
                             permanently delete
@@ -176,7 +146,7 @@ function Messages() {
                         </AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() => {
-                            conversationId && mutate(conversationId);
+                            conversationID && mutate(conversationID);
                             setTimeout(() => {
                               navigate("/messages", { replace: true });
                               document.location.reload();
@@ -197,32 +167,32 @@ function Messages() {
             </TooltipProvider>
           </div>
           <Separator />
-          <ScrollArea className="relative mt-2 h-[65vh] bg-[#F5F5F5] rounded-md border p-6">
-            <div className="flex flex-col items-center justify-center gap-2 w-max mx-auto">
-              <Avatar className="w-24 h-24">
+          <ScrollArea className="relative mt-2 h-[65vh] rounded-md border bg-[#F5F5F5] p-6">
+            <div className="mx-auto flex w-max flex-col items-center justify-center gap-2">
+              <Avatar className="h-24 w-24">
                 <AvatarImage
                   className="object-cover"
                   src={participant[0]?.photoUrl}
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <span className="font-semibold text-xl">
+              <span className="text-xl font-semibold">
                 {participant[0]?.username}
               </span>
-              <Button className="bg-zinc-900 rounded-full text-xs">
+              <Button className="rounded-full bg-zinc-900 text-xs">
                 View profile
               </Button>
             </div>
-            <div className="flex flex-col gap-2 mt-4 mb-10 p-4 h-max">
+            <div className="mb-10 mt-4 flex h-max flex-col gap-2 p-4">
               {messages.map((v) =>
                 v.senderID._id === data?.data.currentUserID ? (
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger className="ml-auto rounded-full w-max bg-gray-900 px-4 py-2">
+                      <TooltipTrigger className="ml-auto w-max rounded-full bg-gray-900 px-4 py-2">
                         {" "}
                         <span
                           key={v._id}
-                          className="text-white font-medium text-sm"
+                          className="text-sm font-medium text-white"
                         >
                           {v.content}
                         </span>
@@ -235,11 +205,11 @@ function Messages() {
                 ) : (
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger className="mr-auto rounded-full w-max bg-gray-700 px-4 py-2">
+                      <TooltipTrigger className="mr-auto w-max rounded-full bg-gray-700 px-4 py-2">
                         {" "}
                         <span
                           key={v._id}
-                          className="text-white font-medium text-sm"
+                          className="text-sm font-medium text-white"
                         >
                           {v.content}
                         </span>
@@ -249,37 +219,35 @@ function Messages() {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-                )
+                ),
               )}
             </div>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                queryClient.invalidateQueries({
-                  queryKey: ["conversations"],
-                });
-                sendMessage({
+                setContent("");
+                chatMessage.mutate({
                   content,
-                  conversationID: conversation && conversation[0]?._id,
-                  senderID: data?.data.currentUserID,
                   receiverName: participant[0].username,
                 });
               }}
             >
-              <div className="bg-[#F5F5F5] flex justify-between items-center gap-2 p-2 absolute left-0 bottom-0 w-full">
+              <div className="absolute bottom-0 left-0 flex w-full items-center justify-between gap-2 bg-[#F5F5F5] p-2">
                 <Input
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Message..."
                   onFocus={async () =>
-                    conversation &&
+                    conversation != null &&
+                    !conversation[0]?.lastMessage.read &&
                     (await readMessage(conversation[0].lastMessage._id))
                   }
-                  className="bg-white p-5 font-medium rounded-full w-full"
+                  className="w-full rounded-full bg-white p-5 font-medium"
+                  spellCheck="true"
                 />
                 <Button
                   disabled={!content}
-                  className="text-lg p-6 bg-gray-950 rounded-full"
+                  className="rounded-full bg-gray-950 p-6 text-lg"
                 >
                   Send
                 </Button>

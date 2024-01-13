@@ -11,7 +11,7 @@ type TUserUpdates = {
   work?: string;
   address?: string;
   funFact?: string;
-  school?: string;
+  educationalAttainment?: string;
   emailVerified?: boolean;
   mobilePhone?: string;
   mobileVerified?: boolean;

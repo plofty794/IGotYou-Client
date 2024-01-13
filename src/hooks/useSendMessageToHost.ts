@@ -1,0 +1,58 @@
+import { axiosPrivateRoute } from "@/api/axiosRoute";
+import { toast } from "sonner";
+import { SocketContextProvider } from "@/context/SocketContext";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
+type TMessageHost = {
+  content: string;
+  hostID: string;
+};
+function useSendMessageToHost() {
+  const navigate = useNavigate();
+  const { socket } = useContext(SocketContextProvider);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: TMessageHost) => {
+      return await axiosPrivateRoute.post(
+        "/api/users/current-user/conversations/send-message-to-host/",
+        {
+          ...data,
+        }
+      );
+    },
+    onSuccess(data) {
+      toast("Success! 🎉", {
+        description: "Message has been sent.",
+        action: {
+          label: "View Message",
+          onClick: () =>
+            navigate(`/messages/conversation/${data.data.conversationID}`, {
+              replace: true,
+            }),
+        },
+        className: "bg-[#FFF] cursor-pointer",
+        actionButtonStyle: {
+          backgroundColor: "white",
+          color: "black",
+          border: "1px solid black",
+        },
+        duration: 5000,
+        descriptionClassName: "font-semibold",
+      });
+      socket?.emit("message-host", data.data);
+      queryClient.invalidateQueries({
+        queryKey: ["conversations"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["conversation", data.data.conversationID],
+      });
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
+}
+
+export default useSendMessageToHost;

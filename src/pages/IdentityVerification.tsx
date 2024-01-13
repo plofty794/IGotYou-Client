@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { CloudinaryUploadWidget } from "@/types/createUploadWidget";
 
 type TIdentityPhoto = {
   public_id: string;
@@ -44,6 +45,8 @@ function IdentityVerification() {
 
   useEffect(() => {
     if (cloudinaryWidget) return;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: "dop5kqpod",
@@ -53,6 +56,8 @@ function IdentityVerification() {
         multiple: false,
         cropping: false,
       },
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       (_, res) => {
         if (res.event === "success") {
           setIdentityPhoto({
@@ -60,7 +65,7 @@ function IdentityVerification() {
             secure_url: res.info.secure_url,
           });
         }
-      }
+      },
     );
     widget && setCloudinaryWidget(widget);
   }, [cloudinaryWidget]);
@@ -79,22 +84,22 @@ function IdentityVerification() {
           <Navigate to={"/"} replace />
         )}
       {data?.data.user.identityVerificationStatus === "pending" ? (
-        <div className="min-h-[70vh] flex items-center justify-center p-2">
-          <Card className="w-3/5 p-4 flex flex-col justify-center shadow-none border-none">
-            <CardHeader className="p-0 w-max mx-auto">
+        <div className="flex min-h-[70vh] items-center justify-center p-2">
+          <Card className="flex w-3/5 flex-col justify-center border-none p-4 shadow-none">
+            <CardHeader className="mx-auto w-max p-0">
               <Lottie
                 animationData={PoliteChicky}
-                className="w-full h-[220px] mx-auto"
+                className="mx-auto h-[220px] w-full"
               />
             </CardHeader>
             <CardDescription className="px-6 pb-4 text-2xl font-bold text-gray-950">
               Hello {data.data.user.username}!
             </CardDescription>
-            <CardContent className="flex flex-col gap-2 pb-4 text-base text-gray-600 font-semibold">
+            <CardContent className="flex flex-col gap-2 pb-4 text-base font-semibold text-gray-600">
               <span>
                 We wanted to inform you that your identity verification status
                 is{" "}
-                <span className="text-amber-600 font-bold">
+                <span className="font-bold text-amber-600">
                   currently pending
                 </span>
                 . Our team is working diligently to process verification of your
@@ -107,7 +112,7 @@ function IdentityVerification() {
               </span>
             </CardContent>
 
-            <Button className="ml-auto w-max p-6 font-semibold text-base rounded-full bg-gray-950 text-white mb-2 mr-4">
+            <Button className="mb-2 ml-auto mr-4 w-max rounded-full bg-gray-950 p-6 text-base font-semibold text-white">
               <Link to={"/"} replace>
                 {" "}
                 Go back
@@ -119,44 +124,46 @@ function IdentityVerification() {
         <div
           className={`${
             isFadingIn ? "opacity-0" : "opacity-100"
-          } transition-opacity flex flex-col justify-center items-center h-[70vh] mt-12 gap-4`}
+          } mt-12 flex h-[70vh] flex-col items-center justify-center gap-4 transition-opacity`}
         >
-          <div className="w-3/6 flex flex-col items-center justify-center gap-2">
-            <div className="text-center flex flex-col gap-4 p-2">
+          <div className="flex w-3/6 flex-col items-center justify-center gap-2">
+            <div className="flex flex-col gap-4 p-2 text-center">
               <h1 className="text-4xl font-semibold ">Identity Verification</h1>
               <p className="text-lg font-semibold text-gray-600">
                 Upload a scanned copy or clear photo of your government-issued
                 ID through a secure document upload interface.{" "}
-                <span className="text-sm mt-1 block font-bold text-amber-600">
+                <span className="mt-1 block text-sm font-bold text-amber-600">
                   Note: Make sure that the credentials in the photo are not
                   blurry.
                 </span>
               </p>
             </div>
-            <div className="overflow-hidden w-3/4 rounded-lg border-dashed border border-zinc-600">
+            <div className="relative w-3/4 overflow-hidden rounded-lg border border-dashed border-zinc-600">
+              {identityPhoto.secure_url && (
+                <CrossCircledIcon
+                  onClick={() => {
+                    mutate({
+                      publicId: identityPhoto.public_id,
+                    });
+                    setIdentityPhoto({
+                      public_id: "",
+                      secure_url: "",
+                    });
+                  }}
+                  className="absolute right-0 m-1 h-[25px] w-[25px] cursor-pointer rounded-full shadow-lg transition-transform hover:scale-110"
+                />
+              )}
               {identityPhoto?.secure_url ? (
-                <div className="relative bg-[#222222d6] h-60">
-                  <CrossCircledIcon
-                    onClick={() => {
-                      mutate({
-                        publicId: identityPhoto.public_id,
-                      });
-                      setIdentityPhoto({
-                        public_id: "",
-                        secure_url: "",
-                      });
-                    }}
-                    className="absolute right-0 w-[25px] h-[25px] text-zinc-300 hover:text-zinc-100 m-1 cursor-pointer"
-                  />
+                <div className="mx-auto h-60 w-5/6">
                   <img
                     src={identityPhoto.secure_url}
-                    className="mx-auto aspect-square object-cover h-full hover:scale-110 transition-transform"
+                    className="mx-auto h-full w-full object-cover transition-transform hover:scale-105"
                     alt="proof_of_payment"
                     loading="lazy"
                   />
                 </div>
               ) : (
-                <div className="p-16 flex flex-col items-center justify-center gap-2">
+                <div className="flex flex-col items-center justify-center gap-2 p-16">
                   <span className="text-center text-sm font-semibold text-gray-600">
                     Your photo will be shown here
                   </span>
@@ -166,7 +173,7 @@ function IdentityVerification() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-6 h-6"
+                    className="h-6 w-6"
                   >
                     <path
                       strokeLinecap="round"
@@ -181,18 +188,18 @@ function IdentityVerification() {
               <Button
                 onClick={() =>
                   sendIdentityVerificationRequest.mutate(
-                    identityPhoto.secure_url
+                    identityPhoto.secure_url,
                   )
                 }
                 disabled={sendIdentityVerificationRequest.isPending}
                 type="button"
-                className="bg-gray-950 rounded-full p-6"
+                className="rounded-full bg-gray-950 p-6"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
-                  className="w-7 h-7"
+                  className="h-7 w-7"
                 >
                   <path
                     fillRule="evenodd"
@@ -206,7 +213,7 @@ function IdentityVerification() {
                 type="button"
                 disabled={identityPhoto?.public_id !== "" || !isAgreed}
                 onClick={() => cloudinaryWidget?.open()}
-                className="bg-gray-950 rounded-full font-medium flex gap-2"
+                className="flex gap-2 rounded-full bg-gray-950 font-medium"
                 size={"lg"}
               >
                 <span className="text-sm font-semibold">Upload</span>
@@ -216,7 +223,7 @@ function IdentityVerification() {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-5 h-5"
+                  className="h-5 w-5"
                 >
                   <path
                     strokeLinecap="round"
@@ -245,7 +252,7 @@ function IdentityVerification() {
                       viewBox="0 0 24 24"
                       strokeWidth={2}
                       stroke="blue"
-                      className="w-6 h-6"
+                      className="h-6 w-6"
                     >
                       <path
                         strokeLinecap="round"
@@ -263,7 +270,7 @@ function IdentityVerification() {
                   <ScrollArea className="h-72">
                     <div className="px-6 py-4">
                       <div className="flex flex-col justify-between gap-2">
-                        <div className="text-sm flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-sm">
                           <span className="font-bold">
                             1. Acceptance of Terms
                           </span>
@@ -274,7 +281,7 @@ function IdentityVerification() {
                             collection of personal information.
                           </span>
                         </div>
-                        <div className="text-sm flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-sm">
                           <span className="font-bold">
                             2. Collection of Information
                           </span>
@@ -285,7 +292,7 @@ function IdentityVerification() {
                             name, ID validity, address, and your picture.
                           </span>
                         </div>
-                        <div className="text-sm flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-sm">
                           <span className="font-bold">
                             3. Use of Information
                           </span>
@@ -297,7 +304,7 @@ function IdentityVerification() {
                             required by law.
                           </span>
                         </div>
-                        <div className="text-sm flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 text-sm">
                           <span className="font-bold">
                             4. Security Measures
                           </span>
@@ -320,10 +327,10 @@ function IdentityVerification() {
                   </ScrollArea>
                 </DialogFooter>
                 <Separator />
-                <div className="m-2 p-2 flex items-center justify-center gap-2 w-max ml-auto">
+                <div className="m-2 ml-auto flex w-max items-center justify-center gap-2 p-2">
                   <Button
                     onClick={() => setIsAgreed(true)}
-                    className="rounded-full font-medium w-max bg-gray-950"
+                    className="w-max rounded-full bg-gray-950 font-medium"
                   >
                     Agree
                   </Button>
@@ -338,73 +345,3 @@ function IdentityVerification() {
 }
 
 export default IdentityVerification;
-
-interface CloudinaryImageUploadResponse {
-  access_mode: string;
-  asset_id: string;
-  batchId: string;
-  bytes: number;
-  created_at: string;
-  etag: string;
-  folder: string;
-  format: string;
-  height: number;
-  id: string;
-  original_filename: string;
-  path: string;
-  placeholder: boolean;
-  public_id: string;
-  resource_type: string;
-  secure_url: string;
-  signature: string;
-  tags: string[];
-  thumbnail_url: string;
-  type: string;
-  url: string;
-  version: number;
-  version_id: string;
-  width: number;
-}
-
-interface CloudinaryUploadWidget {
-  open(): void;
-  close(): void;
-  destroy(): void;
-  setFolder(folder: string): void;
-  setUploadPreset(uploadPreset: string): void;
-  setMultiple(multiple: boolean): void;
-  setCropping(cropping: boolean): void;
-  setResultCallback(
-    callback: (
-      error: Error | null,
-      result: CloudinaryImageUploadResponse
-    ) => void
-  ): void;
-}
-
-type TResult = {
-  event: string;
-  info: CloudinaryImageUploadResponse;
-};
-
-type TFn = (err: unknown, res: TResult) => void;
-
-declare global {
-  interface Window {
-    cloudinary: {
-      createUploadWidget: (
-        { cloudName, uploadPreset, folder, cropping }: TParamsProps,
-        fn: TFn
-      ) => CloudinaryUploadWidget;
-    };
-  }
-}
-
-type TParamsProps = {
-  cloudName?: string;
-  uploadPreset?: string;
-  folder?: string;
-  cropping?: boolean;
-  resourceType?: string;
-  multiple?: boolean;
-};

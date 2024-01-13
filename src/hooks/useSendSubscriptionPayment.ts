@@ -17,12 +17,12 @@ function useSendSubscriptionPayment() {
   return useMutation({
     mutationFn: async (data: TPaymentProofPhoto) => {
       return await axiosPrivateRoute.post(
-        "/api/payments/send-subscription-photos",
+        "/api/subscriptions/send-subscription-photos",
         {
           paymentProofPhoto: data.secure_url,
           subscriptionStatus: "pending",
           paymentStatus: "pending",
-        }
+        },
       );
     },
     onSuccess() {

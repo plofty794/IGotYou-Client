@@ -25,7 +25,7 @@ dotPulse.register();
 function Login() {
   const googleSignIn = useGoogleSignin();
   useEffect(() => {
-    document.title = "IGotYou - Sign in";
+    document.title = "Sign in - IGotYou";
   }, []);
 
   const { mutate, isPending } = useLogin();
@@ -34,6 +34,7 @@ function Login() {
     formState: { errors },
     handleSubmit,
   } = useForm<LoginSchema>({
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
@@ -50,11 +51,11 @@ function Login() {
   }
 
   return (
-    <main className="min-h-screen flex justify-center items-center">
-      <section className="flex max-lg:flex-col max-lg:gap-5 gap-10 justify-between items-center w-3/5 max-lg:w-1/3 max-sm:w-3/4">
+    <main className="flex min-h-screen items-center justify-center">
+      <section className="flex w-3/5 items-center justify-between gap-10 max-lg:w-1/3 max-lg:flex-col max-lg:gap-5 max-sm:w-3/4">
         <span className="h-full w-full max-lg:w-32 max-md:w-20">
           <img
-            className="hover:scale-105 transition-transform max-w-full max-h-full object-cover block mx-auto"
+            className="mx-auto block max-h-full max-w-full object-cover transition-transform hover:scale-105"
             loading="lazy"
             src="https://uploads.turbologo.com/uploads/icon/preview_image/2880304/draw_svg20200612-15006-1ioouzj.svg.png"
             alt="logo"
@@ -62,31 +63,31 @@ function Login() {
         </span>
         <div className="w-full">
           <div className="p-5">
-            <h1 className="text-gray-900 font-bold text-3xl w-max mx-auto max-md:text-2xl">
+            <h1 className="mx-auto w-max text-3xl font-bold text-gray-900 max-md:text-2xl">
               Sign in to IGotYou
             </h1>
           </div>
-          <div className="w-full flex flex-col items-center justify-center gap-5">
+          <div className="flex w-full flex-col items-center justify-center gap-5">
             <form
               onSubmit={handleSubmit(handleLogin)}
-              className="w-full bg-white flex flex-col gap-2"
+              className="flex w-full flex-col gap-2 bg-white"
             >
-              <Label className="text-gray-600 font-semibold">
+              <Label className="font-semibold text-gray-600">
                 Email address
               </Label>
               <Input
                 id="email"
-                className="font-medium border-gray-400"
+                className="border-gray-400 font-medium"
                 autoFocus
                 autoComplete="off"
                 type="text"
                 {...register("email")}
               />
               {errors.email && <ErrorMessage message={errors.email.message} />}
-              <Label className="text-gray-600 font-semibold">Password</Label>
+              <Label className="font-semibold text-gray-600">Password</Label>
               <Input
                 id="password"
-                className="font-medium border-gray-400"
+                className="border-gray-400 font-medium"
                 type="password"
                 {...register("password")}
               />
@@ -100,7 +101,7 @@ function Login() {
                   !!errors.password?.message
                 }
                 size={"lg"}
-                className="bg-gray-950 hover:bg-[#2d2d2d] mt-3 font-semibold rounded-full"
+                className="mt-3 rounded-full bg-gray-950 font-semibold hover:bg-[#2d2d2d]"
               >
                 {isPending ? (
                   <l-dot-pulse
@@ -116,7 +117,7 @@ function Login() {
                 size={"lg"}
                 type="button"
                 onClick={handleGoogleSignIn}
-                className="bg-gray-950 hover:bg-[#2d2d2d] border mt-2 font-semibold rounded-full"
+                className="mt-2 rounded-full border bg-gray-950 font-semibold hover:bg-[#2d2d2d]"
               >
                 <img
                   width={20}
@@ -130,31 +131,31 @@ function Login() {
               </Button>
               <Link
                 to={"/forgot-password"}
-                className="text-center mt-2 underline underline-offset-2 text-xs text-gray-900 font-semibold"
+                className="mt-2 text-center text-xs font-semibold text-gray-900 underline underline-offset-2"
               >
                 Forgot your password?
               </Link>
             </form>
             <div className="flex items-center justify-center text-xs">
-              <span className="text-gray-600 font-medium">
+              <span className="font-medium text-gray-600">
                 New to IGotYou?{" "}
               </span>
               <Dialog>
                 <DialogTrigger asChild>
                   <Button
-                    className="text-gray-900 underline underline-offset-2 p-0 ml-1 font-semibold text-xs"
+                    className="ml-1 p-0 text-xs font-semibold text-gray-900 underline underline-offset-2"
                     variant={"link"}
                     size={"sm"}
                   >
                     Sign up
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="p-8 border border-slate-300 max-md:min-h-screen max-md:w-full">
+                <DialogContent className="border border-slate-300 p-8 max-md:min-h-screen max-md:w-full">
                   <DialogHeader>
-                    <DialogTitle className="flex flex-col gap-4 items-center justify-center">
+                    <DialogTitle className="flex flex-col items-center justify-center gap-4">
                       <span className="h-20 w-20 max-lg:w-32 max-md:w-20">
                         <img
-                          className="hover:scale-105 transition-all max-w-full max-h-full object-cover block mx-auto"
+                          className="mx-auto block max-h-full max-w-full object-cover transition-all hover:scale-105"
                           loading="lazy"
                           src="https://uploads.turbologo.com/uploads/icon/preview_image/2880304/draw_svg20200612-15006-1ioouzj.svg.png"
                           alt="logo"
@@ -166,7 +167,7 @@ function Login() {
                     </DialogTitle>
                   </DialogHeader>
                   <Register />
-                  <DialogFooter className="text-gray-600 text-center py-2 px-4 text-xs font-semibold">
+                  <DialogFooter className="px-4 py-2 text-center text-xs font-semibold text-gray-600">
                     Sign up and become a part of the conversation. Share your
                     thoughts, ideas, and feedback with us and connect with
                     others who share your interests.

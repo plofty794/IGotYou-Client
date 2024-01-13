@@ -5,7 +5,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { SocketContextProvider } from "@/context/SocketContext";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -19,9 +19,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CircleIcon } from "@radix-ui/react-icons";
 import useGetHostNotifications from "@/hooks/useGetHostNotifications";
 import { Button } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
 pulsar.register();
 
 function HostNotification() {
+  const queryClient = useQueryClient();
   const hostNotifications = useGetHostNotifications();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -33,18 +35,18 @@ function HostNotification() {
     setNotifications(hostNotifications.data?.data.hostNotifications);
     setNewNotifications(
       hostNotifications.data?.data.hostNotifications?.filter(
-        (v: { read: boolean }) => !v.read
-      )
+        (v: { read: boolean }) => !v.read,
+      ),
     );
   }, [hostNotifications.data?.data.hostNotifications]);
 
-  useMemo(() => {
-    socket?.on("send-hostNotification", (newHostNotification) => {
-      console.log(newHostNotification);
-      setNotifications((prev) => [newHostNotification, ...prev]);
-      setNewNotifications((prev) => [newHostNotification, ...prev]);
+  useEffect(() => {
+    socket?.on("send-hostNotification", () => {
+      queryClient.invalidateQueries({
+        queryKey: ["host-booking-requests"],
+      });
     });
-  }, [socket]);
+  }, [queryClient, socket]);
 
   return (
     <>
@@ -68,7 +70,7 @@ function HostNotification() {
                         viewBox="0 0 24 24"
                         strokeWidth={2}
                         stroke="currentColor"
-                        className="w-5 h-5"
+                        className="h-5 w-5"
                       >
                         <path
                           strokeLinecap="round"
@@ -77,7 +79,7 @@ function HostNotification() {
                         />
                       </svg>
                       {newNotifications?.length > 0 && (
-                        <span className="absolute top-[-5px] text-xs rounded-full text-white w-4 h-4 bg-red-500">
+                        <span className="absolute top-[-5px] h-4 w-4 rounded-full bg-red-500 text-xs text-white">
                           {newNotifications.length}
                         </span>
                       )}
@@ -89,19 +91,19 @@ function HostNotification() {
                 {newNotifications?.length < 1
                   ? "No notification"
                   : newNotifications?.length > 1
-                  ? `${newNotifications?.length} unread notifications`
-                  : `${newNotifications?.length} unread notification`}
+                    ? `${newNotifications?.length} unread notifications`
+                    : `${newNotifications?.length} unread notification`}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <PopoverContent align="end" className="rounded-lg p-0 w-80">
+          <PopoverContent align="end" className="w-80 rounded-lg p-0">
             <div className="flex flex-col">
-              <span className="text-lg font-bold p-4">
+              <span className="p-4 text-lg font-bold">
                 Booking Notifications
               </span>
               {notifications?.length < 1 && (
                 <>
-                  <span className="p-4 m-2 mx-auto w-max text-xs font-bold ">
+                  <span className="m-2 mx-auto w-max p-4 text-xs font-bold ">
                     No notifications
                   </span>
                 </>
@@ -110,27 +112,27 @@ function HostNotification() {
             {notifications?.length > 0 && (
               <>
                 <Separator />
-                <ScrollArea className="min-h-72 h-max">
-                  <div className="flex flex-col items-center p-1">
+                <ScrollArea className="h-80">
+                  <div className="flex flex-col items-center">
                     {notifications?.map((v) => (
                       <>
                         <Link
                           key={v._id}
                           to="/hosting-inbox"
-                          className="hover:bg-[#F5F5F5] p-3"
+                          className="w-full p-4 hover:bg-[#F5F5F5]"
                         >
-                          <div className="w-full flex gap-2">
+                          <div className="flex w-full items-center gap-2">
                             <div className="w-full">
-                              <p className="text-gray-600 text-xs font-bold">
+                              <p className="text-xs font-semibold text-gray-600">
                                 {v.senderID.username} has sent you a{" "}
                                 {(v.notificationType as string)
                                   .split("-")
                                   .join(" ")}{" "}
                               </p>
-                              <span className="text-xs font-bold text-rose-600">
+                              <span className="text-xs font-semibold text-red-600">
                                 {formatDistanceToNow(
                                   new Date(v.createdAt as string),
-                                  { addSuffix: true }
+                                  { addSuffix: true },
                                 )}
                               </span>
                             </div>
@@ -139,11 +141,12 @@ function HostNotification() {
                                 height={10}
                                 width={10}
                                 color="blue"
-                                className="fill-blue-600 bg-blue-600 rounded-full p-0 h-max w-max"
+                                className="h-max w-max rounded-full bg-blue-600 fill-blue-600 p-0"
                               />
                             )}
                           </div>
                         </Link>
+                        <Separator />
                       </>
                     ))}
                   </div>

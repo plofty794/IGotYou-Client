@@ -10,9 +10,13 @@ function usePasswordReset() {
   const { toast } = useToast();
   return useMutation({
     mutationFn: async (data: EmailSchema) => {
-      return await axiosPrivateRoute.post("/api/users/email-check", {
-        ...data,
-      });
+      return await axiosPrivateRoute.post(
+        "/api/users/email-check",
+        {
+          ...data,
+        },
+        {}
+      );
     },
     onSuccess: async (_, variables) => {
       try {

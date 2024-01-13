@@ -4,6 +4,7 @@ import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import useRemoveAsset from "@/hooks/useRemoveAsset";
 import { TStatePaymentPhoto } from "../../root layouts/SubscriptionLayout";
+import { CloudinaryUploadWidget } from "@/types/createUploadWidget";
 
 function ConfirmPayment() {
   const [isFadingIn, setIsFadingIn] = useState(true);
@@ -15,6 +16,8 @@ function ConfirmPayment() {
 
   useEffect(() => {
     if (cloudinaryWidget) return;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: "dop5kqpod",
@@ -24,6 +27,8 @@ function ConfirmPayment() {
         multiple: false,
         cropping: false,
       },
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       (_, res) => {
         if (res.event === "success") {
           setPaymentProof({
@@ -31,7 +36,7 @@ function ConfirmPayment() {
             secure_url: res.info.secure_url,
           });
         }
-      }
+      },
     );
     widget && setCloudinaryWidget(widget);
   }, [cloudinaryWidget, setPaymentProof]);
@@ -46,44 +51,46 @@ function ConfirmPayment() {
       <div
         className={`${
           isFadingIn ? "opacity-0" : "opacity-100"
-        } transition-opacity flex justify-center items-center gap-12 h-full`}
+        } flex h-full items-center justify-center gap-12 transition-opacity`}
       >
-        <div className="w-2/4 flex flex-col items-center justify-center gap-2 p-8">
-          <div className="text-center flex flex-col gap-4 p-2">
+        <div className="flex w-2/4 flex-col items-center justify-center gap-2 p-8">
+          <div className="flex flex-col gap-4 p-2 text-center">
             <h1 className="text-4xl font-semibold ">Confirm your payment</h1>
             <p className="text-lg font-semibold text-gray-600">
               Take a screenshot or download the photo of the proof of payment
               from GCash containing the amount and the Ref no. and upload it
               here.{" "}
-              <span className="text-sm mt-1 block font-bold text-amber-600">
+              <span className="mt-1 block text-sm font-bold text-amber-600">
                 Note: Make sure you include the Ref no. on the screenshot
               </span>
             </p>
           </div>
-          <div className="overflow-hidden w-3/4 rounded-lg border-dashed border border-zinc-600">
+          <div className="relative w-3/4 overflow-hidden rounded-lg border border-dashed border-zinc-600  bg-[#222222d6]">
+            {paymentProof?.secure_url && (
+              <CrossCircledIcon
+                onClick={() => {
+                  mutate({
+                    publicId: paymentProof?.public_id,
+                  });
+                  setPaymentProof({
+                    public_id: "",
+                    secure_url: "",
+                  });
+                }}
+                className="absolute right-0 m-1 h-[25px] w-[25px] cursor-pointer text-zinc-300 hover:text-zinc-100"
+              />
+            )}
             {paymentProof?.secure_url ? (
-              <div className="relative bg-[#222222d6]">
-                <CrossCircledIcon
-                  onClick={() => {
-                    mutate({
-                      publicId: paymentProof?.public_id,
-                    });
-                    setPaymentProof({
-                      public_id: "",
-                      secure_url: "",
-                    });
-                  }}
-                  className="absolute right-0 w-[25px] h-[25px] text-zinc-300 hover:text-zinc-100 m-1 cursor-pointer"
-                />
+              <div className="mx-auto w-5/6 overflow-hidden">
                 <img
                   src={paymentProof.secure_url}
-                  className="mx-auto h-48 object-cover max-w-full hover:scale-110 transition-transform"
+                  className="mx-auto h-48 max-w-full object-cover transition-transform hover:scale-110"
                   alt="proof_of_payment"
                   loading="lazy"
                 />
               </div>
             ) : (
-              <div className="p-12 flex flex-col items-center justify-center gap-2">
+              <div className="flex flex-col items-center justify-center gap-2 p-12">
                 <span className="text-center text-sm font-semibold text-gray-600">
                   Your photo will be shown here
                 </span>
@@ -93,7 +100,7 @@ function ConfirmPayment() {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-6 h-6"
+                  className="h-6 w-6"
                 >
                   <path
                     strokeLinecap="round"
@@ -108,7 +115,7 @@ function ConfirmPayment() {
             disabled={!!paymentProof?.public_id}
             type="button"
             onClick={() => cloudinaryWidget?.open()}
-            className="bg-gray-950 rounded-full font-medium flex gap-2"
+            className="flex gap-2 rounded-full bg-gray-950 font-medium"
             size={"lg"}
           >
             <span className="text-sm font-semibold">Upload</span>
@@ -118,7 +125,7 @@ function ConfirmPayment() {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-5 h-5"
+              className="h-5 w-5"
             >
               <path
                 strokeLinecap="round"
@@ -134,73 +141,3 @@ function ConfirmPayment() {
 }
 
 export default ConfirmPayment;
-
-interface CloudinaryImageUploadResponse {
-  access_mode: string;
-  asset_id: string;
-  batchId: string;
-  bytes: number;
-  created_at: string;
-  etag: string;
-  folder: string;
-  format: string;
-  height: number;
-  id: string;
-  original_filename: string;
-  path: string;
-  placeholder: boolean;
-  public_id: string;
-  resource_type: string;
-  secure_url: string;
-  signature: string;
-  tags: string[];
-  thumbnail_url: string;
-  type: string;
-  url: string;
-  version: number;
-  version_id: string;
-  width: number;
-}
-
-interface CloudinaryUploadWidget {
-  open(): void;
-  close(): void;
-  destroy(): void;
-  setFolder(folder: string): void;
-  setUploadPreset(uploadPreset: string): void;
-  setMultiple(multiple: boolean): void;
-  setCropping(cropping: boolean): void;
-  setResultCallback(
-    callback: (
-      error: Error | null,
-      result: CloudinaryImageUploadResponse
-    ) => void
-  ): void;
-}
-
-type TResult = {
-  event: string;
-  info: CloudinaryImageUploadResponse;
-};
-
-type TFn = (err: unknown, res: TResult) => void;
-
-declare global {
-  interface Window {
-    cloudinary: {
-      createUploadWidget: (
-        { cloudName, uploadPreset, folder, cropping }: TParamsProps,
-        fn: TFn
-      ) => CloudinaryUploadWidget;
-    };
-  }
-}
-
-type TParamsProps = {
-  cloudName?: string;
-  uploadPreset?: string;
-  folder?: string;
-  cropping?: boolean;
-  resourceType?: string;
-  multiple?: boolean;
-};

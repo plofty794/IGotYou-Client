@@ -10,7 +10,7 @@ type TSetServiceType = {
   service: TListing;
 };
 
-function Service() {
+function ServiceType() {
   const { setService } = useOutletContext<TSetServiceType>();
   const [selected, setSelected] = useState("");
   const [isFadingIn, setIsFadingIn] = useState(true);
@@ -25,17 +25,17 @@ function Service() {
   return (
     <>
       <ScrollArea
-        className={`w-full h-[450px] rounded-md border transition-opacity ${
+        className={`h-[450px] w-full rounded-md border transition-opacity ${
           isFadingIn ? "opacity-0" : "opacity-100"
         }`}
       >
         <section className="my-16 flex flex-col items-center justify-center gap-8">
-          <div className="text-center w-3/4">
+          <div className="w-3/4 text-center">
             <h1 className="text-3xl font-semibold">
               Which of these best categories describes your service?
             </h1>
           </div>
-          <div className="grid grid-cols-2 w-3/6 max-md:w-full gap-2 px-8">
+          <div className="grid w-3/6 grid-cols-2 gap-2 px-8 max-md:w-full">
             {CATEGORIES().map((category, i) =>
               i != CATEGORIES().length - 1 ? (
                 <Button
@@ -48,8 +48,8 @@ function Service() {
                     }));
                   }}
                   type="button"
-                  className={`h-max flex flex-col gap-2 border text-950 bg-white p-6 hover:outline-gray-950 hover:outline hover:bg-white ${
-                    selected === category.name ? "outline-gray-950 outline" : ""
+                  className={`text-950 flex h-max flex-col gap-2 border bg-white p-6 hover:bg-white hover:outline hover:outline-gray-950 ${
+                    selected === category.name ? "outline outline-gray-950" : ""
                   }`}
                 >
                   {category.icon}
@@ -65,14 +65,14 @@ function Service() {
                     }));
                   }}
                   type="button"
-                  className={`col-span-full h-max flex flex-col gap-2 border text-950 bg-white p-6 hover:outline-gray-950 hover:outline hover:bg-white ${
-                    selected === category.name ? "outline-gray-950 outline" : ""
+                  className={`text-950 col-span-full flex h-max flex-col gap-2 border bg-white p-6 hover:bg-white hover:outline hover:outline-gray-950 ${
+                    selected === category.name ? "outline outline-gray-950" : ""
                   }`}
                 >
                   {category.icon}
                   {category.name}
                 </Button>
-              )
+              ),
             )}
           </div>
         </section>
@@ -81,4 +81,4 @@ function Service() {
   );
 }
 
-export default Service;
+export default ServiceType;

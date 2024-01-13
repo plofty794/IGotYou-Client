@@ -20,12 +20,21 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import WishlistDialog from "@/partials/components/WishlistDialog";
+import UpdateWishlist from "@/partials/components/UpdateWishlist";
+import { Cloudinary } from "@cloudinary/url-gen";
+import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
+import { formatDistance } from "date-fns";
 
 type TOutletContext = {
   listings: InfiniteData<AxiosResponse<TListings>>;
   uid: string;
 };
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: "dop5kqpod",
+  },
+});
 
 function Home() {
   const { listings, uid } = useOutletContext<TOutletContext>();
@@ -50,7 +59,7 @@ function Home() {
                   width={25}
                   height={25}
                 />
-                <DialogTitle className="font-semibold text-base">
+                <DialogTitle className="text-base font-semibold">
                   Some features are disabled!
                 </DialogTitle>
               </div>
@@ -85,7 +94,7 @@ function Home() {
               </div>
             </DialogFooter>
             <Separator />
-            <div className="m-2 p-2 flex items-center justify-center gap-2 w-max ml-auto">
+            <div className="m-2 ml-auto flex w-max items-center justify-center gap-2 p-2">
               <Label htmlFor="checkbox" className="text-xs font-medium">
                 Don't show this again
               </Label>
@@ -100,25 +109,29 @@ function Home() {
           </DialogContent>
         </Dialog>
       )}
-      <section className="px-8 mt-2">
+      <section className="mt-2 px-8">
         {listings.pages[0].data.listings.length > 0 ? (
           <>
-            <div className="grid grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-2">
+            <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1">
               {listings.pages.map((page) =>
                 page.data.listings.map((v, i) => (
                   <Card
                     key={v._id}
-                    className="border-none shadow-none overflow-hidden w-full"
+                    className="w-full overflow-hidden border-none shadow-none"
                   >
-                    <Link
-                      to={`${
-                        uid === v.host.uid
-                          ? `/users/show/${v.host.uid}`
-                          : `/listings/show/${v._id}`
-                      } `}
-                    >
-                      <CardHeader className="p-0 flex flex-col gap-1">
+                    <CardHeader className="flex flex-col gap-1 p-0">
+                      <Link
+                        to={`${
+                          uid === v.host.uid
+                            ? `/hosting-listings/edit/${v._id}`
+                            : `/listings/show/${v._id}`
+                        } `}
+                        className="mt-2"
+                        reloadDocument={uid === v.host.uid}
+                        replace
+                      >
                         <Swiper
+                          className="rounded-xl"
                           key={i}
                           spaceBetween={10}
                           cssMode={true}
@@ -129,34 +142,58 @@ function Home() {
                           mousewheel={true}
                           modules={[Navigation, Pagination, Mousewheel]}
                         >
-                          {v.listingPhotos.map((photo) => (
-                            <SwiperSlide key={photo.public_id}>
-                              <img
-                                key={photo._id}
-                                loading="lazy"
-                                className="rounded-lg max-h-full max-w-full h-72 w-full mx-auto object-cover"
-                                src={photo.secure_url}
-                              />
-                            </SwiperSlide>
-                          ))}
+                          {v.listingAssets?.map((asset) =>
+                            asset.resource_type === "video" ? (
+                              <SwiperSlide
+                                className="h-72 rounded-xl"
+                                key={asset.public_id}
+                              >
+                                <AdvancedImage
+                                  className="mx-auto h-72 w-full rounded-xl object-cover"
+                                  cldImg={cld
+                                    .image(asset.public_id)
+                                    .setAssetType("video")
+                                    .format("auto:image")}
+                                />
+                              </SwiperSlide>
+                            ) : (
+                              <SwiperSlide key={asset.public_id}>
+                                <AdvancedImage
+                                  key={asset._id}
+                                  cldImg={cld.image(asset.public_id)}
+                                  plugins={[
+                                    lazyload(),
+                                    responsive({
+                                      steps: [800, 1000, 1400],
+                                    }),
+                                  ]}
+                                  className="mx-auto h-72 w-full rounded-lg border object-cover"
+                                />
+                              </SwiperSlide>
+                            ),
+                          )}
                         </Swiper>
-                      </CardHeader>
-                    </Link>
-                    <CardContent className="mt-2 px-1 flex items-start justify-between">
+                      </Link>
+                    </CardHeader>
+                    <CardContent className="mt-2 flex justify-between p-0">
                       <div className="flex flex-col">
-                        <span className="font-semibold">{v.serviceType}</span>
-                        <span className="text-sm font-medium text-gray-600">
+                        <span className="text-sm font-semibold">
+                          {v.serviceType}
+                        </span>
+                        <span className="text-sm font-semibold text-gray-600">
                           {v.host.username}
                         </span>
 
-                        <div className="text-sm w-full">
-                          <span className="text-gray-600">Ends at</span>
-                          <span className="text-gray-600">
-                            {" "}
-                            {new Date(v.endsAt).toDateString()}
+                        <div className="w-full">
+                          <span className="text-sm font-semibold text-gray-600">
+                            Ends in{" "}
+                            {formatDistance(
+                              new Date().setHours(0, 0, 0, 0),
+                              new Date(v.endsAt),
+                            )}
                           </span>
                         </div>
-                        <div className="w-full flex items-center justify-between">
+                        <div className="flex w-full items-center justify-between">
                           <span className="mt-1 font-semibold">
                             {formatValue({
                               value: v.price.toString(),
@@ -165,17 +202,19 @@ function Home() {
                                 currency: "PHP",
                               },
                             })}{" "}
-                            <span className="text-sm font-normal">service</span>
+                            <span className="text-sm font-semibold">
+                              service
+                            </span>
                           </span>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end  gap-10">
-                        <div className="flex items-center justify-center gap-1">
+                      <div className="flex flex-col items-end">
+                        <div className="mb-2 flex items-center justify-center gap-1">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             fill="currentColor"
-                            className="w-4 h-4"
+                            className="h-4 w-4"
                           >
                             <path
                               fillRule="evenodd"
@@ -183,19 +222,21 @@ function Home() {
                               clipRule="evenodd"
                             />
                           </svg>
-                          <span className="font-semibold text-sm">
+                          <span className="text-xs font-semibold">
                             {v.host.rating.length > 0
                               ? v.host.rating.length
                               : "No rating"}
                           </span>
                         </div>
                         {v.host.uid !== auth.currentUser?.uid && (
-                          <WishlistDialog listingID={v._id} />
+                          <>
+                            <UpdateWishlist listingID={v._id} />
+                          </>
                         )}
                       </div>
                     </CardContent>
                   </Card>
-                ))
+                )),
               )}
             </div>
           </>
@@ -204,9 +245,9 @@ function Home() {
             <Lottie
               loop={false}
               animationData={noListing}
-              className="w-64 h-64"
+              className="h-64 w-64"
             />
-            <span className="text-gray-600 font-bold text-xl">
+            <span className="text-xl font-bold text-gray-600">
               No listings to show
             </span>
           </div>
@@ -216,11 +257,13 @@ function Home() {
   );
 }
 
-type TListingPhotos = {
+type TListingAssets = {
   original_filename: string;
   public_id: string;
   secure_url: string;
   _id: string;
+  resource_type: string;
+  thumbnail_url: string;
 };
 
 type TListings = {
@@ -230,13 +273,13 @@ type TListings = {
       createdAt: string;
       endsAt: string;
       host: THost;
-      listingPhotos: [TListingPhotos];
+      listingAssets: [TListingAssets];
       price: number;
       serviceDescription: string;
       serviceType: string;
       updatedAt: string;
       _id: string;
-    }
+    },
   ];
 };
 

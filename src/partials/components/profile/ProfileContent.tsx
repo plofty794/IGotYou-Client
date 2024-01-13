@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Link } from "react-router-dom";
 import Loader from "@/partials/loaders/Loader";
+import { CloudinaryUploadWidget } from "@/types/createUploadWidget";
 dotPulse.register();
 
 const Listings = lazy(() => import("./Listings"));
@@ -60,7 +61,7 @@ type TListings = {
   _id: string;
   serviceType: string[];
   serviceDescription: string;
-  listingPhotos: [
+  listingAssets: [
     {
       public_id: string;
       secure_url: string;
@@ -79,20 +80,27 @@ function ProfileContent({ profileData, activeListings }: TProps) {
     useState<CloudinaryUploadWidget>();
 
   useEffect(() => {
-    auth.currentUser?.emailVerified &&
-      profileData.emailVerified == false &&
+    if (
+      auth.currentUser?.emailVerified &&
+      profileData.emailVerified === false
+    ) {
       mutate({ emailVerified: true });
+    }
   }, [mutate, profileData.emailVerified]);
 
   useEffect(() => {
     setPhoto(profileData?.photoUrl);
     if (updateUserProfile.isSuccess) {
-      queryClient.invalidateQueries({ queryKey: ["listings"] });
+      queryClient.invalidateQueries({
+        queryKey: ["profile", auth.currentUser?.uid],
+      });
     }
   }, [profileData?.photoUrl, queryClient, updateUserProfile.isSuccess]);
 
   useEffect(() => {
     if (cloudinaryWidget) return;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: "dop5kqpod",
@@ -101,6 +109,8 @@ function ProfileContent({ profileData, activeListings }: TProps) {
         resourceType: "image",
         cropping: true,
       },
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       async (_, res) => {
         if (res.event === "success") {
           updateUserProfile.mutate({ photoUrl: res.info.secure_url });
@@ -436,73 +446,3 @@ function ProfileContent({ profileData, activeListings }: TProps) {
 }
 
 export default ProfileContent;
-
-type TParamsProps = {
-  cloudName?: string;
-  uploadPreset?: string;
-  folder?: string;
-  cropping?: boolean;
-  resourceType?: string;
-  multiple?: boolean;
-};
-
-interface CloudinaryImageUploadResponse {
-  access_mode: string;
-  asset_id: string;
-  batchId: string;
-  bytes: number;
-  created_at: string;
-  etag: string;
-  folder: string;
-  format: string;
-  height: number;
-  id: string;
-  original_filename: string;
-  path: string;
-  placeholder: boolean;
-  public_id: string;
-  resource_type: string;
-  secure_url: string;
-  signature: string;
-  tags: string[];
-  thumbnail_url: string;
-  type: string;
-  url: string;
-  version: number;
-  version_id: string;
-  width: number;
-}
-
-interface CloudinaryUploadWidget {
-  open(): void;
-  close(): void;
-  destroy(): void;
-  setFolder(folder: string): void;
-  setUploadPreset(uploadPreset: string): void;
-  setMultiple(multiple: boolean): void;
-  setCropping(cropping: boolean): void;
-  setResultCallback(
-    callback: (
-      error: Error | null,
-      result: CloudinaryImageUploadResponse
-    ) => void
-  ): void;
-}
-
-type TResult = {
-  event: string;
-  info: CloudinaryImageUploadResponse;
-};
-
-type TFn = (err: unknown, res: TResult) => void;
-
-declare global {
-  interface Window {
-    cloudinary: {
-      createUploadWidget: (
-        { cloudName, uploadPreset, folder, cropping }: TParamsProps,
-        fn: TFn
-      ) => CloudinaryUploadWidget;
-    };
-  }
-}

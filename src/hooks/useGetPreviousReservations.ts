@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 
 function useGetPreviousReservations() {
   return useInfiniteQuery({
-    queryKey: ["reservations", "current"],
+    queryKey: ["reservations", "previous"],
     queryFn: async ({ pageParam }) => {
       return await axiosPrivateRoute.get(
         `/api/reservations/previous/${pageParam}`

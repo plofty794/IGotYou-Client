@@ -1,6 +1,7 @@
 import { axiosPrivateRoute } from "@/api/axiosRoute";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError, AxiosResponse } from "axios";
 
 function useCreateConversation() {
   const { toast } = useToast();
@@ -21,12 +22,13 @@ function useCreateConversation() {
         className: "bg-white font-bold",
       });
     },
-    onError(error) {
-      console.log(error);
-      return toast({
-        title: "Oops! An error occurred.",
-        description: "This user is already in a conversation with you.",
+    onError(err) {
+      const error = err as AxiosError;
+      const response = error.response as AxiosResponse;
+      toast({
         variant: "destructive",
+        title: "Oops! An error occurred.",
+        description: response.data.error,
       });
     },
   });

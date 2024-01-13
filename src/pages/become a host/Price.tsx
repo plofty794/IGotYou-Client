@@ -1,7 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dispatch, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import CurrencyInput from "react-currency-input-field";
+import CurrencyInput, { formatValue } from "react-currency-input-field";
 import { BASE_PRICE, PRICE_CAP } from "@/constants/price";
 import ErrorMessage from "@/partials/components/ErrorMessage";
 import { TListing } from "@/root layouts/BecomeAHostLayout";
@@ -24,7 +24,13 @@ function Price() {
   useEffect(() => {
     if (service.price > PRICE_CAP || service.price < BASE_PRICE) {
       setErrorMessage(
-        `Please enter a price between ₱${BASE_PRICE} and ₱${PRICE_CAP}.`
+        `Enter a price between ${formatValue({
+          value: BASE_PRICE.toString(),
+          intlConfig: { locale: "ph", currency: "php" },
+        })} and ${formatValue({
+          value: PRICE_CAP.toString(),
+          intlConfig: { locale: "ph", currency: "php" },
+        })}.`,
       );
     } else {
       setErrorMessage("");
@@ -34,11 +40,11 @@ function Price() {
   return (
     <>
       <ScrollArea
-        className={`w-full h-[450px] rounded-md border transition-opacity ${
+        className={`h-[450px] w-full rounded-md border transition-opacity ${
           isFadingIn ? "opacity-0" : "opacity-100"
         }`}
       >
-        <section className="my-8 h-[400px] flex flex-wrap flex-col items-center justify-center gap-4">
+        <section className="my-8 flex h-[400px] flex-col flex-wrap items-center justify-center gap-4">
           <div className="flex flex-col gap-2">
             <h1 className="text-5xl font-bold">
               Now, set your price per day of service.
@@ -49,11 +55,12 @@ function Price() {
           </div>
           <CurrencyInput
             autoFocus
-            className="w-1/3 rounded border-none focus:outline-none text-6xl font-semibold"
+            className="w-1/3 rounded border-none text-6xl font-semibold focus:outline-none"
             prefix="₱"
             allowNegativeValue={false}
             decimalsLimit={2}
             value={service.price}
+            inputMode="numeric"
             onValueChange={(value) =>
               setService((prev) => ({
                 ...prev,
@@ -62,7 +69,7 @@ function Price() {
             }
           />
           {errorMessage && (
-            <div className="w-max mx-auto">
+            <div className="mx-auto w-max">
               <ErrorMessage message={errorMessage} />
             </div>
           )}

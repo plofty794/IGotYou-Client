@@ -3,13 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
 function useVisitListing() {
-  const { id } = useParams();
+  const { listingID } = useParams();
   return useQuery({
-    queryKey: ["listing", id && id],
+    queryKey: ["listing", listingID && listingID],
     queryFn: async () => {
-      return await axiosPrivateRoute.get(`/api/listings/listing/${id}`);
+      return await axiosPrivateRoute.get(`/api/listings/visit/${listingID}`);
     },
-    enabled: id != null,
+    enabled: listingID != null,
     refetchOnWindowFocus: false,
   });
 }

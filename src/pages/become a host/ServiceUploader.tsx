@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 import { TListing } from "@/root layouts/BecomeAHostLayout";
+import { CloudinaryUploadWidget } from "@/types/createUploadWidget";
 
 type TSetServiceProps = {
   setService: Dispatch<React.SetStateAction<TListing>>;
@@ -25,6 +26,8 @@ function ServiceUploader() {
 
   useEffect(() => {
     if (cloudinaryWidget) return;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: "dop5kqpod",
@@ -33,12 +36,15 @@ function ServiceUploader() {
         resourceType: "auto",
         multiple: true,
       },
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       (_, result) => {
         if (result.event === "success") {
+          console.log(result.info);
           setService((prev) => ({
             ...prev,
-            listingPhotos: [
-              ...prev.listingPhotos,
+            listingAssets: [
+              ...prev.listingAssets,
               {
                 public_id: result.info.public_id,
                 secure_url: result.info.secure_url,
@@ -46,6 +52,7 @@ function ServiceUploader() {
                 bytes: result.info.bytes,
                 thumbnail_url: result.info.thumbnail_url,
                 format: result.info.format,
+                resource_type: result.info.resource_type,
               },
             ],
           }));
@@ -55,9 +62,11 @@ function ServiceUploader() {
     widget && setCloudinaryWidget(widget);
   }, [cloudinaryWidget, setService]);
 
+  console.log(service.listingAssets);
+
   return (
     <>
-      {service.listingPhotos.length > 0 && (
+      {service.listingAssets.length > 0 && (
         <Button
           type="button"
           variant={"outline"}
@@ -68,7 +77,7 @@ function ServiceUploader() {
         </Button>
       )}
       <section className="profile-sheet scrollbar-none overflow-auto w-[600px] h-[250px] rounded border-dashed border-2 border-zinc-400 hover:border-zinc-500">
-        {service.listingPhotos.length > 0 ? (
+        {service.listingAssets.length > 0 ? (
           <>
             <Table>
               <TableHeader className="bg-gray-200">
@@ -82,26 +91,26 @@ function ServiceUploader() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {service.listingPhotos.map((photo, i) => (
+                {service.listingAssets.map((asset, i) => (
                   <>
                     <TableRow
                       className="text-xs text-zinc-500 font-medium hover:bg-zinc-100"
-                      key={photo.public_id}
+                      key={asset.public_id}
                     >
                       <TableCell key={i}>
                         <img
                           className="rounded max-h-full max-w-full object-contain"
-                          src={photo.thumbnail_url}
+                          src={asset.thumbnail_url}
                           alt="some image"
                           loading="lazy"
                         />
                       </TableCell>
-                      <TableCell>{photo.original_filename}</TableCell>
+                      <TableCell>{asset.original_filename}</TableCell>
                       <TableCell>
-                        {(photo.bytes / 1000).toFixed(2)} kb
+                        {(asset.bytes / 1000).toFixed(2)} kb
                       </TableCell>
                       <TableCell className="uppercase">
-                        {photo.format}
+                        {asset.format}
                       </TableCell>
                     </TableRow>
                   </>
@@ -129,73 +138,3 @@ function ServiceUploader() {
 }
 
 export default ServiceUploader;
-
-type TParamsProps = {
-  cloudName?: string;
-  uploadPreset?: string;
-  folder?: string;
-  cropping?: boolean;
-  resourceType?: string;
-  multiple?: boolean;
-};
-
-interface CloudinaryImageUploadResponse {
-  access_mode: string;
-  asset_id: string;
-  batchId: string;
-  bytes: number;
-  created_at: string;
-  etag: string;
-  folder: string;
-  format: string;
-  height: number;
-  id: string;
-  original_filename: string;
-  path: string;
-  placeholder: boolean;
-  public_id: string;
-  resource_type: string;
-  secure_url: string;
-  signature: string;
-  tags: string[];
-  thumbnail_url: string;
-  type: string;
-  url: string;
-  version: number;
-  version_id: string;
-  width: number;
-}
-
-interface CloudinaryUploadWidget {
-  open(): void;
-  close(): void;
-  destroy(): void;
-  setFolder(folder: string): void;
-  setUploadPreset(uploadPreset: string): void;
-  setMultiple(multiple: boolean): void;
-  setCropping(cropping: boolean): void;
-  setResultCallback(
-    callback: (
-      error: Error | null,
-      result: CloudinaryImageUploadResponse
-    ) => void
-  ): void;
-}
-
-type TResult = {
-  event: string;
-  info: CloudinaryImageUploadResponse;
-};
-
-type TFn = (err: unknown, res: TResult) => void;
-
-declare global {
-  interface Window {
-    cloudinary: {
-      createUploadWidget: (
-        { cloudName, uploadPreset, folder, cropping }: TParamsProps,
-        fn: TFn
-      ) => CloudinaryUploadWidget;
-    };
-  }
-}

@@ -1,12 +1,12 @@
 import Address from "./buttons/Address";
 import FunFact from "./buttons/FunFact";
-import School from "./buttons/School";
+import EducationalAttainment from "./buttons/EducationalAttainment";
 import Work from "./buttons/Work";
 
 function ProfileButtonGroup() {
   return (
     <>
-      <School />
+      <EducationalAttainment />
       <Work />
       <Address />
       <FunFact />

@@ -9,23 +9,20 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import { Separator } from "@/components/ui/separator";
-
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { auth } from "@/firebase config/config";
 import { CircleBackslashIcon } from "@radix-ui/react-icons";
-import { formatDistanceToNow, subDays } from "date-fns";
-import { useEffect, useState } from "react";
+import { compareAsc, formatDistanceToNow, subDays } from "date-fns";
+import { useEffect } from "react";
 import { formatValue } from "react-currency-input-field";
 import { Link, useNavigate, useOutletContext } from "react-router-dom";
+import AssetsDrawer from "@/partials/components/AssetsDrawer";
+import UpdateWishlist from "@/partials/components/UpdateWishlist";
+import MessageHost from "@/partials/components/messages/MessageHost";
+import VisitListingAccordion from "@/partials/components/VisitListingAccordion";
 
 function VisitListing() {
   const navigate = useNavigate();
@@ -37,9 +34,6 @@ function VisitListing() {
     // @ts-ignore
     userProfileData: { user },
   } = useOutletContext();
-  const [wishlist, setWishlist] = useState(false);
-
-  console.log(listing);
 
   useEffect(() => {
     document.title = "View Listing - IGotYou";
@@ -48,7 +42,7 @@ function VisitListing() {
   return (
     <>
       <section className="mx-auto w-5/6">
-        <div className="pt-6 w-full flex justify-between items-center">
+        <div className="flex w-full items-center justify-between pt-6">
           <span className="flex items-center gap-1 text-2xl font-semibold">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +50,7 @@ function VisitListing() {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="h-6 w-6"
             >
               <path
                 strokeLinecap="round"
@@ -64,88 +58,31 @@ function VisitListing() {
                 d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5l-3.9 19.5m-2.1-19.5l-3.9 19.5"
               />
             </svg>
-            {listing.serviceDescription}
+            {listing.serviceTitle}
           </span>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger
-                onClick={() => setWishlist((prev) => !prev)}
-                className="flex items-center justify-center gap-2 rounded-md"
-              >
-                {" "}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  className={`w-6 h-6 stroke-gray-500 hover:stroke-slate-600 cursor-pointer ${
-                    wishlist ? "fill-red-600" : "fill-none"
-                  }`}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                  />
-                </svg>
-                <span className="underline font-medium text-sm">Save</span>
-              </TooltipTrigger>
-              <TooltipContent className="bg-gray-950">
-                <p>Save to wishlist</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-        <div className="shadow-md border mt-4 grid grid-cols-2 gap-1 rounded-xl overflow-hidden h-72">
-          <img
-            src={listing.listingPhotos[0].secure_url}
-            className="object-cover max-h-full max-w-full h-full w-full"
-            loading="lazy"
-          />
-          <div className="grid grid-cols-2 gap-1 h-max">
-            {listing.listingPhotos.map(
-              (photo: TListingPhoto, i: number) =>
-                i != 0 && (
-                  <img
-                    key={photo._id}
-                    src={photo.secure_url}
-                    className="object-cover max-w-full h-36 w-full"
-                    loading="lazy"
-                  />
-                )
-            )}
+          <div className="flex items-center justify-center gap-2 p-2">
+            <p className="text-sm font-semibold underline">Save</p>
+            <UpdateWishlist listingID={listing._id} />
           </div>
         </div>
-        <div className="mt-6 w-full flex gap-4 mb-4">
-          <div className="flex flex-col gap-4 w-full">
+        <AssetsDrawer listing={listing} />
+        <div className="mb-4 mt-6 flex w-full gap-4">
+          <div className="flex w-full flex-col gap-2">
             <div className="flex flex-col gap-1">
-              <span className="text-lg font-semibold flex items-center gap-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-                  />
-                </svg>
-                {listing.serviceLocation}
+              <div className="w-4/5 overflow-hidden text-ellipsis whitespace-nowrap">
+                <span className="w-max text-xl font-semibold">
+                  {listing.serviceLocation}
+                </span>
+              </div>
+              <span className="w-max text-base font-semibold text-gray-600">
+                {listing.serviceDescription ?? "No description"}
               </span>
-              <span className="flex items-center font-semibold text-base underline underline-offset-2">
+              <span className="flex items-center gap-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="w-5 h-5"
+                  className="h-5 w-5"
                 >
                   <path
                     fillRule="evenodd"
@@ -153,9 +90,11 @@ function VisitListing() {
                     clipRule="evenodd"
                   />
                 </svg>
-                {listing.host.rating.length
-                  ? listing.host.rating
-                  : "No ratings yet "}
+                {listing.host.rating.length ? (
+                  listing.host.rating
+                ) : (
+                  <p className="text-lg font-semibold">No ratings yet</p>
+                )}
               </span>
               <div className="flex items-center">
                 <span>{listing.host.rating}</span>
@@ -163,34 +102,41 @@ function VisitListing() {
             </div>
             <Card className="border-0 shadow-none">
               <Separator />
-              <CardHeader className="flex-row gap-6 items-start w-max">
-                <Avatar className="w-12 h-12">
-                  <AvatarImage
-                    className="max-w-full object-cover"
-                    src={
-                      listing.host.photoUrl ??
-                      "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"
-                    }
-                  />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <span className="text-lg font-semibold">
-                    Hosted by {listing.host.username}
-                  </span>
-                  <span className="text-sm font-medium text-gray-600">
-                    {formatDistanceToNow(
-                      subDays(new Date(listing.host.subscriptionExpiresAt), 30)
-                    )}{" "}
-                    hosting
-                  </span>
+              <CardHeader className="w-full flex-row items-center justify-between">
+                <div className="flex w-max items-center justify-center gap-2">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage
+                      className="max-w-full object-cover"
+                      src={
+                        listing.host.photoUrl ??
+                        "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"
+                      }
+                    />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="text-lg font-semibold">
+                      Hosted by {listing.host.username}
+                    </span>
+                    <Badge variant={"outline"} className="w-max">
+                      {formatDistanceToNow(
+                        subDays(
+                          new Date(listing.host.subscriptionExpiresAt),
+                          30,
+                        ),
+                      )}{" "}
+                      of hosting
+                    </Badge>
+                  </div>
                 </div>
+                <MessageHost listing={listing} />
               </CardHeader>
               <Separator />
+              <VisitListingAccordion listing={listing} />
             </Card>
           </div>
-          <Card className="w-3/6 border-gray-300 shadow-xl">
-            <CardHeader>
+          <Card className="h-max w-3/6 border-gray-300 shadow-xl">
+            <CardHeader className="w-full flex-row justify-between">
               <CardTitle className="text-xl font-semibold">
                 {formatValue({
                   value: String(listing.price),
@@ -199,37 +145,57 @@ function VisitListing() {
                     currency: "php",
                   },
                 })}{" "}
-                <span className="uppercase text-sm">service</span>
+                <span className="text-sm uppercase">service</span>
               </CardTitle>
+              {listing.status === "Ended" && (
+                <Badge variant={"destructive"} className="w-max">
+                  Listing ended
+                </Badge>
+              )}
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 rounded-md border border-gray-400 w-full">
-                <div className="flex flex-col gap-1 p-2 border-r border-gray-400 ">
-                  <span className="text-xs uppercase font-bold">
+              <div className="grid w-full grid-cols-2 rounded-md border border-gray-400">
+                <div className="flex flex-col gap-1 border-r border-gray-400 p-2 ">
+                  <span className="text-xs font-bold uppercase">
                     Available at
                   </span>
-                  <span className="text-sm text-gray-600 font-bold">
+                  <span className="text-sm font-bold text-gray-600">
                     {new Date(listing.availableAt as Date).toDateString()}
                   </span>
                 </div>
-                <div className="p-2 flex flex-col gap-1">
-                  <span className="text-xs uppercase font-bold">Ends at</span>
-                  <span className="text-sm text-gray-600 font-bold">
+                <div className="flex flex-col gap-1 p-2">
+                  <span className="text-xs font-bold uppercase">Ends at</span>
+                  <span className="text-sm font-bold text-gray-600">
                     {new Date(listing.endsAt as Date).toDateString()}
                   </span>
                 </div>
               </div>
               {auth.currentUser?.emailVerified ? (
-                <Button className="mt-6 w-full p-6 bg-gray-950 text-sm font-semibold rounded-full">
+                <Button
+                  disabled={
+                    compareAsc(
+                      new Date().setHours(0, 0, 0, 0),
+                      new Date(listing.endsAt),
+                    ) >= 0
+                  }
+                  className="mt-6 w-full rounded-full bg-gray-950 p-6 text-sm font-semibold"
+                >
                   {user?.bookingRequests.find(
-                    (v: { listingID: string }) => v.listingID === listing._id
+                    (v: { listingID: string }) => v.listingID === listing._id,
                   ) ? (
                     <Link className="w-full" to="/bookings">
                       Check request status
                     </Link>
                   ) : (
                     <Link
-                      className="w-full"
+                      className={`w-full ${
+                        compareAsc(
+                          new Date().setHours(0, 0, 0, 0),
+                          new Date(listing.endsAt),
+                        ) >= 0
+                          ? "pointer-events-none"
+                          : ""
+                      } `}
                       to={`/listings/create-booking/${listing._id}`}
                     >
                       Continue
@@ -239,11 +205,11 @@ function VisitListing() {
               ) : (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button className="mt-6 w-full p-6 bg-gray-950 text-sm font-semibold rounded-full">
+                    <Button className="mt-6 w-full rounded-full bg-gray-950 p-6 text-sm font-semibold">
                       Continue
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent className="p-0 gap-0">
+                  <AlertDialogContent className="gap-0 p-0">
                     <AlertDialogHeader>
                       <div className="flex items-center gap-2 p-6">
                         <CircleBackslashIcon
@@ -251,7 +217,7 @@ function VisitListing() {
                           width={25}
                           height={25}
                         />
-                        <AlertDialogTitle className="font-semibold text-base">
+                        <AlertDialogTitle className="text-base font-semibold">
                           Oops! Your email isn't verified yet.
                         </AlertDialogTitle>
                       </div>
@@ -284,7 +250,7 @@ function VisitListing() {
                     </div>
                     <Separator />
                     <AlertDialogFooter className="p-4">
-                      <AlertDialogCancel className="font-medium text-sm rounded-full">
+                      <AlertDialogCancel className="rounded-full text-sm font-medium">
                         Close
                       </AlertDialogCancel>
                       <AlertDialogAction
@@ -292,10 +258,10 @@ function VisitListing() {
                           navigate(
                             `/users/show/${
                               auth.currentUser && auth.currentUser.uid
-                            }`
+                            }`,
                           )
                         }
-                        className="font-medium text-sm bg-gray-950 text-white rounded-full"
+                        className="rounded-full bg-gray-950 text-sm font-medium text-white"
                       >
                         Go to your profile
                       </AlertDialogAction>
@@ -310,12 +276,5 @@ function VisitListing() {
     </>
   );
 }
-
-type TListingPhoto = {
-  secure_url: string;
-  public_id: string;
-  _id: string;
-  original_filename: string;
-};
 
 export default VisitListing;

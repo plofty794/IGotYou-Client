@@ -18,8 +18,7 @@ import GraphicDesignAndVisualArts from "./pages/categories/GraphicDesignAndVisua
 import BecomeAHostOverview from "./pages/become a host/BecomeAHostOverview";
 import BecomeAHostLayout from "./root layouts/BecomeAHostLayout";
 import AboutYourService from "./pages/become a host/steps/AboutYourService";
-import Service from "./pages/become a host/Service";
-import ServiceDescription from "./pages/become a host/ServiceDescription";
+import ServiceType from "./pages/become a host/ServiceType";
 import MakeItStandOut from "./pages/become a host/steps/MakeItStandOut";
 import Price from "./pages/become a host/Price";
 import Success from "./pages/become a host/steps/Success";
@@ -53,7 +52,6 @@ import { SocketContextProvider } from "./context/SocketContext";
 import ListingsLayout from "./root layouts/ListingsLayout";
 import MakeABooking from "./pages/MakeABooking";
 import BookingsLayout from "./root layouts/BookingsLayout";
-import Bookings from "./pages/Bookings";
 import DigitalAudioServices from "./pages/categories/DigitalAudioServices";
 import PhotographyServices from "./pages/categories/PhotographyServices";
 import AnimationAnd3DModeling from "./pages/categories/AnimationAnd3DModeling";
@@ -67,8 +65,14 @@ import UpcomingReservations from "./partials/components/hosting/reservations/Upc
 import PreviousReservations from "./partials/components/hosting/reservations/PreviousReservations";
 import CancellationPolicy from "./pages/become a host/CancellationPolicy";
 import Listings from "./pages/Listings";
-import RenewListing from "./pages/host/listings/RenewListing";
 import EditListing from "./pages/host/listings/EditListing";
+import AllBookingRequests from "./pages/bookings/AllBookingRequests";
+import ApprovedBookingRequests from "./pages/bookings/ApprovedBookingRequests";
+import PendingBookingRequests from "./pages/bookings/PendingBookingRequests";
+import DeclinedBookingRequests from "./pages/bookings/DeclinedBookingRequests";
+import CancelledBookingRequests from "./pages/bookings/CancelledBookingRequests";
+import BookingRequest from "./pages/inbox/BookingRequest";
+import ServiceTitle from "./pages/become a host/ServiceTitle";
 
 function App() {
   const [User, setUser] = useState<User | null>();
@@ -226,20 +230,20 @@ function App() {
             }
           />
           <Route
-            path="service"
+            path="service-type"
             element={
               User ?? token ?? identifier ? (
-                <Service />
+                <ServiceType />
               ) : (
                 <Navigate to={"/login"} replace />
               )
             }
           />
           <Route
-            path="service-description"
+            path="service-title"
             element={
               User ?? token ?? identifier ? (
-                <ServiceDescription />
+                <ServiceTitle />
               ) : (
                 <Navigate to={"/login"} replace />
               )
@@ -319,14 +323,14 @@ function App() {
 
         {/* BOOKING Route */}
         <Route path="/listings" element={<ListingsLayout />}>
-          <Route path="show/:id" element={<VisitListing />} />
-          <Route path="create-booking/:id" element={<MakeABooking />} />
+          <Route path="show/:listingID" element={<VisitListing />} />
+          <Route path="create-booking/:listingID" element={<MakeABooking />} />
         </Route>
 
         {/* MESSAGES Route */}
         <Route path="/messages" element={<MessagesLayout />}>
           <Route
-            path="conversation/:conversationId"
+            path="conversation/:conversationID"
             element={
               User ?? token ?? identifier ? (
                 <Messages />
@@ -339,7 +343,11 @@ function App() {
 
         {/* BOOKINGS Route */}
         <Route path="/bookings" element={<BookingsLayout />}>
-          <Route index element={<Bookings />} />
+          <Route path="all" element={<AllBookingRequests />} />
+          <Route path="approved" element={<ApprovedBookingRequests />} />
+          <Route path="pending" element={<PendingBookingRequests />} />
+          <Route path="declined" element={<DeclinedBookingRequests />} />
+          <Route path="cancelled" element={<CancelledBookingRequests />} />
         </Route>
 
         {/* HOSTING Route */}
@@ -358,9 +366,10 @@ function App() {
               element={<PreviousReservations />}
             />
           </Route>
-          <Route path="hosting-inbox" element={<Inbox />} />
+          <Route path="hosting-inbox" element={<Inbox />}>
+            <Route path="booking-request/:id" element={<BookingRequest />} />
+          </Route>
           <Route path="hosting-listings" element={<Listings />}>
-            <Route path="renew/:listingID" element={<RenewListing />} />
             <Route path="edit/:listingID" element={<EditListing />} />
           </Route>
           <Route path="hosting" element={<Hosting />} />
@@ -398,8 +407,8 @@ function App() {
           />
           <Route path="*" element={<PageNotFound />} />
         </Route>
-      </>
-    )
+      </>,
+    ),
   );
 
   return <RouterProvider router={router} />;

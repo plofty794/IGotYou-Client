@@ -2,13 +2,13 @@ import { axiosPrivateRoute } from "@/api/axiosRoute";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-function useAddToWishlist() {
+function useUpdateWishlist() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   return useMutation({
     mutationFn: async (listingID: string) => {
       return await axiosPrivateRoute.post(
-        "/api/users/current-user/add-listing-wishlist",
+        "/api/users/current-user/update-wishlist",
         {
           listingID,
         }
@@ -33,4 +33,4 @@ function useAddToWishlist() {
   });
 }
 
-export default useAddToWishlist;
+export default useUpdateWishlist;

@@ -20,7 +20,7 @@ function useRenewListing() {
     },
     onSuccess(data) {
       toast({
-        title: "Success!",
+        title: "Success! 🎉",
         description: data.data.message + ".",
         className: "bg-white",
       });

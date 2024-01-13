@@ -252,10 +252,7 @@ function SubscriptionLayout() {
                   Back
                 </Button>
                 <Button
-                  disabled={
-                    paymentProof.public_id == null &&
-                    paymentProof.secure_url == null
-                  }
+                  disabled={!paymentProof.public_id}
                   type="button"
                   onClick={() => next()}
                   className="rounded-full p-6 font-medium text-lg w-max bg-gray-950"

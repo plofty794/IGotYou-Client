@@ -33,25 +33,53 @@ import RenewListingDialog from "./partials/RenewListingDialog";
 import DisableListingDialog from "./partials/DisableListingDialog";
 import { differenceInDays } from "date-fns";
 import EnableListing from "./partials/EnableListing";
+import { Cloudinary } from "@cloudinary/url-gen/index";
+import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: "dop5kqpod",
+  },
+});
 
 const columns: ColumnDef<TListings>[] = [
   {
     header: "Name",
-    accessorKey: "serviceDescription",
+    accessorKey: "serviceTitle",
     cell: (props) => (
-      <p className="font-semibold w-max">{props.getValue() as string}</p>
+      <p className="w-max font-semibold">{props.getValue() as string}</p>
     ),
   },
   {
-    id: "listingPhoto",
+    id: "listingAssets",
     cell: ({ row }) => (
       <div className="w-22">
-        <img
-          className="h-10 w-full shadow object-cover rounded-md"
-          src={`${
-            (row.original.listingPhotos as TListingPhotos[])[0].secure_url
-          }`}
-        />
+        {row.original.listingAssets[0]?.resource_type === "video" ? (
+          <AdvancedImage
+            className="h-10 w-full rounded-md object-cover shadow"
+            cldImg={cld
+              .image(row.original.listingAssets[0]?.public_id)
+              .setAssetType("video")
+              .format("auto:image")}
+            plugins={[
+              lazyload(),
+              responsive({
+                steps: [800, 1000, 1400],
+              }),
+            ]}
+          />
+        ) : (
+          <AdvancedImage
+            cldImg={cld.image(row.original.listingAssets[0]?.public_id)}
+            plugins={[
+              lazyload(),
+              responsive({
+                steps: [800, 1000, 1400],
+              }),
+            ]}
+            className="h-10 w-full rounded-md object-cover shadow"
+          />
+        )}
       </div>
     ),
   },
@@ -60,7 +88,7 @@ const columns: ColumnDef<TListings>[] = [
     header: "Type",
     cell: (props) => (
       <ScrollArea className="w-28">
-        <p className="font-semibold text-xs w-max py-2">
+        <p className="w-max py-2 text-xs font-semibold">
           {props.getValue() as string}
         </p>
         <ScrollBar orientation="horizontal" />
@@ -82,7 +110,7 @@ const columns: ColumnDef<TListings>[] = [
       );
     },
     cell: (props) => (
-      <p className="font-semibold text-sm text-center">
+      <p className="text-center text-sm font-semibold">
         {formatValue({
           value: String(props.getValue()),
           intlConfig: {
@@ -98,7 +126,7 @@ const columns: ColumnDef<TListings>[] = [
     header: "Location",
     cell: (props) => (
       <ScrollArea className="w-36 py-2">
-        <p className="text-xs font-semibold w-max">
+        <p className="w-max text-xs font-semibold">
           {props.getValue() as string}
         </p>
         <ScrollBar orientation="horizontal" />
@@ -109,7 +137,7 @@ const columns: ColumnDef<TListings>[] = [
     accessorKey: "availableAt",
     header: "Available at",
     cell: (props) => (
-      <p className="font-semibold text-xs">
+      <p className="text-xs font-semibold">
         {new Date(props.getValue() as string).toDateString()}
       </p>
     ),
@@ -118,7 +146,7 @@ const columns: ColumnDef<TListings>[] = [
     accessorKey: "endsAt",
     header: "Ends at",
     cell: (props) => (
-      <p className="font-semibold text-xs">
+      <p className="text-xs font-semibold">
         {new Date(props.getValue() as string).toDateString()}
       </p>
     ),
@@ -127,7 +155,7 @@ const columns: ColumnDef<TListings>[] = [
     accessorKey: "createdAt",
     header: "Created",
     cell: (props) => (
-      <p className="font-semibold text-xs">
+      <p className="text-xs font-semibold">
         {new Date(props.getValue() as string).toDateString()}
       </p>
     ),
@@ -141,8 +169,8 @@ const columns: ColumnDef<TListings>[] = [
           props.getValue() === "Flexible"
             ? "text-green-600"
             : props.getValue() === "Moderate"
-            ? "text-amber-600"
-            : "text-red-600"
+              ? "text-amber-600"
+              : "text-red-600"
         }`}
       >
         {props.getValue() as string}
@@ -154,7 +182,7 @@ const columns: ColumnDef<TListings>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="font-medium p-2"
+          className="p-2 font-medium"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -185,12 +213,12 @@ const columns: ColumnDef<TListings>[] = [
               <DotsHorizontalIcon className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="py-1 px-0" align="end">
+          <DropdownMenuContent className="px-0 py-1" align="end">
             {row.original.status === "Ended" ? (
               <RenewListingDialog
                 listingDuration={differenceInDays(
                   new Date(row.original.endsAt),
-                  new Date(row.original.availableAt)
+                  new Date(row.original.availableAt),
                 )}
                 listingID={row.original._id}
               />
@@ -206,13 +234,9 @@ const columns: ColumnDef<TListings>[] = [
             <DropdownMenuItem className="p-0">
               <Button
                 variant={"ghost"}
-                className="w-full p-2 font-semibold text-sm text-gray-600"
+                className="w-full p-2 text-sm font-semibold text-gray-600"
               >
-                <Link
-                  reloadDocument
-                  replace
-                  to={`/hosting-listings/edit/${row.original._id}`}
-                >
+                <Link replace to={`/hosting-listings/edit/${row.original._id}`}>
                   Edit listing
                 </Link>
               </Button>
@@ -249,7 +273,7 @@ function ListingsTable({ data }: { data: TListings[] }) {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -268,7 +292,7 @@ function ListingsTable({ data }: { data: TListings[] }) {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -298,7 +322,8 @@ export type TListings = {
   createdAt: string;
   endsAt: string;
   host: THost;
-  listingPhotos: [TListingPhotos];
+  listingAssets: [TListingAssets];
+  listingPhotos: [TListingAssets];
   price: number;
   serviceDescription: string;
   serviceType: string;
@@ -309,11 +334,13 @@ export type TListings = {
   status: string;
 };
 
-type TListingPhotos = {
+type TListingAssets = {
   original_filename: string;
   public_id: string;
   secure_url: string;
   _id: string;
+  thumbnail_url: string;
+  resource_type: string;
 };
 
 type THost = {

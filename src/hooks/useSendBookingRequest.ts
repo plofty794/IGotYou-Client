@@ -11,6 +11,7 @@ type TBookingRequest = {
   requestedBookingDateStartsAt?: Date;
   requestedBookingDateEndsAt?: Date;
   message: string;
+  totalPrice: number;
 };
 
 function useSendBookingRequest() {
@@ -19,7 +20,7 @@ function useSendBookingRequest() {
   return useMutation({
     mutationFn: async (data: TBookingRequest) => {
       return await axiosPrivateRoute.post(
-        `/api/booking-requests/${data.listingID}`,
+        `/api/guest-send-booking-requests/${data.listingID}`,
         { ...data }
       );
     },
@@ -40,7 +41,7 @@ function useSendBookingRequest() {
       toast({
         variant: "destructive",
         title: "Oops! An error occurred.",
-        description: response.data.message,
+        description: response.data.error,
       });
     },
   });

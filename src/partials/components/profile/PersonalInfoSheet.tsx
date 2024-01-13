@@ -71,27 +71,25 @@ function PersonalInfoSheet() {
           <Suspense fallback={<h1>Loading...</h1>}>
             <CollapsiblePhoneNumber data={data} />
           </Suspense>
-          <Separator />
           {!data?.data?.user.identityVerified && (
-            <Button className="bg-gray-950">
-              <Link
-                to={`/users/identity-verification/${data?.data?.user.uid}`}
-                reloadDocument
-              >
-                Verify your identity
-              </Link>
-            </Button>
+            <>
+              <Separator />
+              <Button className="bg-gray-950">
+                <Link
+                  className="w-full"
+                  to={`/users/identity-verification/${data?.data?.user.uid}`}
+                  reloadDocument
+                >
+                  Verify your identity
+                </Link>
+              </Button>
+            </>
           )}
-
           <Separator />
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button
-              size={"lg"}
-              className="bg-[#222222] font-semibold text-md mt-4 rounded-full"
-              type="submit"
-            >
+            <Button className="bg-gray-950 mt-4 rounded-full" type="submit">
               Close
             </Button>
           </SheetClose>

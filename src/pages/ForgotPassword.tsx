@@ -30,7 +30,7 @@ function ForgotPassword() {
   });
 
   useEffect(() => {
-    document.title = "IGotYou - Forgot Password";
+    document.title = "Forgot Password - IGotYou";
   }, []);
 
   function handleFormSubmit(data: EmailSchema) {

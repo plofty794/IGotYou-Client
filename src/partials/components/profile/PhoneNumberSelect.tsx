@@ -69,7 +69,7 @@ function PhoneNumberSelect({ mobilePhone, mobileVerified }: TMobilePhone) {
       <form onSubmit={handleSubmit(mobilePhoneSubmit)}>
         <div className="flex items-center gap-2 mb-2">
           {<Flag country={"PH"} className="w-9 h-9" />}
-          <Input autoFocus {...register("mobile_phone")} type="tel" />
+          <Input autoFocus inputMode="numeric" {...register("mobile_phone")} />
         </div>
         {errors.mobile_phone && (
           <ErrorMessage message={errors.mobile_phone?.message} />

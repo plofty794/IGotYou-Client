@@ -22,7 +22,7 @@ type TListings = {
   _id: string;
   serviceType: string[];
   serviceDescription: string;
-  listingPhotos: [
+  listingAssets: [
     {
       public_id: string;
       secure_url: string;
@@ -40,7 +40,7 @@ function Listings({ listings, username, listingsCount }: TListingProps) {
       <div className="w-full rounded-xl bg-white shadow-xl p-6 border">
         <div className="w-full flex justify-between items-center">
           <h2 className="mb-5 font-semibold text-xl text-[#222222]">
-            {username}'s services
+            {username}'s most recent listings
           </h2>
           {listingsCount > 0 && (
             <>
@@ -77,7 +77,7 @@ function Listings({ listings, username, listingsCount }: TListingProps) {
                   keyboard={true}
                   modules={[Navigation, Pagination, Mousewheel, Keyboard]}
                 >
-                  {listing.listingPhotos.map((photo) => (
+                  {listing.listingAssets.map((photo) => (
                     <SwiperSlide key={photo.public_id}>
                       <img
                         key={photo._id}

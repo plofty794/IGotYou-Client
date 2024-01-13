@@ -20,6 +20,7 @@ function Register() {
     formState: { errors },
     register,
   } = useForm<RegisterSchema>({
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
@@ -42,7 +43,7 @@ function Register() {
       <div className="flex flex-col gap-4">
         <form
           onSubmit={handleSubmit(handleRegister)}
-          className="flex flex-col gap-2 py-5 w-full mx-auto"
+          className="mx-auto flex w-full flex-col gap-2 py-5"
         >
           <Label className="font-semibold text-gray-600" htmlFor="email">
             Email
@@ -68,10 +69,10 @@ function Register() {
             {errors.password && (
               <ErrorMessage message={errors.password.message} />
             )}
-            <div className="absolute top-0 right-0 flex justify-between w-max">
+            <div className="absolute right-0 top-0 flex w-max justify-between">
               <Toggle
                 onPressedChange={(v) => setIsHidden(v)}
-                className="ml-auto rounded-full p-2 !bg-transparent"
+                className="ml-auto rounded-full !bg-transparent p-2"
                 tabIndex={-1}
               >
                 {isHidden ? (
@@ -81,7 +82,7 @@ function Register() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-5 h-5"
+                    className="h-5 w-5"
                   >
                     <path
                       strokeLinecap="round"
@@ -96,7 +97,7 @@ function Register() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-5 h-5"
+                    className="h-5 w-5"
                   >
                     <path
                       strokeLinecap="round"
@@ -129,10 +130,10 @@ function Register() {
             {errors.confirmPassword && (
               <ErrorMessage message={errors.confirmPassword.message} />
             )}
-            <div className="absolute top-0 right-0 flex justify-between w-max">
+            <div className="absolute right-0 top-0 flex w-max justify-between">
               <Toggle
                 onPressedChange={(v) => setIsHidden2(v)}
-                className="ml-auto rounded-full p-2 !bg-transparent"
+                className="ml-auto rounded-full !bg-transparent p-2"
                 tabIndex={-1}
               >
                 {isHidden2 ? (
@@ -142,7 +143,7 @@ function Register() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-5 h-5"
+                    className="h-5 w-5"
                   >
                     <path
                       strokeLinecap="round"
@@ -157,7 +158,7 @@ function Register() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-5 h-5"
+                    className="h-5 w-5"
                   >
                     <path
                       strokeLinecap="round"
@@ -182,7 +183,7 @@ function Register() {
                 !!errors.password?.message ||
                 !!errors.confirmPassword?.message
               }
-              className="bg-gray-950 mt-1 font-semibold rounded-full"
+              className="mt-1 rounded-full bg-gray-950 font-semibold"
             >
               {isPending ? (
                 <l-dot-pulse size="30" speed="1.3" color="white"></l-dot-pulse>

@@ -6,12 +6,15 @@ type TFileType = {
   public_id: string;
   secure_url: string;
   original_filename: string;
+  format: string;
+  thumbnail_url: string;
+  resource_type: string;
 };
 
 type TListing = {
   serviceType: string;
   serviceDescription?: string;
-  listingPhotos: TFileType[];
+  listingAssets: TFileType[];
 };
 
 function useUploadListing() {
@@ -23,10 +26,9 @@ function useUploadListing() {
         ...data,
       });
     },
-    onSuccess(data) {
+    onSuccess() {
       queryClient.invalidateQueries({ queryKey: ["profile", id], exact: true });
       queryClient.invalidateQueries({ queryKey: ["listings"] });
-      console.log(data.data);
     },
     onError(error) {
       console.error(error);
