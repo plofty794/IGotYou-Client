@@ -11,8 +11,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MdOutlineAddAPhoto } from "react-icons/md";
-import { TListing } from "@/root layouts/BecomeAHostLayout";
-import { CloudinaryUploadWidget } from "@/types/createUploadWidget";
+import { TFileType, TListing } from "@/root layouts/BecomeAHostLayout";
+import {
+  CloudinaryUploadWidget,
+  CloudinaryUploadResult,
+} from "@/types/createUploadWidget";
 
 type TSetServiceProps = {
   setService: Dispatch<React.SetStateAction<TListing>>;
@@ -36,9 +39,7 @@ function ServiceUploader() {
         resourceType: "auto",
         multiple: true,
       },
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      (_, result) => {
+      (_: unknown, result: CloudinaryUploadResult) => {
         if (result.event === "success") {
           console.log(result.info);
           setService((prev) => ({
@@ -46,14 +47,14 @@ function ServiceUploader() {
             listingAssets: [
               ...prev.listingAssets,
               {
-                public_id: result.info.public_id,
-                secure_url: result.info.secure_url,
-                original_filename: result.info.original_filename,
                 bytes: result.info.bytes,
-                thumbnail_url: result.info.thumbnail_url,
                 format: result.info.format,
+                original_filename: result.info.original_filename,
+                public_id: result.info.public_id,
                 resource_type: result.info.resource_type,
-              },
+                secure_url: result.info.secure_url,
+                thumbnail_url: result.info.thumbnail_url,
+              } as TFileType,
             ],
           }));
         }

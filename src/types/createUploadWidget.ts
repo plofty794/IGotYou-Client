@@ -9,12 +9,12 @@ export interface CloudinaryUploadWidget {
   setResultCallback(
     callback: (
       error: Error | null,
-      result: CloudinaryImageUploadResponse
-    ) => void
+      result: CloudinaryImageUploadResponse,
+    ) => void,
   ): void;
 }
 
-interface CloudinaryImageUploadResponse {
+export interface CloudinaryImageUploadResponse {
   access_mode: string;
   asset_id: string;
   batchId: string;
@@ -40,3 +40,26 @@ interface CloudinaryImageUploadResponse {
   version_id: string;
   width: number;
 }
+
+// Example usage:
+export type CloudinaryUploadResult = {
+  event: string;
+  info: {
+    height: number;
+    public_id: string;
+    secure_url: string;
+    signature: string;
+    tags: string[];
+    timestamp: string;
+    url: string;
+    version: number;
+    width: string;
+    original_filename: string;
+    bytes: number;
+    thumbnail_url: string;
+    format: string;
+    resource_type: string;
+  };
+  start: 1643038799;
+  state: "completed";
+};
