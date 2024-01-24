@@ -16,7 +16,7 @@ import { fadeIn, fadeOut } from "@cloudinary/url-gen/actions/effect";
 import { Cloudinary } from "@cloudinary/url-gen/index";
 import UpdateWishlist from "./UpdateWishlist";
 import { useState } from "react";
-import { TListing } from "@/root layouts/BecomeAHostLayout";
+import { TFileType, TListing } from "@/root layouts/BecomeAHostLayout";
 
 const cld = new Cloudinary({
   cloud: {
@@ -59,7 +59,7 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
           )}
           <div className="grid h-72 grid-cols-2 gap-1">
             {listing.listingAssets.map(
-              (asset: TListingAsset, i: number) =>
+              (asset: TFileType, i: number) =>
                 i != 0 &&
                 (asset.resource_type === "video" ? (
                   <AdvancedImage
@@ -104,7 +104,7 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
             </div>
           </DrawerHeader>
           <div className="flex w-full flex-col items-center justify-center gap-4 py-8">
-            {listing.listingAssets.map((asset: TListingAsset) =>
+            {listing.listingAssets.map((asset: TFileType) =>
               asset.resource_type === "video" ? (
                 <div
                   onClick={(e) => {
@@ -192,14 +192,5 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
     </Drawer>
   );
 }
-
-type TListingAsset = {
-  secure_url: string;
-  public_id: string;
-  _id: string;
-  original_filename: string;
-  resource_type: string;
-  thumbnail_url: string;
-};
 
 export default AssetsDrawer;

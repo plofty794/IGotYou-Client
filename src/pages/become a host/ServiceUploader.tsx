@@ -107,7 +107,7 @@ function ServiceUploader() {
                       </TableCell>
                       <TableCell>{asset.original_filename}</TableCell>
                       <TableCell>
-                        {(asset.bytes / 1000).toFixed(2)} kb
+                        {(asset.bytes! / 1000).toFixed(2)} kb
                       </TableCell>
                       <TableCell className="uppercase">
                         {asset.format}
