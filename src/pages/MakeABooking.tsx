@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import DatePicker from "@/partials/components/DatePicker";
-import { format, formatDistance } from "date-fns";
+import { compareAsc, differenceInDays, format, formatDistance } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { formatValue } from "react-currency-input-field";
 import { DateRange } from "react-day-picker";
@@ -49,15 +49,25 @@ function MakeABooking() {
   });
 
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(new Date().setHours(0, 0, 0, 0)),
-    to: new Date(new Date(listing.endsAt).setHours(0, 0, 0, 0)),
+    from:
+      compareAsc(
+        new Date().setHours(0, 0, 0, 0),
+        new Date(listing.availableAt),
+      ) > 0
+        ? new Date(new Date().setHours(0, 0, 0, 0))
+        : new Date(listing.availableAt),
+    to: new Date(listing.endsAt),
   });
 
-  const totalPrice = useMemo(
-    () =>
-      listing.price * parseInt(formatDistance(date?.to ?? 0, date?.from ?? 0)),
-    [date?.from, date?.to, listing.price],
-  );
+  const totalPrice = useMemo(() => {
+    if (listing.cancellationPolicy === "Non-refundable") {
+      const basePrice =
+        listing.price * differenceInDays(date?.to ?? 0, date?.from ?? 0);
+      return basePrice - (basePrice * 10) / 100;
+    } else {
+      return listing.price * differenceInDays(date?.to ?? 0, date?.from ?? 0);
+    }
+  }, [date?.from, date?.to, listing.cancellationPolicy, listing.price]);
 
   useEffect(() => {
     document.title = "Make A Request - IGotYou";
@@ -110,7 +120,9 @@ function MakeABooking() {
                     <span className="text-lg font-semibold">Dates</span>
                     <span
                       className={`${
-                        isNaN(totalPrice) ? "text-red-600" : "text-gray-600"
+                        date?.from == null || date?.to == null
+                          ? "text-red-600"
+                          : "text-gray-600"
                       } font-semibold`}
                     >
                       {date?.from ? (
@@ -146,7 +158,8 @@ function MakeABooking() {
                         <DatePicker
                           date={date}
                           setDate={setDate}
-                          listingEndsAt={listing.endsAt}
+                          endsAt={listing.endsAt}
+                          availableAt={listing.availableAt}
                         />
                       </div>
                     </DialogContent>
@@ -170,6 +183,7 @@ function MakeABooking() {
                   </Badge>
                 </div>
                 <Textarea
+                  spellCheck="true"
                   {...register("message")}
                   placeholder="Type your message here."
                   id="message"
@@ -225,17 +239,20 @@ function MakeABooking() {
                   </Badge>
                   <div className="mt-4 flex w-full items-center justify-between">
                     <Badge variant={"outline"}>Cancellation policy</Badge>
-                    <span
-                      className={`text-sm font-bold underline ${
+                    <Badge
+                      variant={"outline"}
+                      className={`font-bold ${
                         listing.cancellationPolicy === "Flexible"
                           ? "text-green-600"
                           : listing.cancellationPolicy === "Moderate"
                             ? "text-amber-600"
-                            : "text-red-600"
+                            : listing.cancellationPolicy === "Non-refundable"
+                              ? "text-red-600"
+                              : "text-red-800"
                       }`}
                     >
                       {listing.cancellationPolicy}
-                    </span>
+                    </Badge>
                   </div>
                 </div>
               </CardHeader>
@@ -245,7 +262,7 @@ function MakeABooking() {
                 <div className="mt-4 flex flex-col gap-2">
                   <div className="flex w-full items-center justify-between">
                     <span className="font-semibold text-gray-600">Price</span>
-                    <span className="font-semibold text-gray-600">
+                    <span className="font-semibold ">
                       {formatValue({
                         value: String(listing.price),
                         intlConfig: {
@@ -261,24 +278,80 @@ function MakeABooking() {
                         ? listing.price +
                           " x " +
                           formatDistance(date.from, date.to)
-                        : "No dates"}
+                        : date?.from == null || date?.to == null
+                          ? "Invalid dates"
+                          : "No dates"}
                     </span>
-                    <span className="font-semibold text-gray-600">
-                      {date?.from != null && date.to != null
-                        ? formatDistance(date?.to, date?.from)
-                        : "?"}
+                    <span className="font-semibold ">
+                      {listing.cancellationPolicy === "Non-refundable" ? (
+                        <>
+                          {date?.from != null &&
+                            date.to != null &&
+                            formatValue({
+                              value: String(
+                                Math.abs(
+                                  listing.price *
+                                    differenceInDays(
+                                      date?.from ?? 0,
+                                      date?.to ?? 0,
+                                    ),
+                                ),
+                              ),
+                              intlConfig: {
+                                locale: "ph",
+                                currency: "php",
+                              },
+                            })}
+                          {date?.from == null ||
+                            (date?.to == null && (
+                              <p className="text-base text-red-600">
+                                Pick 2 dates
+                              </p>
+                            ))}
+                        </>
+                      ) : (
+                        formatValue({
+                          value: String(totalPrice),
+                          intlConfig: {
+                            locale: "ph",
+                            currency: "php",
+                          },
+                        })
+                      )}
                     </span>
                   </div>
+                  {listing.cancellationPolicy === "Non-refundable" && (
+                    <div className="flex w-full items-center justify-between">
+                      <span className="text-sm font-semibold text-gray-600">
+                        Cancellation policy rules applied
+                      </span>
+                      <span className="font-semibold "> - 10%</span>
+                    </div>
+                  )}
                   <Separator />
                   <div className="flex w-full items-center justify-between">
                     <span className="text-lg font-semibold">Total</span>
                     <span className="font-semibold">
-                      {isNaN(totalPrice) ? (
+                      {date?.from == null || date.to == null ? (
                         <Badge variant={"destructive"}>
                           Invalid date range
                         </Badge>
+                      ) : listing.cancellationPolicy === "Non-refundable" ? (
+                        formatValue({
+                          value: String(totalPrice),
+                          intlConfig: {
+                            locale: "ph",
+                            currency: "php",
+                          },
+                        })
                       ) : (
-                        totalPrice
+                        formatValue({
+                          value: String(totalPrice),
+                          intlConfig: {
+                            locale: "ph",
+                            currency: "php",
+                          },
+                        })
                       )}
                     </span>
                   </div>

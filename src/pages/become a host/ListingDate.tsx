@@ -9,7 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Dispatch, useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
-import { addDays, format, parseISO } from "date-fns";
+import { compareAsc, format, parseISO } from "date-fns";
 import pickADate from "../../assets/pick-a-date.json";
 import Lottie from "lottie-react";
 import { useOutletContext } from "react-router-dom";
@@ -31,8 +31,8 @@ function ListingDate() {
   ]);
   const { setService } = useOutletContext<TSetServiceProps>();
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(new Date().setHours(0, 0, 0, 0)),
-    to: addDays(new Date().setHours(0, 0, 0, 0), 10),
+    from: undefined,
+    to: undefined,
   });
   const [isFadingIn, setIsFadingIn] = useState(true);
 
@@ -50,16 +50,16 @@ function ListingDate() {
 
   return (
     <ScrollArea
-      className={`w-full h-[450px] rounded-md border transition-opacity ${
+      className={`h-[450px] w-full rounded-md border transition-opacity ${
         isFadingIn ? "opacity-0" : "opacity-100"
       }`}
     >
-      <section className="h-[400px] flex flex-col items-center justify-center gap-4">
-        <Lottie loop={false} animationData={pickADate} className="w-52 h-52" />
-        <span className="text-center w-3/4 font-bold text-5xl">
+      <section className="flex h-[400px] flex-col items-center justify-center gap-4">
+        <Lottie loop={false} animationData={pickADate} className="h-52 w-52" />
+        <span className="w-3/4 text-center text-5xl font-bold">
           It's time to set the availability dates for your fantastic listing.
         </span>
-        <span className="text-gray-600 text-center w-2/4 font-semibold text-lg">
+        <span className="w-2/4 text-center text-lg font-semibold text-gray-600">
           Choose the start and end dates for when your listing will be
           available.
         </span>
@@ -74,8 +74,16 @@ function ListingDate() {
               {date?.from ? (
                 date.to ? (
                   <>
-                    {format(date.from, "LLL dd y")} -{" "}
-                    {format(date.to, "LLL dd y")}
+                    {compareAsc(date.from, date.to) === 0 ? (
+                      <span className="font-medium text-red-600">
+                        Invalid dates!
+                      </span>
+                    ) : (
+                      `${format(date.from, "LLL dd y")} - ${format(
+                        date.to,
+                        "LLL dd y",
+                      )}`
+                    )}
                   </>
                 ) : (
                   format(date.from, "LLL dd, y")
@@ -92,6 +100,17 @@ function ListingDate() {
               disabled={{
                 before: new Date(),
                 after: parseISO(userData?.data.user.subscriptionExpiresAt),
+              }}
+              modifiersStyles={{
+                range_start: {
+                  color: "white",
+                },
+                selected: {
+                  backgroundColor: "#222222",
+                },
+                range_middle: {
+                  backgroundColor: "gainsboro",
+                },
               }}
               fromYear={new Date().getFullYear()}
               defaultMonth={date?.from}

@@ -34,13 +34,22 @@ export function UserDropDownButton() {
         queryKey: ["conversation", conversationID],
       });
     });
+
+    socket?.on("booking-requestUpdate", () => {
+      queryClient.invalidateQueries({
+        queryKey: ["guest-notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["guest-booking-requests"],
+      });
+    });
   }, [queryClient, socket]);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          className="flex items-center justify-between w-max h-max gap-3 rounded-full bg-white border"
+          className="flex h-max w-max items-center justify-between gap-3 rounded-full border bg-white"
           variant="secondary"
         >
           <svg
@@ -49,7 +58,7 @@ export function UserDropDownButton() {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-5 h-5"
+            className="h-5 w-5"
           >
             <path
               strokeLinecap="round"
@@ -57,9 +66,9 @@ export function UserDropDownButton() {
               d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
             />
           </svg>
-          <div className="w-max relative">
+          <div className="relative w-max">
             <img
-              className="w-[30px] h-[30px] max-h-full max-w-full object-cover rounded-full"
+              className="h-[30px] max-h-full w-[30px] max-w-full rounded-full object-cover"
               src={
                 auth.currentUser?.photoURL ??
                 "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"
@@ -68,7 +77,7 @@ export function UserDropDownButton() {
               loading="lazy"
             />
             {data?.data.guestNotifications?.length > 0 && (
-              <span className="top-[-5px] left-5 absolute w-4 h-4 text-xs text-white rounded-full bg-[#FF385C] outline-white outline outline-1">
+              <span className="absolute left-5 top-[-5px] h-4 w-4 rounded-full bg-[#FF385C] text-xs text-white outline outline-1 outline-white">
                 {data?.data.guestNotifications?.length}
               </span>
             )}
@@ -89,9 +98,9 @@ export function UserDropDownButton() {
             >
               Messages
               {data?.data.guestNotifications.find(
-                (v: string) => v === "New-Message"
+                (v: string) => v === "New-Message",
               ) && (
-                <span className="absolute w-[5px] h-[5px] rounded-full bg-[#FF385C]"></span>
+                <span className="absolute h-[5px] w-[5px] rounded-full bg-[#FF385C]"></span>
               )}
             </Link>
           </DropdownMenuItem>
@@ -112,8 +121,13 @@ export function UserDropDownButton() {
             disabled={!auth.currentUser?.emailVerified}
             className="p-4 font-semibold text-gray-600"
           >
-            <Link to={"/bookings"} className="w-full" replace>
+            <Link to={"/bookings"} className="relative w-full" replace>
               Bookings
+              {data?.data.guestNotifications.find(
+                (v: string) => v === "Booking-Approved",
+              ) && (
+                <span className="absolute h-[5px] w-[5px] rounded-full bg-[#FF385C]"></span>
+              )}
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

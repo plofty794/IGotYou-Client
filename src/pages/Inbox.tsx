@@ -30,7 +30,7 @@ function Inbox() {
         {data?.pages.flatMap((page) =>
           page.data.bookingRequests.length > 0 ? (
             <>
-              <ScrollArea className="mt-2 h-[420px]">
+              <ScrollArea className="mt-2 h-max max-h-[484px]">
                 <div className="flex w-full flex-col gap-4">
                   {data?.pages.flatMap((page) =>
                     page.data.bookingRequests.map(

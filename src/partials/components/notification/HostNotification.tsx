@@ -45,6 +45,9 @@ function HostNotification() {
       queryClient.invalidateQueries({
         queryKey: ["host-booking-requests"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["host-notifications"],
+      });
     });
   }, [queryClient, socket]);
 
@@ -103,7 +106,7 @@ function HostNotification() {
               </span>
               {notifications?.length < 1 && (
                 <>
-                  <span className="m-2 mx-auto w-max p-4 text-xs font-bold ">
+                  <span className="m-2 mx-auto w-max p-4 text-sm font-bold text-gray-600">
                     No notifications
                   </span>
                 </>
@@ -112,7 +115,7 @@ function HostNotification() {
             {notifications?.length > 0 && (
               <>
                 <Separator />
-                <ScrollArea className="h-80">
+                <ScrollArea className="h-max max-h-80">
                   <div className="flex flex-col items-center">
                     {notifications?.map((v) => (
                       <>
@@ -130,10 +133,9 @@ function HostNotification() {
                                   .join(" ")}{" "}
                               </p>
                               <span className="text-xs font-semibold text-red-600">
-                                {formatDistanceToNow(
-                                  new Date(v.createdAt as string),
-                                  { addSuffix: true },
-                                )}
+                                {formatDistanceToNow(new Date(v.createdAt), {
+                                  addSuffix: true,
+                                })}
                               </span>
                             </div>
                             {!v.read && (

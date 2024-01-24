@@ -31,6 +31,7 @@ import { CircleBackslashIcon } from "@radix-ui/react-icons";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import HostingDropdownMenu from "@/partials/components/HostingDropdownMenu";
 import HostNotification from "@/partials/components/notification/HostNotification";
+import { compareAsc } from "date-fns";
 
 dotPulse.register();
 
@@ -365,7 +366,9 @@ function BecomeAHostLayout() {
                     type="button"
                     onClick={next}
                     disabled={
-                      service.date.from == null && service.date.to == null
+                      service.date.from == null ||
+                      service.date.to == null ||
+                      compareAsc(service.date.from, service.date.to) === 0
                     }
                     size={"lg"}
                     className="rounded-full bg-gray-950 p-6 text-lg font-semibold"
@@ -418,7 +421,9 @@ function BecomeAHostLayout() {
                     className="rounded-full bg-gray-950 p-6 text-lg font-semibold"
                   >
                     <Link
-                      to={`/manage-your-service/${data?.data.newListingID}/details`}
+                      to={`/hosting-listings/edit/${data?.data.newListingID}`}
+                      reloadDocument
+                      replace
                     >
                       Check your listing
                     </Link>

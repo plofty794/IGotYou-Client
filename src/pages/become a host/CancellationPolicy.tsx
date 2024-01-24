@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/hover-card";
 import { TListing } from "@/root layouts/BecomeAHostLayout";
 import { useOutletContext } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { differenceInDays } from "date-fns";
 
 type TSetServiceProps = {
   setService: Dispatch<React.SetStateAction<TListing>>;
@@ -15,7 +17,7 @@ type TSetServiceProps = {
 };
 
 function CancellationPolicy() {
-  const { setService } = useOutletContext<TSetServiceProps>();
+  const { setService, service } = useOutletContext<TSetServiceProps>();
   const [isFadingIn, setIsFadingIn] = useState(true);
   const [cancellationPolicy, setCancellationPolicy] = useState("");
 
@@ -29,16 +31,16 @@ function CancellationPolicy() {
   return (
     <>
       <ScrollArea
-        className={`w-full h-[450px] rounded-md border transition-opacity ${
+        className={`h-[450px] w-full rounded-md border transition-opacity ${
           isFadingIn ? "opacity-0" : "opacity-100"
         }`}
       >
         <section className="my-28 flex flex-col items-center justify-center gap-4">
-          <div className="text-center w-2/4">
+          <div className="w-2/4 text-center">
             <h1 className="text-4xl font-semibold">
               Pick a cancellation policy
             </h1>
-            <span className="text-gray-600 font-semibold">
+            <span className="font-semibold text-gray-600">
               Choose a policy that caters your service.
             </span>
           </div>
@@ -55,36 +57,32 @@ function CancellationPolicy() {
                     }));
                   }}
                   variant={"outline"}
-                  className={`p-10 text-lg font-semibold hover:outline-gray-950 hover:outline ${
+                  className={`p-10 text-lg font-semibold hover:outline hover:outline-gray-950 ${
                     cancellationPolicy === "Flexible" ? "outline" : ""
                   }`}
                 >
                   Flexible
                 </Button>
               </HoverCardTrigger>
-              <HoverCardContent className="flex flex-col p-0 w-2/5 mx-auto">
-                <ScrollArea className="h-44 p-4">
-                  <span className="font-bold text-green-600 uppercase">
-                    Flexible
-                  </span>
-                  <ul className="flex flex-col gap-2 list-disc px-4 py-2">
-                    <li className="text-sm font-medium text-gray-600">
-                      Users can cancel their booking and receive a full refund
-                      up to a certain period before the scheduled service start
-                      time.
-                    </li>
-                    <li className="text-sm font-medium text-gray-600">
-                      If a user cancels within a time frame before the service
-                      starts, they might receive a full refund and is usually
-                      more generous compared to other policies.
-                    </li>
-                  </ul>
-                </ScrollArea>
+              <HoverCardContent className="mx-auto flex w-full flex-col">
+                <span className="font-bold uppercase text-green-600">
+                  Flexible
+                </span>
+
+                <p className="mt-2 text-base font-semibold text-gray-600">
+                  Full refund 1 day prior to service.
+                </p>
               </HoverCardContent>
             </HoverCard>
             <HoverCard>
               <HoverCardTrigger asChild>
                 <Button
+                  disabled={
+                    differenceInDays(
+                      service.date.from!,
+                      new Date().setHours(0, 0, 0, 0),
+                    ) < 3
+                  }
                   type="button"
                   onClick={() => {
                     setCancellationPolicy("Moderate");
@@ -94,35 +92,39 @@ function CancellationPolicy() {
                     }));
                   }}
                   variant={"outline"}
-                  className={`p-10 text-lg font-semibold hover:outline-gray-950 hover:outline ${
+                  className={`p-10 text-lg font-semibold hover:outline hover:outline-gray-950 ${
                     cancellationPolicy === "Moderate" ? "outline" : ""
                   }`}
                 >
                   Moderate
                 </Button>
               </HoverCardTrigger>
-              <HoverCardContent className="flex flex-col p-0 w-2/4 mx-auto">
-                <ScrollArea className="h-44 p-4">
-                  <span className="font-bold text-amber-600 uppercase">
-                    Moderate
-                  </span>
-                  <ul className="flex flex-col gap-2 list-disc px-4 py-2">
-                    <li className="text-sm font-medium text-gray-600">
-                      This policy offers a moderate level of flexibility for
-                      cancellations.
-                    </li>
-                    <li className="text-sm font-medium text-gray-600">
-                      If a user cancels within a time frame before the service
-                      starts, they might receive a partial refund or no refund
-                      at all.
-                    </li>
-                  </ul>
-                </ScrollArea>
+              <HoverCardContent className="mx-auto flex w-full flex-col">
+                <span className="font-bold uppercase text-amber-600">
+                  Moderate
+                </span>
+                <p className="mt-2 text-base font-semibold text-gray-600">
+                  Full refund at least 3 days prior to service.
+                </p>
+                {differenceInDays(
+                  service.date.from!,
+                  new Date().setHours(0, 0, 0, 0),
+                ) < 3 && (
+                  <Badge variant={"destructive"} className="mt-2 w-max">
+                    Can be applied to listings at least 3 days before it starts.
+                  </Badge>
+                )}
               </HoverCardContent>
             </HoverCard>
             <HoverCard>
               <HoverCardTrigger asChild>
                 <Button
+                  disabled={
+                    differenceInDays(
+                      service.date.from!,
+                      new Date().setHours(0, 0, 0, 0),
+                    ) < 5
+                  }
                   onClick={() => {
                     setCancellationPolicy("Strict");
                     setService((prev) => ({
@@ -132,28 +134,64 @@ function CancellationPolicy() {
                   }}
                   type="button"
                   variant={"outline"}
-                  className={`p-10 text-lg font-semibold hover:outline-gray-950 hover:outline ${
+                  className={`p-10 text-lg font-semibold hover:outline hover:outline-gray-950 ${
                     cancellationPolicy === "Strict" ? "outline" : ""
                   }`}
                 >
                   Strict
                 </Button>
               </HoverCardTrigger>
-              <HoverCardContent className="flex flex-col p-0 w-2/4 mx-auto">
+              <HoverCardContent className="mx-auto flex w-2/5 flex-col p-0">
                 <ScrollArea className="h-max p-4">
-                  <span className="font-bold text-red-600 uppercase">
+                  <span className="font-bold uppercase text-red-800">
                     Strict
                   </span>
-                  <ul className="flex flex-col gap-2 list-disc px-4 py-2">
-                    <li className="text-sm font-medium text-gray-600">
-                      This is the least flexible cancellation policy.
-                    </li>
-                    <li className="text-sm font-medium text-gray-600">
-                      If a user cancels within a time frame before the service
-                      starts, they are unlikely to receive a refund or might
-                      receive only a partial refund.
-                    </li>
-                  </ul>
+                  <p className="mt-2 text-sm font-semibold text-gray-600">
+                    Full refund for cancellations made if the service date is at
+                    least 5 days away. 50% refund for cancellations made at
+                    least 3-5 days before service. No refunds for cancellations
+                    made within 3 days before service.
+                  </p>
+                  {differenceInDays(
+                    service.date.from!,
+                    new Date().setHours(0, 0, 0, 0),
+                  ) < 5 && (
+                    <Badge variant={"destructive"} className="mt-2 w-max">
+                      Can be applied to listings at least 5 days before it
+                      starts.
+                    </Badge>
+                  )}
+                </ScrollArea>
+              </HoverCardContent>
+            </HoverCard>
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <Button
+                  onClick={() => {
+                    setCancellationPolicy("Non-refundable");
+                    setService((prev) => ({
+                      ...prev,
+                      cancellationPolicy: "Non-refundable",
+                    }));
+                  }}
+                  type="button"
+                  variant={"outline"}
+                  className={`p-10 text-lg font-semibold hover:outline hover:outline-gray-950 ${
+                    cancellationPolicy === "Non-refundable" ? "outline" : ""
+                  }`}
+                >
+                  Non-refundable
+                </Button>
+              </HoverCardTrigger>
+              <HoverCardContent className="mx-auto flex w-3/4 flex-col p-0">
+                <ScrollArea className="h-max p-4">
+                  <span className="font-bold uppercase text-red-600">
+                    Non-refundable
+                  </span>
+                  <p className="mt-2 text-sm font-semibold text-gray-600">
+                    Guests pay 10% less, but you keep your payout no matter when
+                    they cancel.
+                  </p>
                 </ScrollArea>
               </HoverCardContent>
             </HoverCard>

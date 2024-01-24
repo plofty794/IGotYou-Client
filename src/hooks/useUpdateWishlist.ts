@@ -11,7 +11,7 @@ function useUpdateWishlist() {
         "/api/users/current-user/update-wishlist",
         {
           listingID,
-        }
+        },
       );
     },
     onSuccess() {
@@ -21,6 +21,7 @@ function useUpdateWishlist() {
         className: "bg-[#FFF]",
       });
       queryClient.invalidateQueries({ queryKey: ["wishlists"] });
+      queryClient.invalidateQueries({ queryKey: ["listings"] });
     },
     onError(error) {
       console.log(error);

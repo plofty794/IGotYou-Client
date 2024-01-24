@@ -22,11 +22,11 @@ const REASONS = [
   "negative reviews",
 ];
 
-function DeclineReasons() {
+function DeclineReasons({ isExpired }: { isExpired: boolean }) {
   const [declineReason, setDeclineReason] = useState("");
   return (
     <Dialog onOpenChange={(isOpen) => !isOpen && setDeclineReason("")}>
-      <DialogTrigger asChild>
+      <DialogTrigger disabled={isExpired} asChild>
         <Button className="rounded-full" variant={"destructive"}>
           Decline
         </Button>

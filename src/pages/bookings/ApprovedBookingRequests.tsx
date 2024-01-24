@@ -18,7 +18,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { compareAsc, differenceInDays, formatDistance } from "date-fns";
+import { differenceInDays, formatDistance } from "date-fns";
 import Lottie from "lottie-react";
 import { formatValue } from "react-currency-input-field";
 import noRequest from "../../assets/no-pending-payments.json";
@@ -35,7 +35,7 @@ function ApprovedBookingRequests() {
   }, []);
 
   return isPending ? (
-    <div className="flex items-center justify-center w-full h-[50vh]">
+    <div className="flex h-[50vh] w-full items-center justify-center">
       <l-jelly size="40" speed="0.9" color="black"></l-jelly>
     </div>
   ) : data?.pages.flatMap((page) => page.data.approvedBookingRequests).length ??
@@ -43,11 +43,11 @@ function ApprovedBookingRequests() {
     data?.pages.flatMap((page) =>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       page.data.approvedBookingRequests.map((v: any) => (
-        <Card className="w-full my-2" key={v._id}>
+        <Card className="my-2 w-full" key={v._id}>
           <CardHeader className="flex-row justify-between">
             <div className="flex items-center gap-2">
               <CardTitle className="m-0">
-                <Badge className="text-sm rounded-full">
+                <Badge className="rounded-full text-sm">
                   {v.hostID.username}
                 </Badge>
               </CardTitle>
@@ -60,7 +60,7 @@ function ApprovedBookingRequests() {
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="w-6 h-6"
+                      className="h-6 w-6"
                     >
                       <path
                         strokeLinecap="round"
@@ -76,13 +76,13 @@ function ApprovedBookingRequests() {
                       <DialogTitle className="text-lg font-semibold">
                         New Message
                       </DialogTitle>
-                      <div className="flex flex-col items-center justify-center gap-2 w-full">
-                        <div className="flex items-center justify-center gap-2 w-full">
+                      <div className="flex w-full flex-col items-center justify-center gap-2">
+                        <div className="flex w-full items-center justify-center gap-2">
                           <Label className="text-sm font-semibold text-gray-600">
                             To:{" "}
                           </Label>
-                          <div className="w-max mr-auto">
-                            <span className="p-2 text-sm focus-visible:ring-0 focus-visible:border-none border-none outline-none shadow-none font-semibold">
+                          <div className="mr-auto w-max">
+                            <span className="border-none p-2 text-sm font-semibold shadow-none outline-none focus-visible:border-none focus-visible:ring-0">
                               {v.hostID.username}
                             </span>
                           </div>
@@ -101,12 +101,12 @@ function ApprovedBookingRequests() {
               </CardDescription>
             </div>
             <Badge
-              className={`uppercase font-bold rounded-full ${
+              className={`rounded-full font-bold uppercase ${
                 v.status === "pending"
                   ? "text-amber-600"
                   : v.status === "approved"
-                  ? "text-green-600"
-                  : "text-red-600"
+                    ? "text-green-600"
+                    : "text-red-600"
               }`}
               variant={"outline"}
             >
@@ -114,23 +114,23 @@ function ApprovedBookingRequests() {
             </Badge>
           </CardHeader>
           <Separator />
-          <CardContent className="w-full flex justify-between py-4 px-6">
+          <CardContent className="flex w-full justify-between px-6 py-4">
             <div className="flex gap-2">
-              <div className="w-44 h-full overflow-hidden rounded-md">
+              <div className="h-full w-44 overflow-hidden rounded-md">
                 <img
                   src={v.listingID.listingAssets[0].secure_url}
                   alt="Image"
-                  className="object-cover w-full h-full hover:scale-110 transition-transform"
+                  className="h-full w-full object-cover transition-transform hover:scale-110"
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <span className="font-bold text-lg ">
+                <span className="text-lg font-bold ">
                   {v.listingID.serviceDescription}
                 </span>
-                <span className="font-semibold text-sm ">
+                <span className="text-sm font-semibold ">
                   {v.listingID.serviceType}
                 </span>
-                <span className="font-semibold text-sm">
+                <span className="text-sm font-semibold">
                   Requested date:{" "}
                   {new Date(v.requestedBookingDateStartsAt).toDateString()} -{" "}
                   {new Date(v.requestedBookingDateEndsAt).toDateString()}{" "}
@@ -151,25 +151,14 @@ function ApprovedBookingRequests() {
                       0,
                       0,
                       0,
-                      0
+                      0,
                     ),
-                    new Date(v.requestedBookingDateEndsAt).setHours(0, 0, 0, 0)
+                    new Date(v.requestedBookingDateEndsAt).setHours(0, 0, 0, 0),
                   )}
                 </Badge>
               </div>
             </div>
-            <div className="flex flex-col justify-between items-end gap-2">
-              {v.status === "pending" &&
-              compareAsc(
-                new Date(v.requestedBookingDateStartsAt),
-                new Date().setHours(0, 0, 0, 0)
-              ) < 0 ? (
-                <Badge variant={"destructive"}>Expired booking request</Badge>
-              ) : (
-                <Badge className="bg-green-600 hover:bg-green-500">
-                  Awaiting host approval
-                </Badge>
-              )}
+            <div className="flex flex-col items-end justify-between gap-2">
               <div className="flex flex-col">
                 <Badge variant={"secondary"} className="text-base font-bold">
                   Total:{" "}
@@ -177,8 +166,8 @@ function ApprovedBookingRequests() {
                     value: String(
                       differenceInDays(
                         new Date(v.requestedBookingDateEndsAt),
-                        new Date(v.requestedBookingDateStartsAt)
-                      ) * v.listingID.price
+                        new Date(v.requestedBookingDateStartsAt),
+                      ) * v.listingID.price,
                     ),
                     intlConfig: {
                       locale: "PH",
@@ -193,12 +182,12 @@ function ApprovedBookingRequests() {
             </div>
           </CardContent>
         </Card>
-      ))
+      )),
     )
   ) : (
-    <div className="h-[50vh] w-full flex flex-col items-center justify-center">
-      <Lottie animationData={noRequest} loop={false} className="w-36 h-36" />{" "}
-      <span className="text-gray-600 font-bold text-lg">
+    <div className="flex h-[50vh] w-full flex-col items-center justify-center">
+      <Lottie animationData={noRequest} loop={false} className="h-36 w-36" />{" "}
+      <span className="text-lg font-bold text-gray-600">
         No approved requests
       </span>
     </div>

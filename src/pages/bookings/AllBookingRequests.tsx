@@ -18,7 +18,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { compareAsc, differenceInDays, formatDistance } from "date-fns";
+import { compareAsc, formatDistance } from "date-fns";
 import Lottie from "lottie-react";
 import { formatValue } from "react-currency-input-field";
 import noRequest from "../../assets/no-pending-payments.json";
@@ -168,15 +168,21 @@ function AllBookingRequests() {
                       {new Date(v.requestedBookingDateStartsAt).toDateString()}{" "}
                       - {new Date(v.requestedBookingDateEndsAt).toDateString()}{" "}
                     </span>
-                    <span className="font-bold">
-                      {formatValue({
-                        value: v.listingID.price.toString(),
-                        intlConfig: {
-                          locale: "PH",
-                          currency: "php",
-                        },
-                      })}
-                    </span>
+                    <Badge
+                      variant={"outline"}
+                      className={`w-max font-bold ${
+                        v.listingID.cancellationPolicy === "Flexible"
+                          ? "text-green-600"
+                          : v.listingID.cancellationPolicy === "Moderate"
+                            ? "text-amber-600"
+                            : v.listingID.cancellationPolicy ===
+                                "Non-refundable"
+                              ? "text-red-600"
+                              : " text-red-800"
+                      }`}
+                    >
+                      {v.listingID.cancellationPolicy}
+                    </Badge>
                     <Badge className="w-max">
                       Duration{" "}
                       {formatDistance(
@@ -217,12 +223,7 @@ function AllBookingRequests() {
                     >
                       Total:{" "}
                       {formatValue({
-                        value: String(
-                          differenceInDays(
-                            new Date(v.requestedBookingDateEndsAt),
-                            new Date(v.requestedBookingDateStartsAt),
-                          ) * v.listingID.price,
-                        ),
+                        value: String(v.totalPrice),
                         intlConfig: {
                           locale: "PH",
                           currency: "php",

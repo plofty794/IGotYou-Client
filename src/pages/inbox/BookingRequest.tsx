@@ -8,17 +8,18 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import useGetBookingRequestDetails from "@/hooks/useGetBookingRequestDetails";
-import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { compareAsc, formatDistance } from "date-fns";
 import { formatValue } from "react-currency-input-field";
 import { Link } from "react-router-dom";
 import DeclineReasons from "./DeclineReasons";
+import GuestInformation, { TGuestID } from "./GuestInformation";
+import useSendBookingRequestUpdate from "@/hooks/useSendBookingRequestUpdate";
 
 function BookingRequest() {
   const { data, isPending } = useGetBookingRequestDetails();
+  const sendBookingRequestUpdate = useSendBookingRequestUpdate();
 
   return (
     <>
@@ -58,9 +59,13 @@ function BookingRequest() {
                 {data?.data.bookingRequest.guestID.username} wants to book{" "}
               </span>
               <div className="flex gap-1">
-                <span className="text-sm font-semibold underline">
-                  {data?.data.bookingRequest.listingID.serviceDescription}
-                </span>
+                <Link
+                  replace
+                  to={`/hosting-listings/edit/${data?.data.bookingRequest.listingID._id}`}
+                  className="text-sm font-semibold underline"
+                >
+                  {data?.data.bookingRequest.listingID.serviceTitle}
+                </Link>
                 <span className="text-sm font-semibold ">
                   for{" "}
                   {formatDistance(
@@ -85,113 +90,14 @@ function BookingRequest() {
             <div className="flex flex-col gap-2">
               <div className="p-2">
                 <h3 className="text-sm font-semibold uppercase">Message</h3>
-                <CardDescription className="text-sm font-semibold italic">
+                <CardDescription className="mt-2 text-sm font-semibold italic">
                   {data?.data.bookingRequest.message}
                 </CardDescription>
               </div>
               <div className="flex w-full items-end justify-between">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      className="border-black text-xs"
-                      variant={"outline"}
-                    >
-                      {data?.data.bookingRequest.guestID.username}'s information
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <Card className="w-max">
-                      <CardHeader className="p-4"></CardHeader>
-                      <CardContent className="flex flex-col gap-2">
-                        {data?.data.bookingRequest.guestID.emailVerified ? (
-                          <div className="flex w-max items-center justify-center gap-2">
-                            {" "}
-                            <CheckCircledIcon
-                              color="#FFF"
-                              width={22}
-                              height={22}
-                              className="inline-block rounded-full bg-green-600"
-                            />{" "}
-                            <p className="text-sm font-semibold text-gray-600">
-                              Email verified
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="flex w-max items-center justify-center gap-2">
-                            {" "}
-                            <CrossCircledIcon
-                              color="#FFF"
-                              width={22}
-                              height={22}
-                              className="inline-block rounded-full bg-red-600"
-                            />{" "}
-                            <p className="text-sm font-semibold text-gray-600">
-                              Email verified
-                            </p>
-                          </div>
-                        )}
-                        {data?.data.bookingRequest.guestID.identityVerified ? (
-                          <div className="flex w-max items-center justify-center gap-2">
-                            {" "}
-                            <CheckCircledIcon
-                              color="#FFF"
-                              width={22}
-                              height={22}
-                              className="inline-block rounded-full bg-green-600"
-                            />{" "}
-                            <p className="text-sm font-semibold text-gray-600">
-                              Identity verified
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="flex w-max items-center justify-center gap-2">
-                            {" "}
-                            <CrossCircledIcon
-                              color="#FFF"
-                              width={22}
-                              height={22}
-                              className="inline-block rounded-full bg-red-600"
-                            />{" "}
-                            <p className="text-sm font-semibold text-gray-600">
-                              Identity (not verified)
-                            </p>
-                          </div>
-                        )}
-                        {data?.data.bookingRequest.guestID.mobileVerified ? (
-                          <div className="flex w-max items-center justify-center gap-2">
-                            {" "}
-                            <CheckCircledIcon
-                              color="#FFF"
-                              width={22}
-                              height={22}
-                              className="inline-block rounded-full bg-green-600"
-                            />{" "}
-                            <p className="text-sm font-semibold text-gray-600">
-                              Mobile verified
-                            </p>
-                            <p className="text-sm font-semibold text-gray-600">
-                              {data?.data.bookingRequest.guestID.mobilePhone}
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="flex w-max items-center justify-center gap-2">
-                            {" "}
-                            <CrossCircledIcon
-                              color="#FFF"
-                              width={22}
-                              height={22}
-                              className="inline-block rounded-full bg-red-600"
-                            />{" "}
-                            <p className="text-sm font-semibold text-gray-600">
-                              Mobile (not verified)
-                            </p>
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </DialogContent>
-                </Dialog>
-
+                <GuestInformation
+                  guestID={data?.data.bookingRequest.guestID as TGuestID}
+                />
                 <div className="h-max w-max rounded-md border p-4 shadow-md">
                   <div className="flex items-center justify-between gap-2">
                     <CardDescription className="text-sm font-semibold text-black">
@@ -204,8 +110,20 @@ function BookingRequest() {
                       ),
                     ) > 0 ? (
                       <Badge variant={"destructive"}>Expired</Badge>
+                    ) : data?.data.bookingRequest.status !== "approved" ? (
+                      <Badge
+                        variant={"outline"}
+                        className="font-bold text-green-600"
+                      >
+                        Available
+                      </Badge>
                     ) : (
-                      <Badge>Available</Badge>
+                      <Badge
+                        variant={"outline"}
+                        className="font-bold text-green-600"
+                      >
+                        Approved
+                      </Badge>
                     )}
                   </div>
                   <CardDescription className="mt-2 font-medium">
@@ -221,16 +139,74 @@ function BookingRequest() {
               </div>
             </div>
           </CardContent>
-          <Separator />
-          <CardFooter className="justify-between gap-2 p-4">
-            <div className="flex items-center gap-2">
-              <Button className="rounded-full bg-gray-950">Accept</Button>
-              <DeclineReasons />
-            </div>
-            <Button variant={"link"}>
-              <Link to={"/"}>View profile</Link>
-            </Button>
-          </CardFooter>
+          {data?.data.bookingRequest.status !== "approved" && (
+            <>
+              <Separator />
+              <CardFooter className="justify-between gap-2 p-4">
+                <div className="flex items-center gap-2">
+                  <Button
+                    disabled={
+                      compareAsc(
+                        new Date().setHours(0, 0, 0, 0),
+                        new Date(
+                          data?.data.bookingRequest
+                            .requestedBookingDateStartsAt,
+                        ),
+                      ) > 0 || sendBookingRequestUpdate.isPending
+                    }
+                    onClick={() =>
+                      sendBookingRequestUpdate.mutate({
+                        bookingRequestID: data?.data.bookingRequest._id,
+                        receiverName:
+                          data?.data.bookingRequest.guestID.username,
+                      })
+                    }
+                    className="rounded-full bg-gray-950"
+                  >
+                    Accept
+                  </Button>
+                  <DeclineReasons
+                    isExpired={
+                      compareAsc(
+                        new Date().setHours(0, 0, 0, 0),
+                        new Date(
+                          data?.data.bookingRequest
+                            .requestedBookingDateStartsAt,
+                        ),
+                      ) > 0
+                    }
+                  />
+                </div>
+                <div className="flex items-center justify-center">
+                  <Button variant={"ghost"} className="rounded-full">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="h-6 w-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"
+                      />
+                    </svg>
+                  </Button>
+                  <Button variant={"link"}>
+                    <Link
+                      reloadDocument
+                      replace
+                      to={`/users/visit/${data?.data.bookingRequest.guestID._id}`}
+                    >
+                      View profile
+                    </Link>
+                  </Button>
+                </div>
+              </CardFooter>
+            </>
+          )}
         </Card>
       )}
     </>

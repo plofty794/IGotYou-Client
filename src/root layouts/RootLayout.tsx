@@ -8,7 +8,7 @@ import ListingsNavigation from "@/partials/components/ListingsNavigation";
 import useGetListings from "@/hooks/useGetListings";
 
 const AlertVerifyEmail = lazy(
-  () => import("@/partials/components/AlertVerifyEmail")
+  () => import("@/partials/components/AlertVerifyEmail"),
 );
 
 function RootLayout() {
@@ -19,22 +19,22 @@ function RootLayout() {
     <>
       {listings.status === "success" && auth.currentUser ? (
         <main className="min-h-screen">
-          <nav className="bg-white shadow py-5 px-20 flex justify-between items-center">
+          <nav className="flex items-center justify-between bg-white px-20 py-5 shadow">
             <Link to={"/"}>
-              <span className="w-full h-full">
+              <span className="h-full w-full">
                 <img
-                  className="object-cover w-[30px] max-h-full max-w-full"
+                  className="max-h-full w-[30px] max-w-full object-cover"
                   loading="lazy"
                   src="https://uploads.turbologo.com/uploads/icon/preview_image/2880304/draw_svg20200612-15006-1ioouzj.svg.png"
                   alt="logo"
                 />
               </span>
             </Link>
-            <span className="flex justify-center items-center gap-4">
+            <span className="flex items-center justify-center gap-4">
               {/* outline-1 outline outline-[#FF385C] hover:text-[#FF385C]  */}
               {auth.currentUser?.emailVerified ? (
                 <Button
-                  className="text-sm font-semibold hover:bg-zinc-100 rounded-full"
+                  className="rounded-full text-sm font-semibold hover:bg-zinc-100"
                   variant={"ghost"}
                 >
                   <Link to={"/hosting"} reloadDocument replace>

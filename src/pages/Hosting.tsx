@@ -1,34 +1,43 @@
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HostingTabs from "@/partials/components/hosting/HostingTabs";
+import { format } from "date-fns";
 import { useEffect } from "react";
-import { Link, Outlet, useNavigate, useOutletContext } from "react-router-dom";
+import { Link, Outlet, useLocation, useOutletContext } from "react-router-dom";
 
 function Hosting() {
-  const navigate = useNavigate();
+  const location = useLocation();
   const {
     userData: { user },
   } = useOutletContext<TUserData>();
 
   useEffect(() => {
     document.title = "Host Dashboard - IGotYou";
-
-    navigate("/hosting/current-reservations");
-  }, [navigate]);
+  }, []);
 
   return (
-    <section className="p-16 flex flex-col gap-14">
-      <h1 className="font-semibold text-3xl">Welcome back, {user.username}</h1>
+    <section className="flex flex-col gap-14 p-16">
+      <h1 className="text-3xl font-semibold">Welcome back, {user.username}</h1>
       <div className="w-full">
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <span className="text-xl font-medium">Your reservations</span>
-          <Button className="font-semibold bg-gray-950 rounded-full">
+          <Button className="rounded-full bg-gray-950 font-semibold">
             <Link to={"/hosting/reservations"}>All reservations</Link>
           </Button>
         </div>
         <HostingTabs />
-        <Card className="mt-4 py-4 border-none shadow-none bg-[#F5F5F5]">
-          {<Outlet />}
+        <Card className="mt-4 border-none bg-[#F5F5F5] py-4 shadow-none">
+          {location.pathname.includes("reservations") ? (
+            <Outlet />
+          ) : (
+            <CardContent className="mx-auto w-max p-8">
+              <CardHeader>
+                <CardTitle className="text-4xl font-bold">
+                  Today is, {format(new Date(), "iiii MMMM do")}.
+                </CardTitle>
+              </CardHeader>
+            </CardContent>
+          )}
         </Card>
       </div>
     </section>

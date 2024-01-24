@@ -16,7 +16,7 @@ function EnableListing({ listingID }: { listingID: string }) {
       <Button
         onClick={() => enableListing(listingID)}
         variant={"ghost"}
-        className="w-full p-2 font-semibold text-sm text-gray-600"
+        className="w-full p-2 text-sm font-semibold text-gray-600"
       >
         Enable listing
       </Button>

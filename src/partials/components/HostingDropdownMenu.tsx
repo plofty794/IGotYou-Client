@@ -7,14 +7,36 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SocketContextProvider } from "@/context/SocketContext";
 import { auth } from "@/firebase config/config";
+import useGetGuestNotifications from "@/hooks/useGetGuestNotifications";
+import { useQueryClient } from "@tanstack/react-query";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function HostingDropdownMenu() {
+  const { data } = useGetGuestNotifications();
+  const queryClient = useQueryClient();
+  const { socket } = useContext(SocketContextProvider);
+
+  useEffect(() => {
+    socket?.on("receive-message", (conversationID) => {
+      queryClient.invalidateQueries({
+        queryKey: ["guest-notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["conversations"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["conversation", conversationID],
+      });
+    });
+  }, [queryClient, socket]);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="border border-slate-300 rounded-full p-1">
+        <Avatar className="rounded-full border border-slate-300 p-1">
           <AvatarImage
             className="cursor-pointer rounded-full object-cover"
             src={
@@ -29,6 +51,16 @@ function HostingDropdownMenu() {
         <DropdownMenuGroup>
           <DropdownMenuItem className="p-4">Profile</DropdownMenuItem>
           <DropdownMenuItem className="p-4">Account</DropdownMenuItem>
+          <DropdownMenuItem className="p-4">
+            <Link to={"/messages"} className="relative w-full" replace>
+              Messages
+              {data?.data.guestNotifications.find(
+                (v: string) => v === "New-Message",
+              ) && (
+                <span className="absolute h-[5px] w-[5px] rounded-full bg-[#FF385C]"></span>
+              )}
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem className="p-4">
             <Link className="w-full" to={"/"} replace reloadDocument>
               Switch to Guest

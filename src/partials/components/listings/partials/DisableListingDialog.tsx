@@ -14,10 +14,10 @@ import useDisableListing from "@/hooks/useDisableListing";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 function DisableListingDialog({
-  serviceDescription,
+  serviceTitle,
   listingID,
 }: {
-  serviceDescription: string;
+  serviceTitle: string;
   listingID: string;
 }) {
   const { mutate } = useDisableListing();
@@ -37,26 +37,26 @@ function DisableListingDialog({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader className="gap-2">
-          <AlertDialogTitle className="flex items-center gap-2 font-semibold text-xl">
+          <AlertDialogTitle className="flex items-center gap-2 text-xl font-semibold">
             <ExclamationTriangleIcon className="h-6 w-6 text-red-500" />
             Disable listing
           </AlertDialogTitle>
-          <div className="flex items-center justify-center gap-2 p-4 border border-red-300 rounded-md bg-red-200">
-            <AlertDialogDescription className="font-bold text-sm text-gray-600">
+          <div className="flex items-center justify-center gap-2 rounded-md border border-red-300 bg-red-200 p-4">
+            <AlertDialogDescription className="text-sm font-bold text-gray-600">
               If you disable this listing, it will temporarily disappear from
               search results and won't be bookable.
             </AlertDialogDescription>
           </div>
           <div className="flex flex-col">
-            <p className="font-semibold text-sm text-gray-600">Listing name</p>
-            <p className="font-bold text-lg">{serviceDescription}</p>
+            <p className="text-sm font-semibold text-gray-600">Listing name</p>
+            <p className="text-lg font-bold">{serviceTitle}</p>
           </div>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => disableListing(listingID)}
-            className="bg-red-600 hover:bg-red-500 rounded-full"
+            className="rounded-full bg-red-600 hover:bg-red-500"
           >
             Disable
           </AlertDialogAction>

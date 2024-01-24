@@ -10,6 +10,7 @@ import EditListingDescriptionCollapsible from "./collapsibles/EditListingDescrip
 import ListingAssets from "./ListingAssets";
 import EditListingLocationCollapsible from "./collapsibles/EditListingLocationCollapsible";
 import EditListingPriceCollapsible from "./collapsibles/EditListingPriceCollapsible";
+import EditListingCancellationPolicy from "./collapsibles/EditListingCancellationPolicyCollapsible";
 
 type Listing = {
   listing: TListing;
@@ -28,7 +29,7 @@ function EditListing() {
       ) : (
         <div className="flex w-full flex-col gap-4">
           <div className="p-4 pt-6">
-            <div className="flex w-full items-center justify-between">
+            <div className="mb-4 flex w-full items-center justify-between">
               <h2 className="text-xl font-semibold">
                 {data?.data.listing.serviceTitle}'s Assets
               </h2>
@@ -79,6 +80,12 @@ function EditListing() {
                 <Separator />
                 <EditListingPriceCollapsible
                   price={data?.data.listing.price as number}
+                />
+                <Separator />
+                <EditListingCancellationPolicy
+                  cancellationPolicy={
+                    data?.data.listing.cancellationPolicy as string
+                  }
                 />
               </div>
             </Card>

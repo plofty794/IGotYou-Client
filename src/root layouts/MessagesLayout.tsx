@@ -25,7 +25,7 @@ import UserDropDownButton from "@/partials/components/UserDropDownButton";
 import { CheckIcon, CircleIcon } from "@radix-ui/react-icons";
 import { formatDistanceToNow } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
-import { Link, NavLink, Outlet, useParams } from "react-router-dom";
+import { NavLink, Outlet, useParams } from "react-router-dom";
 import { ping } from "ldrs";
 import Loader from "@/partials/loaders/Loader";
 import useSearchUser from "@/hooks/useSearchUser";
@@ -71,16 +71,36 @@ function MessagesLayout() {
         <>
           <main className="min-h-screen ">
             <nav className="mx-auto flex w-full max-w-screen-2xl items-center justify-between px-28 py-5 shadow 2xl:rounded-b-lg">
-              <Link to={"/"}>
-                <span>
-                  <img
-                    className="max-h-full w-[30px] max-w-full object-cover"
-                    loading="lazy"
-                    src="https://uploads.turbologo.com/uploads/icon/preview_image/2880304/draw_svg20200612-15006-1ioouzj.svg.png"
-                    alt="logo"
-                  />
-                </span>
-              </Link>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Button
+                      onClick={() => history.back()}
+                      variant={"ghost"}
+                      className="rounded-full"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="currentColor"
+                        className="h-5 w-5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+                        />
+                      </svg>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Go back</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
               <div className="flex items-center justify-center gap-4">
                 <UserDropDownButton />
               </div>

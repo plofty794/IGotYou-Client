@@ -47,6 +47,9 @@ const Home = lazy(() => import("./pages/Home"));
 const Wishlists = lazy(() => import("./pages/Wishlists"));
 const Inbox = lazy(() => import("./pages/Inbox"));
 const Messages = lazy(() => import("./pages/Messages"));
+const RootLayoutErrorBoundary = lazy(
+  () => import("./partials/components/RootLayoutErrorBoundary"),
+);
 
 import { SocketContextProvider } from "./context/SocketContext";
 import ListingsLayout from "./root layouts/ListingsLayout";
@@ -149,7 +152,10 @@ function App() {
         />
 
         {/* HOME & CATEGORIES Routes */}
-        <Route element={<RootLayout />}>
+        <Route
+          errorElement={<RootLayoutErrorBoundary />}
+          element={<RootLayout />}
+        >
           <Route
             index
             element={
@@ -200,6 +206,7 @@ function App() {
 
         {/* BECOME A HOST Routes */}
         <Route
+          errorElement={<RootLayoutErrorBoundary />}
           path="/become-a-host/:id"
           element={
             User ?? token ?? identifier ? (
@@ -328,7 +335,16 @@ function App() {
         </Route>
 
         {/* MESSAGES Route */}
-        <Route path="/messages" element={<MessagesLayout />}>
+        <Route
+          path="/messages"
+          element={
+            User ?? token ?? identifier ? (
+              <MessagesLayout />
+            ) : (
+              <Navigate replace to={"/login"} />
+            )
+          }
+        >
           <Route
             path="conversation/:conversationID"
             element={
@@ -342,7 +358,16 @@ function App() {
         </Route>
 
         {/* BOOKINGS Route */}
-        <Route path="/bookings" element={<BookingsLayout />}>
+        <Route
+          path="/bookings"
+          element={
+            User ?? token ?? identifier ? (
+              <BookingsLayout />
+            ) : (
+              <Navigate replace to={"/login"} />
+            )
+          }
+        >
           <Route path="all" element={<AllBookingRequests />} />
           <Route path="approved" element={<ApprovedBookingRequests />} />
           <Route path="pending" element={<PendingBookingRequests />} />
@@ -351,7 +376,11 @@ function App() {
         </Route>
 
         {/* HOSTING Route */}
-        <Route path="/" element={<HostingLayout />}>
+        <Route
+          errorElement={<RootLayoutErrorBoundary />}
+          path="/"
+          element={<HostingLayout />}
+        >
           <Route path="hosting" element={<Hosting />}>
             <Route
               path="current-reservations"

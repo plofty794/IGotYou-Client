@@ -27,7 +27,7 @@ function UpdateWishlist({ listingID }: { listingID: string }) {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
-            className={`w-7 h-7 stroke-gray-500 hover:stroke-slate-600 cursor-pointer ${
+            className={`h-7 w-7 cursor-pointer stroke-gray-500 hover:stroke-slate-600 ${
               wishlists.length > 0 && wishlists.find((v) => v._id === listingID)
                 ? "fill-red-600"
                 : "fill-none"

@@ -65,7 +65,7 @@ function ConfirmPayment() {
               </span>
             </p>
           </div>
-          <div className="relative w-3/4 overflow-hidden rounded-lg border border-dashed border-zinc-600  bg-[#222222d6]">
+          <div className="relative w-3/4 overflow-hidden rounded-lg border border-dashed border-zinc-600">
             {paymentProof?.secure_url && (
               <CrossCircledIcon
                 onClick={() => {
@@ -77,7 +77,7 @@ function ConfirmPayment() {
                     secure_url: "",
                   });
                 }}
-                className="absolute right-0 m-1 h-[25px] w-[25px] cursor-pointer text-zinc-300 hover:text-zinc-100"
+                className="absolute right-0 m-1 h-[25px] w-[25px] cursor-pointer rounded-full shadow-lg transition-transform hover:scale-110"
               />
             )}
             {paymentProof?.secure_url ? (

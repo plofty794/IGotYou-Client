@@ -5,33 +5,29 @@ import { useContext } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { AxiosError, AxiosResponse } from "axios";
 
-type TBookingRequest = {
-  listingID: string;
-  hostID: string;
-  requestedBookingDateStartsAt?: Date;
-  requestedBookingDateEndsAt?: Date;
-  message: string;
-  totalPrice: number;
-};
-
-function useSendBookingRequest() {
+function useSendBookingRequestUpdate() {
   const { toast } = useToast();
   const { socket } = useContext(SocketContextProvider);
   return useMutation({
-    mutationFn: async (data: TBookingRequest) => {
+    mutationFn: async (data: {
+      bookingRequestID: string;
+      receiverName: string;
+    }) => {
       return await axiosPrivateRoute.post(
-        `/api/guest-send-booking-request/${data.listingID}`,
-        { ...data },
+        `/api/host-send-booking-request-update/${data.bookingRequestID}`,
+        {
+          receiverName: data.receiverName,
+        },
       );
     },
     onSuccess(data) {
-      socket?.emit("send-bookingRequest", {
+      socket?.emit("send-bookingRequest-update", {
         newHostNotification: data.data.newHostNotification,
         receiverName: data.data.receiverName,
       });
       toast({
         title: "Success! 🎉",
-        description: "Booking request has been sent.",
+        description: "Booking request has been updated.",
         className: "bg-white",
       });
     },
@@ -47,4 +43,4 @@ function useSendBookingRequest() {
   });
 }
 
-export default useSendBookingRequest;
+export default useSendBookingRequestUpdate;

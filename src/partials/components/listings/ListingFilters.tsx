@@ -24,7 +24,7 @@ function ListingFilters({ table }: { table: Table<TListings> }) {
   const [statusFilter, setStatusFilter] = useState("");
   return (
     <>
-      <div className="py-4 flex items-center gap-4">
+      <div className="flex items-center gap-4 py-4">
         <div className="relative w-1/4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +32,7 @@ function ListingFilters({ table }: { table: Table<TListings> }) {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="w-5 h-5 absolute left-2 top-2"
+            className="absolute left-2 top-2 h-5 w-5"
           >
             <path
               strokeLinecap="round"
@@ -42,22 +42,21 @@ function ListingFilters({ table }: { table: Table<TListings> }) {
           </svg>
           <Input
             value={
-              (table
-                .getColumn("serviceDescription")
-                ?.getFilterValue() as string) ?? ""
+              (table.getColumn("serviceTitle")?.getFilterValue() as string) ??
+              ""
             }
             onChange={(event) =>
               table
-                .getColumn("serviceDescription")
+                .getColumn("serviceTitle")
                 ?.setFilterValue(event.target.value)
             }
             placeholder="Search listing name..."
-            className="font-medium rounded-full pl-9"
+            className="rounded-full pl-9 font-medium"
           />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="font-medium rounded-full">
+            <Button variant="outline" className="rounded-full font-medium">
               Cancellation policy <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -96,11 +95,23 @@ function ListingFilters({ table }: { table: Table<TListings> }) {
             >
               Strict
             </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={cancellationPolicyFilter === "Non-refundable"}
+              onClick={() => {
+                setCancellationPolicyFilter("Non-refundable");
+                table
+                  .getColumn("cancellationPolicy")
+                  ?.setFilterValue("Non-refundable");
+              }}
+              className="capitalize"
+            >
+              Non-refundable
+            </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="font-medium rounded-full">
+            <Button variant="outline" className="rounded-full font-medium">
               Status <ChevronDownIcon className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -116,6 +127,16 @@ function ListingFilters({ table }: { table: Table<TListings> }) {
               Active
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
+              checked={statusFilter === "Ended"}
+              onClick={() => {
+                setStatusFilter("Ended");
+                table.getColumn("status")?.setFilterValue("Ended");
+              }}
+              className="capitalize"
+            >
+              Ended
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
               checked={statusFilter === "Inactive"}
               onClick={() => {
                 setStatusFilter("Inactive");
@@ -126,14 +147,14 @@ function ListingFilters({ table }: { table: Table<TListings> }) {
               Inactive
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
-              checked={statusFilter === "Ended"}
+              checked={statusFilter === "Disabled"}
               onClick={() => {
-                setStatusFilter("Ended");
-                table.getColumn("status")?.setFilterValue("Ended");
+                setStatusFilter("Disabled");
+                table.getColumn("status")?.setFilterValue("Disabled");
               }}
               className="capitalize"
             >
-              Ended
+              Disabled
             </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -152,7 +173,7 @@ function ListingFilters({ table }: { table: Table<TListings> }) {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="w-5 h-5"
+            className="h-5 w-5"
           >
             <path
               strokeLinecap="round"

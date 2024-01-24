@@ -30,10 +30,10 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
   return (
     <Drawer onClose={() => setViewListing("")}>
       <DrawerTrigger>
-        <div className="mt-4 grid h-80 grid-cols-2 gap-1 overflow-hidden rounded-xl">
+        <div className="mt-4 grid h-72 grid-cols-2 gap-1 overflow-hidden rounded-xl">
           {listing.listingAssets[0].resource_type === "video" ? (
             <AdvancedImage
-              className="object-cover"
+              className="h-full w-full object-cover"
               cldImg={cld
                 .image(listing.listingAssets[0].public_id)
                 .setAssetType("video")
@@ -47,7 +47,7 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
             />
           ) : (
             <AdvancedImage
-              className="object-cover"
+              className="h-72 w-full object-cover"
               cldImg={cld.image(listing.listingAssets[0].public_id)}
               plugins={[
                 lazyload(),
@@ -57,14 +57,14 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
               ]}
             />
           )}
-          <div className="grid h-full grid-cols-2 gap-1">
+          <div className="grid h-72 grid-cols-2 gap-1">
             {listing.listingAssets.map(
               (asset: TListingAsset, i: number) =>
                 i != 0 &&
                 (asset.resource_type === "video" ? (
                   <AdvancedImage
                     key={asset._id}
-                    className="h-40 w-full object-cover"
+                    className="h-40 max-h-max w-full object-cover"
                     cldImg={cld
                       .image(asset.public_id)
                       .setAssetType("video")
@@ -78,7 +78,7 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
                   />
                 ) : (
                   <AdvancedImage
-                    className="h-40 w-full object-cover"
+                    className="h-40 max-h-max w-full object-cover"
                     cldImg={cld.image(asset.public_id)}
                     plugins={[
                       lazyload(),
