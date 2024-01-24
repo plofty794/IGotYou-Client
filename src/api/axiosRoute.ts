@@ -1,11 +1,11 @@
 import axios from "axios";
 
 export const axiosRoute = axios.create({
-  baseURL: "http://localhost:5030",
+  baseURL: "https://i-got-you-api.vercel.app",
 });
 
 export const axiosPrivateRoute = axios.create({
-  baseURL: "http://localhost:5030",
+  baseURL: "https://i-got-you-api.vercel.app",
   withCredentials: true,
   headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
 });
