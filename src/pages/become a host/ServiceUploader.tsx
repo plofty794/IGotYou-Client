@@ -57,7 +57,7 @@ function ServiceUploader() {
             ],
           }));
         }
-      }
+      },
     );
     widget && setCloudinaryWidget(widget);
   }, [cloudinaryWidget, setService]);
@@ -70,20 +70,20 @@ function ServiceUploader() {
         <Button
           type="button"
           variant={"outline"}
-          className="font-semibold text-lg mb-2"
+          className="mb-2 text-lg font-semibold"
           onClick={() => cloudinaryWidget?.open()}
         >
           <MdOutlineAddAPhoto />
         </Button>
       )}
-      <section className="profile-sheet scrollbar-none overflow-auto w-[600px] h-[250px] rounded border-dashed border-2 border-zinc-400 hover:border-zinc-500">
+      <section className="profile-sheet h-[250px] w-[600px] overflow-auto rounded border-2 border-dashed border-zinc-400 scrollbar-none hover:border-zinc-500">
         {service.listingAssets.length > 0 ? (
           <>
             <Table>
               <TableHeader className="bg-gray-200">
                 <TableRow className="uppercase">
                   <TableHead className="font-semibold">Preview</TableHead>
-                  <TableHead className="font-semibold w-[220px]">
+                  <TableHead className="w-[220px] font-semibold">
                     Name
                   </TableHead>
                   <TableHead className="font-semibold">Size</TableHead>
@@ -94,12 +94,12 @@ function ServiceUploader() {
                 {service.listingAssets.map((asset, i) => (
                   <>
                     <TableRow
-                      className="text-xs text-zinc-500 font-medium hover:bg-zinc-100"
+                      className="text-xs font-medium text-zinc-500 hover:bg-zinc-100"
                       key={asset.public_id}
                     >
                       <TableCell key={i}>
                         <img
-                          className="rounded max-h-full max-w-full object-contain"
+                          className="max-h-full max-w-full rounded object-contain"
                           src={asset.thumbnail_url}
                           alt="some image"
                           loading="lazy"
@@ -121,12 +121,12 @@ function ServiceUploader() {
         ) : (
           <>
             <Button
-              className="shadow-none text-4xl text-rose-400 bg-zinc-100 hover:bg-zinc-100 hover:text-rose-500 flex flex-col items-center justify-center w-full h-full"
+              className="flex h-full w-full flex-col items-center justify-center bg-zinc-100 text-4xl text-rose-400 shadow-none hover:bg-zinc-100 hover:text-rose-500"
               type="button"
               onClick={() => cloudinaryWidget?.open()}
             >
               <LiaCloudUploadAltSolid />
-              <span className="text-base font-semibold text-gray-600 w-[195px]">
+              <span className="w-[195px] text-base font-semibold text-gray-600">
                 Click to upload your works
               </span>
             </Button>

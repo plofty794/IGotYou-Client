@@ -43,7 +43,7 @@ export type TFileType = {
   thumbnail_url: string;
   resource_type: string;
   format: string;
-  _id: string;
+  _id?: string;
 };
 
 export type TListing = {
