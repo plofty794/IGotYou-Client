@@ -41,7 +41,6 @@ function ServiceUploader() {
       },
       (_: unknown, result: CloudinaryUploadResult) => {
         if (result.event === "success") {
-          console.log(result.info);
           setService((prev) => ({
             ...prev,
             listingAssets: [
