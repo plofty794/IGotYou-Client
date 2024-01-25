@@ -25,6 +25,7 @@ import noRequest from "../../assets/no-pending-payments.json";
 import useGetGuestPendingBookingRequests from "@/hooks/useGetGuestPendingBookingRequests";
 import { jelly } from "ldrs";
 import { useEffect } from "react";
+import CancelRequestDialog from "./components/CancelRequestDialog";
 jelly.register();
 
 function PendingBookingRequests() {
@@ -44,7 +45,7 @@ function PendingBookingRequests() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       page.data.pendingBookingRequests.map((v: any) => (
         <Card className="my-2 w-full" key={v._id}>
-          <CardHeader className="flex-row justify-between">
+          <CardHeader className="flex-row justify-between p-4">
             <div className="flex items-center gap-2">
               <CardTitle className="m-0">
                 <Badge className="rounded-full text-sm">
@@ -114,7 +115,7 @@ function PendingBookingRequests() {
             </Badge>
           </CardHeader>
           <Separator />
-          <CardContent className="flex w-full justify-between px-6 py-4">
+          <CardContent className="flex w-full justify-between p-4">
             <div className="flex gap-2">
               <div className="h-full w-44 overflow-hidden rounded-md">
                 <img
@@ -125,7 +126,7 @@ function PendingBookingRequests() {
               </div>
               <div className="flex flex-col gap-2">
                 <span className="text-lg font-bold ">
-                  {v.listingID.serviceDescription}
+                  {v.listingID.serviceTitle}
                 </span>
                 <span className="text-sm font-semibold ">
                   {v.listingID.serviceType}
@@ -147,7 +148,7 @@ function PendingBookingRequests() {
                           : " text-red-800"
                   }`}
                 >
-                  {v.listingID.cancellationPolicy}
+                  Cancellation policy - {v.listingID.cancellationPolicy}
                 </Badge>
                 <Badge className="w-max">
                   Duration{" "}
@@ -164,17 +165,6 @@ function PendingBookingRequests() {
               </div>
             </div>
             <div className="flex flex-col items-end justify-between gap-2">
-              {v.status === "pending" &&
-              compareAsc(
-                new Date(v.requestedBookingDateStartsAt),
-                new Date().setHours(0, 0, 0, 0),
-              ) < 0 ? (
-                <Badge variant={"destructive"}>Expired booking request</Badge>
-              ) : (
-                <Badge className="bg-green-600 hover:bg-green-500">
-                  Awaiting host approval
-                </Badge>
-              )}
               <div className="flex flex-col">
                 <Badge variant={"secondary"} className="text-base font-bold">
                   Total:{" "}
@@ -186,10 +176,19 @@ function PendingBookingRequests() {
                     },
                   })}
                 </Badge>
-                <Button className="p-0 text-red-600" variant={"link"}>
-                  Cancel request
-                </Button>
+                <CancelRequestDialog bookingRequestID={v._id as string} />
               </div>
+              {v.status === "pending" &&
+              compareAsc(
+                new Date(v.requestedBookingDateStartsAt),
+                new Date().setHours(0, 0, 0, 0),
+              ) < 0 ? (
+                <Badge variant={"destructive"}>Expired booking request</Badge>
+              ) : (
+                <Badge className="bg-green-600 hover:bg-green-500">
+                  Awaiting host approval
+                </Badge>
+              )}
             </div>
           </CardContent>
         </Card>

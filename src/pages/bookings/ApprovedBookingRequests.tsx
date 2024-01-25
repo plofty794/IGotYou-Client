@@ -44,7 +44,7 @@ function ApprovedBookingRequests() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       page.data.approvedBookingRequests.map((v: any) => (
         <Card className="my-2 w-full" key={v._id}>
-          <CardHeader className="flex-row justify-between">
+          <CardHeader className="flex-row justify-between p-4">
             <div className="flex items-center gap-2">
               <CardTitle className="m-0">
                 <Badge className="rounded-full text-sm">
@@ -114,7 +114,7 @@ function ApprovedBookingRequests() {
             </Badge>
           </CardHeader>
           <Separator />
-          <CardContent className="flex w-full justify-between px-6 py-4">
+          <CardContent className="flex w-full justify-between p-4">
             <div className="flex gap-2">
               <div className="h-full w-44 overflow-hidden rounded-md">
                 <img
@@ -125,7 +125,7 @@ function ApprovedBookingRequests() {
               </div>
               <div className="flex flex-col gap-2">
                 <span className="text-lg font-bold ">
-                  {v.listingID.serviceDescription}
+                  {v.listingID.serviceTitle}
                 </span>
                 <span className="text-sm font-semibold ">
                   {v.listingID.serviceType}
@@ -135,15 +135,20 @@ function ApprovedBookingRequests() {
                   {new Date(v.requestedBookingDateStartsAt).toDateString()} -{" "}
                   {new Date(v.requestedBookingDateEndsAt).toDateString()}{" "}
                 </span>
-                <span className="font-bold">
-                  {formatValue({
-                    value: v.listingID.price.toString(),
-                    intlConfig: {
-                      locale: "PH",
-                      currency: "php",
-                    },
-                  })}
-                </span>
+                <Badge
+                  variant={"outline"}
+                  className={`w-max font-bold ${
+                    v.listingID.cancellationPolicy === "Flexible"
+                      ? "text-green-600"
+                      : v.listingID.cancellationPolicy === "Moderate"
+                        ? "text-amber-600"
+                        : v.listingID.cancellationPolicy === "Non-refundable"
+                          ? "text-red-600"
+                          : " text-red-800"
+                  }`}
+                >
+                  Cancellation policy - {v.listingID.cancellationPolicy}
+                </Badge>
                 <Badge className="w-max">
                   Duration{" "}
                   {formatDistance(
@@ -159,26 +164,30 @@ function ApprovedBookingRequests() {
               </div>
             </div>
             <div className="flex flex-col items-end justify-between gap-2">
-              <div className="flex flex-col">
-                <Badge variant={"secondary"} className="text-base font-bold">
-                  Total:{" "}
-                  {formatValue({
-                    value: String(
-                      differenceInDays(
-                        new Date(v.requestedBookingDateEndsAt),
-                        new Date(v.requestedBookingDateStartsAt),
-                      ) * v.listingID.price,
-                    ),
-                    intlConfig: {
-                      locale: "PH",
-                      currency: "php",
-                    },
-                  })}
-                </Badge>
-                <Button className="p-0 text-red-600" variant={"link"}>
-                  Cancel request
-                </Button>
+              <div className="flex h-full flex-col items-end justify-between ">
+                <div className="flex flex-col">
+                  <Badge variant={"secondary"} className="text-base font-bold">
+                    Total:{" "}
+                    {formatValue({
+                      value: String(
+                        differenceInDays(
+                          new Date(v.requestedBookingDateEndsAt),
+                          new Date(v.requestedBookingDateStartsAt),
+                        ) * v.listingID.price,
+                      ),
+                      intlConfig: {
+                        locale: "PH",
+                        currency: "php",
+                      },
+                    })}
+                  </Badge>
+                </div>
               </div>
+              {v.status === "approved" && (
+                <Button size={"sm"} variant={"outline"}>
+                  View reservation details
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>

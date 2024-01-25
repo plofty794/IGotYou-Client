@@ -200,7 +200,7 @@ function MakeABooking() {
                     date.to == null ||
                     errors.message?.message != null ||
                     isPending ||
-                    isNaN(totalPrice)
+                    !totalPrice
                   }
                   className="ml-auto w-max rounded-full bg-gray-950 p-6 text-lg font-medium"
                 >
@@ -310,13 +310,23 @@ function MakeABooking() {
                             ))}
                         </>
                       ) : (
-                        formatValue({
-                          value: String(totalPrice),
-                          intlConfig: {
-                            locale: "ph",
-                            currency: "php",
-                          },
-                        })
+                        <>
+                          {date?.from != null &&
+                            date.to != null &&
+                            formatValue({
+                              value: String(totalPrice),
+                              intlConfig: {
+                                locale: "ph",
+                                currency: "php",
+                              },
+                            })}
+                          {date?.from == null ||
+                            (date?.to == null && (
+                              <p className="text-base text-red-600">
+                                Pick 2 dates
+                              </p>
+                            ))}
+                        </>
                       )}
                     </span>
                   </div>

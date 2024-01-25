@@ -22,14 +22,14 @@ function useLogin() {
         const { data } = await axiosPrivateRoute.post("/api/users/login", {
           ...variables,
         });
+        const token = await user.getIdToken();
+        dispatch({ type: "USER_LOGIN", payload: token });
         data.user.username &&
           toast({
             title: `Ahoy there, ${data.user.username}!`,
             description: "We're so glad to have you back. 👋",
             className: "font-medium bg-[#FFF] text-[#222222]",
           });
-        const token = await user.getIdToken();
-        dispatch({ type: "USER_LOGIN", payload: token });
       } catch (err) {
         const error = err as AxiosError;
         toast({

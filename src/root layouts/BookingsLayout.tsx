@@ -35,7 +35,7 @@ function BookingsLayout() {
           </div>
         </nav>
 
-        <div className="flex items-center justify-center gap-4 p-4 pb-2">
+        <div className="mx-auto flex w-max items-center justify-center gap-4 p-4 pb-2">
           <NavLink
             to={"/bookings/all"}
             className="rounded-full border px-4 py-2 text-sm font-semibold text-gray-600"
@@ -67,7 +67,6 @@ function BookingsLayout() {
             Cancelled
           </NavLink>
         </div>
-
         <ScrollArea className="mx-2 mt-6 h-[70vh] rounded-lg bg-[#F5F5F5] px-2">
           {<Outlet />}
         </ScrollArea>

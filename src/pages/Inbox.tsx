@@ -1,14 +1,24 @@
 import { Input } from "@/components/ui/input";
 import BookingRequestsFilter from "./inbox/BookingRequestsFilter";
-import { NavLink, Outlet, useParams } from "react-router-dom";
+import { NavLink, Navigate, Outlet, useParams } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect } from "react";
 import useGetHostBookingRequests from "@/hooks/useGetHostBookingRequests";
 import { formatDistanceToNow } from "date-fns";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useQueryClient } from "@tanstack/react-query";
 
 function Inbox() {
+  const queryClient = useQueryClient();
   const { id } = useParams();
   const { data } = useGetHostBookingRequests();
 
@@ -19,7 +29,38 @@ function Inbox() {
   return (
     <section className="flex gap-4 p-4">
       <div className="flex w-1/3 flex-col gap-2">
-        <h1 className="text-2xl font-bold"> Booking requests</h1>
+        <div className="flex w-full items-center justify-between">
+          <h1 className="text-2xl font-bold"> Booking requests</h1>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => {
+                    queryClient.invalidateQueries({
+                      queryKey: ["host-booking-requests"],
+                    });
+                    queryClient.invalidateQueries({
+                      queryKey: ["booking-request"],
+                      exact: false,
+                    });
+                    queryClient.invalidateQueries({
+                      queryKey: ["host-notifications"],
+                      exact: false,
+                    });
+                  }}
+                  size={"sm"}
+                  className="rounded-full"
+                  variant={"outline"}
+                >
+                  <ReloadIcon className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-xs font-medium">Reload requests</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
         <div className="flex w-full items-center justify-between gap-2">
           <Input
             placeholder="Search guest name..."
@@ -91,11 +132,14 @@ function Inbox() {
               <Separator />
             </>
           ) : (
-            <div className="p-4">
-              <p className="text-center text-lg font-semibold text-gray-600">
-                No booking requests.
-              </p>
-            </div>
+            <>
+              {<Navigate to={"/hosting-inbox"} replace />}
+              <div className="p-4">
+                <p className="text-center text-lg font-semibold text-gray-600">
+                  No booking requests.
+                </p>
+              </div>
+            </>
           ),
         )}
       </div>

@@ -41,12 +41,30 @@ function HostNotification() {
   }, [hostNotifications.data?.data.hostNotifications]);
 
   useEffect(() => {
-    socket?.on("send-hostNotification", () => {
+    socket?.on("send-booking-request-hostNotification", () => {
+      queryClient.invalidateQueries({
+        queryKey: ["host-notifications"],
+      });
       queryClient.invalidateQueries({
         queryKey: ["host-booking-requests"],
       });
       queryClient.invalidateQueries({
+        queryKey: ["booking-request"],
+        exact: false,
+        type: "active",
+      });
+    });
+
+    socket?.on("send-booking-cancelled-hostNotification", () => {
+      queryClient.invalidateQueries({
         queryKey: ["host-notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["host-booking-requests"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["booking-request"],
+        exact: false,
       });
     });
   }, [queryClient, socket]);
@@ -121,18 +139,18 @@ function HostNotification() {
                       <>
                         <Link
                           key={v._id}
-                          to="/hosting-inbox"
+                          to={`/hosting-inbox/booking-request/${v.data._id}`}
                           className="w-full p-4 hover:bg-[#F5F5F5]"
                         >
                           <div className="flex w-full items-center gap-2">
                             <div className="w-full">
-                              <p className="text-xs font-semibold text-gray-600">
+                              <p className="text-xs font-bold text-gray-600">
                                 {v.senderID.username} has sent you a{" "}
                                 {(v.notificationType as string)
                                   .split("-")
                                   .join(" ")}{" "}
                               </p>
-                              <span className="text-xs font-semibold text-red-600">
+                              <span className="text-xs font-bold text-red-600">
                                 {formatDistanceToNow(new Date(v.createdAt), {
                                   addSuffix: true,
                                 })}

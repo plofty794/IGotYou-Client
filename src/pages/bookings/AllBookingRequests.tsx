@@ -18,7 +18,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { compareAsc, formatDistance } from "date-fns";
+import { compareAsc, differenceInDays, formatDistance } from "date-fns";
 import Lottie from "lottie-react";
 import { formatValue } from "react-currency-input-field";
 import noRequest from "../../assets/no-pending-payments.json";
@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input";
 import useSearchGuestBookingRequests from "@/hooks/useSearchGuestBookingRequests";
 import SearchResults from "./SearchResults";
 import { useQueryClient } from "@tanstack/react-query";
+import CancelRequestDialog from "./components/CancelRequestDialog";
 jelly.register();
 
 function AllBookingRequests() {
@@ -55,7 +56,7 @@ function AllBookingRequests() {
       <span className="relative">
         <Input
           autoFocus
-          className="sticky top-2 mx-auto mt-4 w-1/3 bg-white shadow-xl focus-visible:ring-0"
+          className="sticky top-2 mx-auto mt-4 w-1/3 bg-white font-medium shadow-xl focus-visible:ring-0"
           value={search}
           placeholder="You can search by Service name or Host name"
           onChange={(e) => setSearch(e.target.value)}
@@ -75,7 +76,7 @@ function AllBookingRequests() {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           page.data.bookingRequests.map((v: any) => (
             <Card className="my-2 w-full" key={v._id}>
-              <CardHeader className="flex-row justify-between">
+              <CardHeader className="flex-row justify-between p-4">
                 <div className="flex items-center gap-2">
                   <CardTitle className="m-0">
                     <Badge className="rounded-full text-sm">
@@ -139,7 +140,9 @@ function AllBookingRequests() {
                       ? "text-amber-600"
                       : v.status === "approved"
                         ? "text-green-600"
-                        : "text-red-600"
+                        : v.status === "cancelled"
+                          ? "text-red-600"
+                          : "text-red-800"
                   }`}
                   variant={"outline"}
                 >
@@ -147,7 +150,7 @@ function AllBookingRequests() {
                 </Badge>
               </CardHeader>
               <Separator />
-              <CardContent className="flex w-full justify-between px-6 py-4">
+              <CardContent className="flex w-full justify-between p-4">
                 <div className="flex gap-2">
                   <div className="h-full w-44 overflow-hidden rounded-md">
                     <img
@@ -158,7 +161,7 @@ function AllBookingRequests() {
                   </div>
                   <div className="flex flex-col gap-2">
                     <span className="text-lg font-bold ">
-                      {v.listingID.serviceDescription}
+                      {v.listingID.serviceTitle}
                     </span>
                     <span className="text-sm font-semibold ">
                       {v.listingID.serviceType}
@@ -181,7 +184,7 @@ function AllBookingRequests() {
                               : " text-red-800"
                       }`}
                     >
-                      {v.listingID.cancellationPolicy}
+                      Cancellation policy - {v.listingID.cancellationPolicy}
                     </Badge>
                     <Badge className="w-max">
                       Duration{" "}
@@ -203,37 +206,63 @@ function AllBookingRequests() {
                   </div>
                 </div>
                 <div className="flex flex-col items-end justify-between gap-2">
-                  {v.status === "pending" &&
-                  compareAsc(
-                    new Date(v.requestedBookingDateStartsAt),
-                    new Date().setHours(0, 0, 0, 0),
-                  ) < 0 ? (
-                    <Badge variant={"destructive"}>
-                      Expired booking request
-                    </Badge>
-                  ) : (
-                    <Badge className="bg-green-600 hover:bg-green-500">
-                      Awaiting host approval
-                    </Badge>
-                  )}
-                  <div className="flex flex-col">
-                    <Badge
-                      variant={"secondary"}
-                      className="text-base font-bold"
-                    >
-                      Total:{" "}
-                      {formatValue({
-                        value: String(v.totalPrice),
-                        intlConfig: {
-                          locale: "PH",
-                          currency: "php",
-                        },
-                      })}
-                    </Badge>
-                    <Button className="p-0 text-red-600" variant={"link"}>
-                      Cancel request
-                    </Button>
+                  <div className="flex h-full flex-col items-end justify-between">
+                    <div className="flex flex-col">
+                      <Badge
+                        variant={"secondary"}
+                        className="w-max text-base font-bold"
+                      >
+                        Total:{" "}
+                        {formatValue({
+                          value: String(
+                            differenceInDays(
+                              new Date(v.requestedBookingDateEndsAt),
+                              new Date(v.requestedBookingDateStartsAt),
+                            ) * v.listingID.price,
+                          ),
+                          intlConfig: {
+                            locale: "PH",
+                            currency: "php",
+                          },
+                        })}
+                      </Badge>
+                      {v.status === "pending" && (
+                        <CancelRequestDialog
+                          bookingRequestID={v._id as string}
+                        />
+                      )}
+                    </div>
+                    {v.status === "pending" &&
+                      compareAsc(
+                        new Date(v.requestedBookingDateEndsAt),
+                        new Date().setHours(0, 0, 0, 0),
+                      ) >= 0 && (
+                        <Badge className="bg-green-600 hover:bg-green-500">
+                          Awaiting host approval
+                        </Badge>
+                      )}
+                    {v.status === "pending" &&
+                      compareAsc(
+                        new Date().setHours(0, 0, 0, 0),
+                        new Date(v.requestedBookingDateEndsAt),
+                      ) > 0 && <Badge variant={"destructive"}>Expired</Badge>}
+                    {v.status === "approved" && (
+                      <Button size={"sm"} variant={"outline"}>
+                        View reservation details
+                      </Button>
+                    )}
                   </div>
+                  {v.status === "cancelled" && (
+                    <>
+                      <Button variant={"outline"}>Request again</Button>
+                      <Badge className="w-max" variant={"destructive"}>
+                        Cancellation Reason -
+                        <span className="ml-1 capitalize">
+                          {v.guestCancelReasons}
+                        </span>
+                      </Badge>
+                    </>
+                  )}
                 </div>
               </CardContent>
             </Card>

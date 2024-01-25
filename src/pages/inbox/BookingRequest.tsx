@@ -152,7 +152,9 @@ function BookingRequest() {
                           data?.data.bookingRequest
                             .requestedBookingDateStartsAt,
                         ),
-                      ) > 0 || sendBookingRequestUpdate.isPending
+                      ) > 0 ||
+                      sendBookingRequestUpdate.isPending ||
+                      data?.data.bookingRequest.status === "cancelled"
                     }
                     onClick={() =>
                       sendBookingRequestUpdate.mutate({
@@ -166,6 +168,9 @@ function BookingRequest() {
                     Accept
                   </Button>
                   <DeclineReasons
+                    isCancelled={
+                      data?.data.bookingRequest.status === "cancelled"
+                    }
                     isExpired={
                       compareAsc(
                         new Date().setHours(0, 0, 0, 0),
