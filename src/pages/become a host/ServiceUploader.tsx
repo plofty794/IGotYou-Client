@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { MdOutlineAddAPhoto } from "react-icons/md";
 import { TFileType, TListing } from "@/root layouts/BecomeAHostLayout";
 import {
   CloudinaryUploadWidget,
@@ -62,18 +61,30 @@ function ServiceUploader() {
     widget && setCloudinaryWidget(widget);
   }, [cloudinaryWidget, setService]);
 
-  console.log(service.listingAssets);
-
   return (
     <>
       {service.listingAssets.length > 0 && (
         <Button
           type="button"
           variant={"outline"}
-          className="mb-2 text-lg font-semibold"
+          className="mb-2 gap-2"
           onClick={() => cloudinaryWidget?.open()}
         >
-          <MdOutlineAddAPhoto />
+          Add more
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="h-6 w-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 10.5v6m3-3H9m4.06-7.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"
+            />
+          </svg>
         </Button>
       )}
       <section className="profile-sheet h-[250px] w-[600px] overflow-auto rounded border-2 border-dashed border-zinc-400 scrollbar-none hover:border-zinc-500">

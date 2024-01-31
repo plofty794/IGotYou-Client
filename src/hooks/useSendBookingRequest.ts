@@ -40,7 +40,7 @@ function useSendBookingRequest() {
       const response = error.response as AxiosResponse;
       toast({
         variant: "destructive",
-        title: "Oops! An error occurred.",
+        title: "Uh oh! Request not sent.",
         description: response.data.error,
       });
     },

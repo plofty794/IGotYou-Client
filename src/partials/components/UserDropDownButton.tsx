@@ -94,7 +94,6 @@ export function UserDropDownButton() {
                   : `/users/show/${auth.currentUser?.uid}`
               }`}
               className="relative w-full"
-              replace
             >
               Messages
               {data?.data.guestNotifications.find(

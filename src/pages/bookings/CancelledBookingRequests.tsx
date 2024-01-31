@@ -25,9 +25,12 @@ import noRequest from "../../assets/no-pending-payments.json";
 import { jelly } from "ldrs";
 import useGetGuestCancelledBookingRequests from "@/hooks/useGetGuestCancelledBookingRequests";
 import { useEffect } from "react";
+import useReAttemptBooking from "@/hooks/useReAttemptBooking";
 jelly.register();
+
 function CancelledBookingRequests() {
   const { data, isPending } = useGetGuestCancelledBookingRequests();
+  const reAttemptBooking = useReAttemptBooking();
 
   useEffect(() => {
     document.title = "Cancelled Booking Requests - IGotYou";
@@ -180,7 +183,15 @@ function CancelledBookingRequests() {
                   })}
                 </Badge>
               </div>
-              <Button variant={"outline"}>Request again</Button>
+              <Button
+                disabled={reAttemptBooking.isPending}
+                onClick={() =>
+                  reAttemptBooking.mutate({ bookingRequestID: v._id })
+                }
+                variant={"outline"}
+              >
+                Request again
+              </Button>
               <Badge className="w-max" variant={"destructive"}>
                 Cancellation Reason -
                 <span className="ml-1 capitalize">{v.guestCancelReasons}</span>

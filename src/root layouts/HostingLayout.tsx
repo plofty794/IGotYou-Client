@@ -20,11 +20,11 @@ function HostingLayout() {
         <Loader />
       ) : userProfileData.data?.data.user.userStatus === "host" ? (
         <main className="min-h-screen">
-          <nav className="bg-white shadow py-5 px-28 flex justify-between items-center w-full max-w-screen-2xl mx-auto 2xl:rounded-b-lg">
+          <nav className="mx-auto flex w-full max-w-screen-2xl items-center justify-between bg-white px-28 py-5 shadow 2xl:rounded-b-lg">
             <Link to={"/hosting"}>
               <span>
                 <img
-                  className="object-cover w-[30px] max-h-full max-w-full"
+                  className="max-h-full w-[30px] max-w-full object-cover"
                   loading="lazy"
                   src="https://uploads.turbologo.com/uploads/icon/preview_image/2880304/draw_svg20200612-15006-1ioouzj.svg.png"
                   alt="logo"
@@ -41,7 +41,10 @@ function HostingLayout() {
               >
                 Inbox
               </NavLink>
-              <NavLink to={"/calendar"} className="font-medium text-gray-600">
+              <NavLink
+                to={"/hosting-calendar"}
+                className="font-medium text-gray-600"
+              >
                 Calendar
               </NavLink>
               <NavLink
@@ -52,7 +55,7 @@ function HostingLayout() {
               </NavLink>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button className="flex items-center justify-center gap-1 font-medium text-gray-600 h-max p-0 border-none shadow-none hover:bg-white">
+                  <Button className="flex h-max items-center justify-center gap-1 border-none p-0 font-medium text-gray-600 shadow-none hover:bg-white">
                     Menu
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +63,7 @@ function HostingLayout() {
                       viewBox="0 0 24 24"
                       strokeWidth={3}
                       stroke="currentColor"
-                      className="w-3 h-3"
+                      className="h-3 w-3"
                     >
                       <path
                         strokeLinecap="round"

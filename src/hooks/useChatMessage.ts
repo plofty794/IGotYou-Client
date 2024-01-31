@@ -1,6 +1,8 @@
 import { axiosPrivateRoute } from "@/api/axiosRoute";
+import { useToast } from "@/components/ui/use-toast";
 import { SocketContextProvider } from "@/context/SocketContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError, AxiosResponse } from "axios";
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
 
@@ -10,6 +12,7 @@ type TChatMessage = {
 };
 
 function useChatMessage() {
+  const { toast } = useToast();
   const { conversationID } = useParams();
   const { socket } = useContext(SocketContextProvider);
   const queryClient = useQueryClient();
@@ -20,7 +23,7 @@ function useChatMessage() {
         {
           content,
           receiverName,
-        }
+        },
       );
     },
     onSuccess(data) {
@@ -33,7 +36,12 @@ function useChatMessage() {
       });
     },
     onError(error) {
-      console.log(error);
+      toast({
+        title: "Oops! Message not sent.",
+        description: ((error as AxiosError).response as AxiosResponse).data
+          .error,
+        variant: "destructive",
+      });
     },
   });
 }

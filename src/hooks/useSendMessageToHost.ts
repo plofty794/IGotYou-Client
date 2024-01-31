@@ -4,12 +4,15 @@ import { SocketContextProvider } from "@/context/SocketContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AxiosError, AxiosResponse } from "axios";
+import { useToast } from "@/components/ui/use-toast";
 
 type TMessageHost = {
   content: string;
   hostID: string;
 };
 function useSendMessageToHost() {
+  const defaultToast = useToast();
   const navigate = useNavigate();
   const { socket } = useContext(SocketContextProvider);
   const queryClient = useQueryClient();
@@ -19,7 +22,7 @@ function useSendMessageToHost() {
         "/api/users/current-user/conversations/send-message-to-host/",
         {
           ...data,
-        }
+        },
       );
     },
     onSuccess(data) {
@@ -49,8 +52,14 @@ function useSendMessageToHost() {
         queryKey: ["conversation", data.data.conversationID],
       });
     },
-    onError(error) {
-      console.log(error);
+    onError(e) {
+      const error = e as AxiosError;
+      const response = error.response as AxiosResponse;
+      defaultToast.toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: response.data.error,
+      });
     },
   });
 }

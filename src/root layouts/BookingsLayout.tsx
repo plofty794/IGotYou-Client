@@ -1,4 +1,5 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
+import useGetGuestNotifications from "@/hooks/useGetGuestNotifications";
 import UserDropDownButton from "@/partials/components/UserDropDownButton";
 import { Link, NavLink, Navigate, Outlet, useLocation } from "react-router-dom";
 
@@ -12,6 +13,9 @@ const locations = [
 
 function BookingsLayout() {
   const location = useLocation();
+  const { data } = useGetGuestNotifications();
+
+  console.log(data?.data);
 
   return (
     <>

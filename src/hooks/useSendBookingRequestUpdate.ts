@@ -32,11 +32,12 @@ function useSendBookingRequestUpdate() {
       });
     },
     onError(e) {
+      console.log(e);
       const error = e as AxiosError;
       const response = error.response as AxiosResponse;
       toast({
         variant: "destructive",
-        title: "Oops! An error occurred.",
+        title: "Uh oh! Something went wrong.",
         description: response.data.error,
       });
     },

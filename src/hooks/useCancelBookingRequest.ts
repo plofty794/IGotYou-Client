@@ -30,7 +30,7 @@ function useCancelBookingRequest() {
         description: data.data.message,
         className: "bg-white",
       });
-      socket?.emit("guest-cancel-booking-request", {
+      socket?.emit("guest-cancel-bookingRequest", {
         receiverName: data.data.receiverName,
       });
       queryClient.invalidateQueries({

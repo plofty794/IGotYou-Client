@@ -7,7 +7,7 @@ import { auth } from "@/firebase config/config";
 lineSpinner.register();
 
 const ProfileContent = lazy(
-  () => import("@/partials/components/profile/ProfileContent")
+  () => import("@/partials/components/profile/ProfileContent"),
 );
 
 function Profile() {
@@ -16,13 +16,13 @@ function Profile() {
   console.log(auth.currentUser?.emailVerified);
 
   useEffect(() => {
-    document.title = " Users Profile - IGotYou";
+    document.title = "Your Profile - IGotYou";
   }, []);
 
   return (
     <>
       {status === "pending" ? (
-        <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="flex min-h-[80vh] items-center justify-center">
           <l-line-spinner
             size="55"
             stroke="3"
@@ -35,7 +35,7 @@ function Profile() {
           {data?.data?.user.username ? (
             <ProfileContent
               profileData={data?.data.user}
-              activeListings={data.data.activeListings}
+              recentListings={data.data.recentListings}
             />
           ) : (
             <PromptUsername />

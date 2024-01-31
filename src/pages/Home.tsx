@@ -24,6 +24,7 @@ import UpdateWishlist from "@/partials/components/UpdateWishlist";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
 import { formatDistance } from "date-fns";
+import { TListing } from "@/root layouts/BecomeAHostLayout";
 
 type TOutletContext = {
   listings: InfiniteData<AxiosResponse<TListings>>;
@@ -177,8 +178,8 @@ function Home() {
                     </CardHeader>
                     <CardContent className="mt-2 flex justify-between p-0">
                       <div className="flex flex-col">
-                        <span className="text-sm font-semibold">
-                          {v.serviceType}
+                        <span className="text-base font-semibold">
+                          {v.serviceTitle}
                         </span>
                         <span className="text-sm font-semibold text-gray-600">
                           {v.host.username}
@@ -194,7 +195,7 @@ function Home() {
                           </span>
                         </div>
                         <div className="flex w-full items-center justify-between">
-                          <span className="mt-1 font-semibold">
+                          <span className="font-semibold">
                             {formatValue({
                               value: v.price.toString(),
                               intlConfig: {
@@ -272,30 +273,37 @@ type TListings = {
       availableAt: string;
       createdAt: string;
       endsAt: string;
-      host: THost;
+      host: TUser;
       listingAssets: [TListingAssets];
       price: number;
-      serviceDescription: string;
+      serviceDescription?: string;
       serviceType: string;
+      serviceTitle: string;
       updatedAt: string;
       _id: string;
     },
   ];
 };
 
-type THost = {
+export type TUser = {
+  _id: string;
   email: string;
   emailVerified: boolean;
-  listings: string[];
+  listings: TListing[];
   mobileVerified: boolean;
+  identityVerified: boolean;
   photoUrl: null | string;
   providerId: string;
-  subscriptionExpiresAt: string;
+  subscriptionExpiresAt: Date;
   subscriptionStatus: string;
   uid: string;
   userStatus: string;
   username: string;
   rating: [];
+  educationalAttainment: string;
+  address: string;
+  work: string;
+  funFact: string;
 };
 
 export default Home;

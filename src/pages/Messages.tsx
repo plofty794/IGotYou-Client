@@ -29,7 +29,7 @@ import ListingsLoader from "@/partials/loaders/ListingsLoader";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 function Messages() {
   const { conversationID } = useParams();
@@ -94,13 +94,15 @@ function Messages() {
         <>
           <div className="mb-4 flex w-full items-center justify-between">
             <div className="flex items-center gap-2">
-              <Avatar>
-                <AvatarImage
-                  className="object-cover"
-                  src={participant[0]?.photoUrl}
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+              <Link to={`/users/visit/show/${participant[0]?._id}`}>
+                <Avatar>
+                  <AvatarImage
+                    className="object-cover"
+                    src={participant[0]?.photoUrl}
+                  />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </Link>
               <span className="text-lg font-semibold">
                 {participant[0]?.username}
               </span>
@@ -169,13 +171,15 @@ function Messages() {
           <Separator />
           <ScrollArea className="relative mt-2 h-[65vh] rounded-md border bg-[#F5F5F5] p-6">
             <div className="mx-auto flex w-max flex-col items-center justify-center gap-2">
-              <Avatar className="h-24 w-24">
-                <AvatarImage
-                  className="object-cover"
-                  src={participant[0]?.photoUrl}
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+              <Link to={`/users/visit/show/${participant[0]?._id}`}>
+                <Avatar className="h-24 w-24">
+                  <AvatarImage
+                    className="object-cover"
+                    src={participant[0]?.photoUrl}
+                  />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </Link>
               <span className="text-xl font-semibold">
                 {participant[0]?.username}
               </span>

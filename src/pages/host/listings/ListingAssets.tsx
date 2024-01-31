@@ -20,8 +20,7 @@ function ListingAssets({ listingAssets }: { listingAssets: TListingAssets[] }) {
                 <span
                   onClick={(e) => {
                     e.currentTarget.scrollIntoView({
-                      block: "center",
-                      inline: "center",
+                      block: "end",
                       behavior: "smooth",
                     });
                   }}
@@ -47,8 +46,7 @@ function ListingAssets({ listingAssets }: { listingAssets: TListingAssets[] }) {
                   key={asset._id}
                   onClick={(e) => {
                     e.currentTarget.scrollIntoView({
-                      block: "center",
-                      inline: "center",
+                      block: "end",
                       behavior: "smooth",
                     });
                   }}

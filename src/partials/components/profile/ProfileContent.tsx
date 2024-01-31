@@ -54,24 +54,25 @@ type TProps = {
     photoUrl: string;
     listings: TListings[];
   };
-  activeListings: TListings[];
+  recentListings: TListings[];
 };
 
 type TListings = {
   _id: string;
   serviceType: string[];
   serviceDescription: string;
+  serviceTitle: string;
   listingAssets: [
     {
       public_id: string;
       secure_url: string;
       original_filename: string;
       _id: string;
-    }
+    },
   ];
 };
 
-function ProfileContent({ profileData, activeListings }: TProps) {
+function ProfileContent({ profileData, recentListings }: TProps) {
   const queryClient = useQueryClient();
   const { mutate, isPending, isSuccess } = useVerifyEmail();
   const updateUserProfile = useUpdateUserProfile();
@@ -118,21 +119,21 @@ function ProfileContent({ profileData, activeListings }: TProps) {
           updateProfile(auth.currentUser!, { photoURL: res.info.secure_url });
         }
         return;
-      }
+      },
     );
     widget && setCloudinaryWidget(widget);
   }, [cloudinaryWidget, updateUserProfile]);
 
   return (
     <>
-      <section className="flex gap-16 my-14 max-lg:flex-col w-5/6 mx-auto">
-        <div className="flex flex-col justify-between w-2/4 h-max gap-4 max-lg:w-full">
-          <Card className="flex flex-col justify-center items-center w-full max-lg:w-full px-22 py-5 shadow-lg">
-            <CardHeader className="p-4 relative">
-              <Avatar className="w-[80px] h-[80px]">
+      <section className="mx-auto my-14 flex w-5/6 gap-16 max-lg:flex-col">
+        <div className="flex h-max w-2/4 flex-col justify-between gap-4 max-lg:w-full">
+          <Card className="px-22 flex w-full flex-col items-center justify-center py-5 shadow-lg max-lg:w-full">
+            <CardHeader className="relative p-4">
+              <Avatar className="h-[80px] w-[80px]">
                 <AvatarImage
                   loading="lazy"
-                  className="max-h-full max-w-full object-cover hover:scale-105 transition-all"
+                  className="max-h-full max-w-full object-cover transition-all hover:scale-105"
                   src={
                     auth.currentUser?.photoURL ??
                     photo ??
@@ -145,7 +146,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
               <Button
                 onClick={() => cloudinaryWidget?.open()}
                 type="button"
-                className="px-[0.70rem] py-2 rounded-full border absolute z-10 mx-auto bottom-2 right-2 text-center bg-zinc-600 text-zinc-200"
+                className="absolute bottom-2 right-2 z-10 mx-auto rounded-full border bg-zinc-600 px-[0.70rem] py-2 text-center text-zinc-200"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -153,7 +154,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="w-4 h-4"
+                  className="h-4 w-4"
                 >
                   <path
                     strokeLinecap="round"
@@ -168,24 +169,24 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                 </svg>
               </Button>
             </CardHeader>
-            <CardFooter className="p-0 flex flex-col">
+            <CardFooter className="flex flex-col p-0">
               <span className="text-2xl font-bold">
                 {profileData?.username ?? (
                   <Skeleton className="h-4 w-[100px]" />
                 )}
               </span>
-              <span className="text-gray-600 text-sm font-bold">
+              <span className="text-sm font-bold text-gray-600">
                 {profileData?.userStatus === "host" ? "Host" : "Guest"}
               </span>
             </CardFooter>
           </Card>
-          <Card className="w-full max-lg:w-full shadow-lg">
+          <Card className="w-full shadow-lg max-lg:w-full">
             <CardHeader>
               <span className="text-xl font-semibold">
                 {profileData?.username ? (
                   profileData?.username + "'s confirmed information"
                 ) : (
-                  <Skeleton className="h-4 w-[250px] mx-auto" />
+                  <Skeleton className="mx-auto h-4 w-[250px]" />
                 )}
               </span>
             </CardHeader>
@@ -196,9 +197,9 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                     color="#FFF"
                     width={22}
                     height={22}
-                    className="inline-block bg-[#39c152] rounded-full"
+                    className="inline-block rounded-full bg-[#39c152]"
                   />{" "}
-                  <span className="text-gray-600 ml-2 text-sm font-semibold">
+                  <span className="ml-2 text-sm font-semibold text-gray-600">
                     Identity (verified)
                   </span>
                 </div>
@@ -208,9 +209,9 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                     color="#FFF"
                     width={22}
                     height={22}
-                    className="inline-block bg-[#e94242] rounded-full"
+                    className="inline-block rounded-full bg-[#e94242]"
                   />{" "}
-                  <span className="text-gray-600  ml-2 text-sm font-semibold">
+                  <span className="ml-2  text-sm font-semibold text-gray-600">
                     Identity (not verified)
                   </span>
                 </div>
@@ -221,9 +222,9 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                     color="#FFF"
                     width={22}
                     height={22}
-                    className="inline-block bg-[#39c152] rounded-full"
+                    className="inline-block rounded-full bg-[#39c152]"
                   />{" "}
-                  <span className="text-gray-600 ml-2 text-sm font-semibold">
+                  <span className="ml-2 text-sm font-semibold text-gray-600">
                     Email address (verified)
                   </span>
                 </div>
@@ -233,9 +234,9 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                     color="#FFF"
                     width={22}
                     height={22}
-                    className="inline-block bg-[#e94242] rounded-full"
+                    className="inline-block rounded-full bg-[#e94242]"
                   />{" "}
-                  <span className="text-gray-600 ml-2 text-sm font-semibold">
+                  <span className="ml-2 text-sm font-semibold text-gray-600">
                     Email address (not verified)
                   </span>
                 </div>
@@ -246,9 +247,9 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                     color="#FFF"
                     width={22}
                     height={22}
-                    className="inline-block bg-[#39c152] rounded-full"
+                    className="inline-block rounded-full bg-[#39c152]"
                   />{" "}
-                  <span className="text-gray-600 ml-2 text-sm font-semibold">
+                  <span className="ml-2 text-sm font-semibold text-gray-600">
                     Mobile phone (verified)
                   </span>
                 </div>
@@ -258,9 +259,9 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                     color="#FFF"
                     width={22}
                     height={22}
-                    className="inline-block bg-[#e94242] rounded-full"
+                    className="inline-block rounded-full bg-[#e94242]"
                   />{" "}
-                  <span className="text-gray-600  ml-2 text-sm font-semibold">
+                  <span className="ml-2  text-sm font-semibold text-gray-600">
                     Mobile phone (not verified)
                   </span>
                 </div>
@@ -268,14 +269,14 @@ function ProfileContent({ profileData, activeListings }: TProps) {
             </CardContent>
           </Card>
           <Card className="w-full shadow-lg">
-            <CardHeader className="text-gray-950 px-6 pt-6 pb-2">
+            <CardHeader className="px-6 pb-2 pt-6 text-gray-950">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-10 h-10"
+                className="h-10 w-10"
               >
                 <path
                   strokeLinecap="round"
@@ -283,7 +284,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                   d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
                 />
               </svg>
-              <p className="font-bold text-lg">
+              <p className="text-lg font-bold">
                 {profileData?.emailVerified
                   ? "Personal info"
                   : "Verify your email to edit your personal info"}
@@ -298,7 +299,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
               ) : isSuccess && auth.currentUser?.emailVerified == false ? (
                 <Button
                   type="button"
-                  className="ml-2 mt-2 text-sm  font-semibold bg-gray-950 rounded-full"
+                  className="ml-2 mt-2 rounded-full  bg-gray-950 text-sm font-semibold"
                   onClick={() => document.location.reload()}
                 >
                   <svg
@@ -307,7 +308,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-5 h-5"
+                    className="h-5 w-5"
                   >
                     <path
                       strokeLinecap="round"
@@ -323,7 +324,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                       emailVerified: auth.currentUser?.emailVerified,
                     })
                   }
-                  className="mt-2 text-sm  font-semibold bg-gray-950 rounded-full"
+                  className="mt-2 rounded-full  bg-gray-950 text-sm font-semibold"
                 >
                   {isPending ? (
                     // Default values shown
@@ -340,30 +341,29 @@ function ProfileContent({ profileData, activeListings }: TProps) {
             </CardContent>
           </Card>
         </div>
-        <div className="w-full flex flex-col gap-4">
+        <div className="flex w-full flex-col gap-4">
           <Card className="shadow-lg">
             <CardHeader className="p-6">
-              <CardTitle className="text-gray-950 text-4xl font-semibold">
+              <CardTitle className="text-4xl font-semibold text-gray-950">
                 Your profile
               </CardTitle>
             </CardHeader>
             <div className="px-6 py-2">
-              <span className="text-gray-600 text-base font-semibold">
+              <span className="text-base font-semibold text-gray-600">
                 The information you share will be used across IGotYou to help
                 other guests and hosts get to know you.
               </span>
             </div>
             <CardFooter className="mt-2 text-[#3c3b3b]">
-              <div className="w-full grid lg:grid-cols-2 md:grid-cols-1 gap-2 ">
+              <div className="grid w-full gap-2 md:grid-cols-1 lg:grid-cols-2 ">
                 <ProfileButtonGroup />
               </div>
             </CardFooter>
           </Card>
-          {activeListings.length > 0 || profileData.listings.length > 0 ? (
+          {recentListings?.length > 0 || profileData.listings.length > 0 ? (
             <Suspense fallback={<Loader />}>
               <Listings
-                username={profileData?.username}
-                listings={activeListings}
+                recentListings={recentListings}
                 listingsCount={profileData.listings.length}
               />
             </Suspense>
@@ -371,12 +371,12 @@ function ProfileContent({ profileData, activeListings }: TProps) {
             <>
               <Card className="w-full shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-center font-semibold text-lg text-gray-600">
+                  <CardTitle className="text-center text-lg font-semibold text-gray-600">
                     You have no listings to show
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="mx-auto w-max">
-                  <Button className="bg-gray-950 rounded-full">
+                  <Button className="rounded-full bg-gray-950">
                     <Link
                       to={`/become-a-host/${
                         auth.currentUser && auth.currentUser.uid
@@ -392,14 +392,14 @@ function ProfileContent({ profileData, activeListings }: TProps) {
             <>
               <Card className="w-full shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-center font-semibold text-lg text-gray-600">
+                  <CardTitle className="text-center text-lg font-semibold text-gray-600">
                     You have no listings to show
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="mx-auto w-max">
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button className="bg-gray-950 rounded-full">
+                      <Button className="rounded-full bg-gray-950">
                         Subscribe to create
                       </Button>
                     </AlertDialogTrigger>
@@ -412,7 +412,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                             viewBox="0 0 24 24"
                             strokeWidth={1.5}
                             stroke="red"
-                            className="w-7 h-7"
+                            className="h-7 w-7"
                           >
                             <path
                               strokeLinecap="round"
@@ -423,7 +423,7 @@ function ProfileContent({ profileData, activeListings }: TProps) {
                           You're email is not verified yet.
                         </AlertDialogTitle>
                       </AlertDialogHeader>
-                      <AlertDialogDescription className="text-gray-600 font-medium text-sm">
+                      <AlertDialogDescription className="text-sm font-medium text-gray-600">
                         To create a listing, users are required to have a
                         verified email. Attempting this action without a
                         verified email is useless.

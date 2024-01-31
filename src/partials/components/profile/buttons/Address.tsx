@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import ErrorMessage from "../../ErrorMessage";
 import useUpdateUserProfile from "@/hooks/useUpdateUserProfile";
 import { useQueryClient, QueryState } from "@tanstack/react-query";
@@ -34,15 +34,23 @@ function Address() {
   const queryClient = useQueryClient();
   const { mutate } = useUpdateUserProfile();
   const [address, setAddress] = useState("");
+  const [currentLocation, setCurrentLocation] =
+    useState<GeolocationCoordinates>();
   const [errorMessage, setErrorMessage] = useState("");
   const { id } = useParams();
   const data = queryClient.getQueryData<QueryState<TData>>(["profile", id]);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((pos) =>
+      setCurrentLocation(pos.coords),
+    );
+  }, []);
 
   function handleAddressSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!address)
       return setErrorMessage(
-        "Invalid zip code (eg. 4010 for Pila, 4010 Laguna, Philippines)"
+        "Invalid zip code (eg. 4010 for Pila, 4010 Laguna, Philippines)",
       );
     mutate({ address });
     setErrorMessage("");
@@ -51,10 +59,10 @@ function Address() {
   return (
     <Dialog>
       <DialogTrigger
-        className={`hover:bg-[#e9e9e9] w-full border font-medium ${
+        className={`w-full border font-medium hover:bg-[#e9e9e9] ${
           data?.data?.user.address ? "text-xs" : "text-sm"
         }
-           shadow-md flex justify-start items-center pl-4 pr-6 py-8 rounded`}
+           flex items-center justify-start rounded py-8 pl-4 pr-6 shadow-md`}
       >
         <span className="mr-2">
           <HomeIcon color="black" width={25} height={25} />
@@ -75,16 +83,16 @@ function Address() {
         </DialogHeader>
         {data?.data?.user.address ? (
           <div className="mt-4">
-            <p className="text-sm font-medium mb-2">
+            <p className="mb-2 text-sm font-medium">
               {data?.data?.user.address}
             </p>
-            <div className="flex gap-2 items-center pt-2">
+            <div className="flex items-center gap-2 pt-2">
               <Button
                 onClick={() => {
                   setAddress("");
                   mutate({ address: "" });
                 }}
-                className="bg-[#222222] text-white font-medium rounded-full"
+                className="rounded-full bg-[#222222] font-medium text-white"
                 size={"lg"}
                 variant={"secondary"}
               >
@@ -95,22 +103,25 @@ function Address() {
         ) : (
           <form onSubmit={handleAddressSubmit} className="mt-4">
             <Label className="text-sm font-medium" htmlFor="address">
-              Your Municipality/City's zip code
+              Your current address
             </Label>
             <GeoapifyContext apiKey={GEOAPIFY_KEY}>
               <div className="geo mb-1">
                 <GeoapifyGeocoderAutocomplete
-                  type="postcode"
+                  biasByProximity={{
+                    lat: currentLocation?.latitude ?? 0,
+                    lon: currentLocation?.longitude ?? 0,
+                  }}
+                  limit={5}
                   filterByCountryCode={["ph"]}
-                  placeSelect={(value) => console.log(value)}
                   allowNonVerifiedHouseNumber={false}
                   skipIcons={true}
-                  placeholder="Enter zip code"
+                  addDetails
                   postprocessHook={(value) => {
                     setAddress(
                       `${
                         value.properties.formatted
-                      }, ${value.properties.country_code.toUpperCase()}`
+                      }, ${value.properties.country_code.toUpperCase()}`,
                     );
                     return value.properties.formatted;
                   }}
@@ -118,9 +129,9 @@ function Address() {
               </div>
               {errorMessage && <ErrorMessage message={errorMessage} />}
             </GeoapifyContext>
-            <div className="flex gap-2 items-center pt-2">
+            <div className="flex items-center gap-2 pt-2">
               <Button
-                className="bg-[#222222] text-white font-medium rounded-full"
+                className="rounded-full bg-[#222222] font-medium text-white"
                 size={"lg"}
                 variant={"secondary"}
               >

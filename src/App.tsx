@@ -50,6 +50,7 @@ const Messages = lazy(() => import("./pages/Messages"));
 const RootLayoutErrorBoundary = lazy(
   () => import("./partials/components/RootLayoutErrorBoundary"),
 );
+const PageUnavailable = lazy(() => import("./pages/PageUnavailable"));
 
 import { SocketContextProvider } from "./context/SocketContext";
 import ListingsLayout from "./root layouts/ListingsLayout";
@@ -76,6 +77,7 @@ import DeclinedBookingRequests from "./pages/bookings/DeclinedBookingRequests";
 import CancelledBookingRequests from "./pages/bookings/CancelledBookingRequests";
 import BookingRequest from "./pages/inbox/BookingRequest";
 import ServiceTitle from "./pages/become a host/ServiceTitle";
+import HostCalendar from "./pages/HostCalendar";
 
 function App() {
   const [User, setUser] = useState<User | null>();
@@ -123,7 +125,7 @@ function App() {
           />
 
           <Route
-            path="visit/show/:id"
+            path="visit/show/:userID"
             element={
               User ?? token ?? identifier ? (
                 <VisitProfile />
@@ -395,6 +397,7 @@ function App() {
               element={<PreviousReservations />}
             />
           </Route>
+          <Route path="hosting-calendar" element={<HostCalendar />} />
           <Route path="hosting-inbox" element={<Inbox />}>
             <Route path="booking-request/:id" element={<BookingRequest />} />
           </Route>
@@ -435,6 +438,8 @@ function App() {
             }
           />
           <Route path="*" element={<PageNotFound />} />
+
+          <Route path="/page-unavailable" element={<PageUnavailable />} />
         </Route>
       </>,
     ),

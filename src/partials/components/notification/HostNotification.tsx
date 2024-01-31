@@ -51,7 +51,6 @@ function HostNotification() {
       queryClient.invalidateQueries({
         queryKey: ["booking-request"],
         exact: false,
-        type: "active",
       });
     });
 

@@ -18,7 +18,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { differenceInDays, formatDistance } from "date-fns";
+import { formatDistance } from "date-fns";
 import Lottie from "lottie-react";
 import { formatValue } from "react-currency-input-field";
 import noRequest from "../../assets/no-pending-payments.json";
@@ -169,12 +169,7 @@ function ApprovedBookingRequests() {
                   <Badge variant={"secondary"} className="text-base font-bold">
                     Total:{" "}
                     {formatValue({
-                      value: String(
-                        differenceInDays(
-                          new Date(v.requestedBookingDateEndsAt),
-                          new Date(v.requestedBookingDateStartsAt),
-                        ) * v.listingID.price,
-                      ),
+                      value: String(v.totalPrice),
                       intlConfig: {
                         locale: "PH",
                         currency: "php",

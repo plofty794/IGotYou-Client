@@ -237,8 +237,7 @@ function MakeABooking() {
                     )}{" "}
                     before listing ends
                   </Badge>
-                  <div className="mt-4 flex w-full items-center justify-between">
-                    <Badge variant={"outline"}>Cancellation policy</Badge>
+                  <div className="mt-4">
                     <Badge
                       variant={"outline"}
                       className={`font-bold ${
@@ -251,7 +250,7 @@ function MakeABooking() {
                               : "text-red-800"
                       }`}
                     >
-                      {listing.cancellationPolicy}
+                      Cancellation policy - {listing.cancellationPolicy}
                     </Badge>
                   </div>
                 </div>

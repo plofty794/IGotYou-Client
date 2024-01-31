@@ -101,16 +101,19 @@ function VisitListing() {
               <Separator />
               <CardHeader className="w-full flex-row items-center justify-between">
                 <div className="flex w-max items-center justify-center gap-2">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage
-                      className="max-w-full object-cover"
-                      src={
-                        listing.host.photoUrl ??
-                        "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"
-                      }
-                    />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
+                  <Link to={`/users/visit/show/${listing.host._id}`} replace>
+                    <Avatar className="h-14 w-14">
+                      <AvatarImage
+                        className="max-w-full object-cover"
+                        src={
+                          listing.host.photoUrl ??
+                          "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"
+                        }
+                      />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </Link>
+
                   <div className="flex flex-col">
                     <span className="text-lg font-semibold">
                       Hosted by {listing.host.username}
