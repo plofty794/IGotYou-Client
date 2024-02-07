@@ -465,7 +465,7 @@ function HostPayoutDetails({
           </CardContent>
           <CardFooter className="flex flex-col gap-2">
             <div className="flex w-full flex-col gap-2">
-              {reservationDetails.status === "completed" &&
+              {reservationDetails.confirmServiceEnded === true &&
               reservationDetails.fullPaymentVerificationStatus === "success" ? (
                 <Button
                   className="w-full gap-2 bg-green-500 hover:bg-green-600"
@@ -705,7 +705,7 @@ function HostPayoutDetails({
           </CardContent>
           <CardFooter className="flex flex-col gap-2">
             <div className="flex w-full flex-col gap-2">
-              {reservationDetails.status === "completed" &&
+              {reservationDetails.confirmServiceEnded === true &&
               reservationDetails.fullPaymentVerificationStatus === "success" ? (
                 <Button
                   className="w-full gap-2 bg-green-500 hover:bg-green-600"

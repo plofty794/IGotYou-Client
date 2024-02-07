@@ -26,6 +26,14 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import useSendBookingRequest from "@/hooks/useSendBookingRequest";
 dotPulse.register();
+import { Cloudinary } from "@cloudinary/url-gen/index";
+import { AdvancedImage } from "@cloudinary/react";
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: "dop5kqpod",
+  },
+});
 
 function MakeABooking() {
   const { mutate, isPending } = useSendBookingRequest();
@@ -213,11 +221,20 @@ function MakeABooking() {
             <Card className="p-6">
               <CardHeader className="mb-4 flex-row gap-4 p-0">
                 <span className="h-32 w-32 overflow-hidden rounded-md border">
-                  <img
-                    src={listing.listingAssets[1].secure_url}
-                    className="h-full w-full object-cover transition-transform hover:scale-110"
-                    alt=""
-                  />
+                  {listing.listingAssets[0]?.resource_type === "video" ? (
+                    <AdvancedImage
+                      className="h-full w-full object-cover transition-transform hover:scale-110"
+                      cldImg={cld
+                        .image(listing.listingAssets[0]?.public_id)
+                        .setAssetType("video")
+                        .format("auto:image")}
+                    />
+                  ) : (
+                    <AdvancedImage
+                      className="h-full w-full object-cover transition-transform hover:scale-110"
+                      cldImg={cld.image(listing.listingAssets[0].public_id)}
+                    />
+                  )}
                 </span>
                 <div className="flex w-2/3 flex-col gap-1">
                   <span className="text-lg font-bold">

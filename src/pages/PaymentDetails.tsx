@@ -36,6 +36,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import useConfirmServiceEnded from "@/hooks/useConfirmServiceEnded";
 
 function PaymentDetails() {
   const { data, isPending } = useGetReservationDetails();
@@ -338,7 +339,9 @@ function PaymentDetails() {
                               }
                             </Badge>
                           </div>
-                          {!data?.data.isHost && (
+                          {!data?.data.isHost &&
+                          data?.data.reservationDetails.confirmServiceEnded ===
+                            false ? (
                             <>
                               {new Date().setHours(0, 0, 0, 0) ===
                                 new Date(
@@ -440,6 +443,10 @@ function PaymentDetails() {
                                 </Dialog>
                               )}
                             </>
+                          ) : (
+                            <Badge className="mx-auto w-max bg-green-500 hover:bg-green-600">
+                              Guest confirmed service completion
+                            </Badge>
                           )}
                         </div>
                       </TabsContent>
@@ -563,7 +570,9 @@ function PaymentDetails() {
                               }
                             </Badge>
                           </div>
-                          {!data?.data.isHost && (
+                          {!data?.data.isHost &&
+                          data?.data.reservationDetails.confirmServiceEnded ===
+                            false ? (
                             <>
                               {new Date().setHours(0, 0, 0, 0) ===
                                 new Date(
@@ -665,6 +674,10 @@ function PaymentDetails() {
                                 </Dialog>
                               )}
                             </>
+                          ) : (
+                            <Badge className="mx-auto w-max bg-green-500 hover:bg-green-600">
+                              Guest confirmed service completion
+                            </Badge>
                           )}
                         </div>
                       </TabsContent>
@@ -792,7 +805,9 @@ function PaymentDetails() {
                             }
                           </Badge>
                         </div>
-                        {!data?.data.isHost && (
+                        {!data?.data.isHost &&
+                        data?.data.reservationDetails.confirmServiceEnded ===
+                          false ? (
                           <>
                             {new Date().setHours(0, 0, 0, 0) ===
                               new Date(
@@ -893,6 +908,10 @@ function PaymentDetails() {
                               </Dialog>
                             )}
                           </>
+                        ) : (
+                          <Badge className="mx-auto w-max bg-green-500 hover:bg-green-600">
+                            Guest confirmed service completion
+                          </Badge>
                         )}
                       </div>
                     </>
@@ -1021,7 +1040,9 @@ function PaymentDetails() {
                             }
                           </Badge>
                         </div>
-                        {!data?.data.isHost && (
+                        {!data?.data.isHost &&
+                        data?.data.reservationDetails.confirmServiceEnded ===
+                          false ? (
                           <>
                             {new Date().setHours(0, 0, 0, 0) ===
                               new Date(
@@ -1122,6 +1143,10 @@ function PaymentDetails() {
                               </Dialog>
                             )}
                           </>
+                        ) : (
+                          <Badge className="mx-auto w-max bg-green-500 hover:bg-green-600">
+                            Guest confirmed service completion
+                          </Badge>
                         )}
                       </div>
                     </>
@@ -1141,6 +1166,8 @@ function PaymentDetails() {
 }
 
 function ConfirmServiceEndedAlertDialog() {
+  const { mutate, isPending } = useConfirmServiceEnded();
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -1160,7 +1187,11 @@ function ConfirmServiceEndedAlertDialog() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
-          <AlertDialogAction className="rounded-full bg-green-500 hover:bg-green-600">
+          <AlertDialogAction
+            disabled={isPending}
+            onClick={() => mutate()}
+            className="rounded-full bg-green-500 hover:bg-green-600"
+          >
             Confirm
           </AlertDialogAction>
         </AlertDialogFooter>
