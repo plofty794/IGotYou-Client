@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/select";
 
 import { Toggle } from "@/components/ui/toggle";
+import useEditListing from "@/hooks/useEditListing";
 import { useEffect, useState } from "react";
 
 function EditListingCancellationPolicy({
@@ -22,6 +23,8 @@ function EditListingCancellationPolicy({
     setEditListingCancellationPolicyPressed,
   ] = useState(false);
   const [newCancellationPolicy, setNewCancellationPolicy] = useState("");
+
+  const { mutate } = useEditListing();
 
   useEffect(() => {
     if (!editListingCancellationPolicyPressed) {
@@ -103,10 +106,15 @@ function EditListingCancellationPolicy({
                 </Card>
               )}
               <Button
+                onClick={() =>
+                  mutate({
+                    cancellationPolicy: newCancellationPolicy,
+                  })
+                }
                 disabled={!newCancellationPolicy}
-                className="w-max rounded-full bg-gray-950"
+                className="w-max bg-gray-950"
               >
-                Save
+                Save changes
               </Button>
             </>
           ) : (

@@ -1,17 +1,16 @@
 import { axiosPrivateRoute } from "@/api/axiosRoute";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-function useGetHostListings() {
+function useGetReservations() {
   return useInfiniteQuery({
-    queryKey: ["host-listings"],
+    queryKey: ["reservations"],
     queryFn: async ({ pageParam }) => {
-      return await axiosPrivateRoute.get(
-        `/api/listings/host-listings/${pageParam}`,
-      );
+      return await axiosPrivateRoute.get(`/api/reservations/all/${pageParam}`);
     },
     initialPageParam: 1,
     getNextPageParam: (_, pages) => pages.length + 1,
+    refetchOnWindowFocus: false,
   });
 }
 
-export default useGetHostListings;
+export default useGetReservations;

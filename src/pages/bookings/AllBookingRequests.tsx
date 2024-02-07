@@ -1,12 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { compareAsc, formatDistance } from "date-fns";
 import Lottie from "lottie-react";
@@ -28,7 +22,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Cloudinary } from "@cloudinary/url-gen/index";
+import { AdvancedImage } from "@cloudinary/react";
 jelly.register();
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: "dop5kqpod",
+  },
+});
 
 function AllBookingRequests() {
   const { data, isPending } = useGetGuestBookingRequests();
@@ -109,10 +111,11 @@ function AllBookingRequests() {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-
-                  <CardDescription className="font-semibold">
-                    View profile
-                  </CardDescription>
+                  <Button variant={"link"} className="p-0 text-xs">
+                    <Link to={`/users/visit/show/${v.hostID._id}`}>
+                      View profile
+                    </Link>
+                  </Button>
                 </div>
                 <Badge
                   className={`rounded-full font-bold uppercase ${
@@ -132,12 +135,23 @@ function AllBookingRequests() {
               <Separator />
               <CardContent className="flex w-full justify-between p-4">
                 <div className="flex gap-2">
-                  <div className="h-full w-44 overflow-hidden rounded-md">
-                    <img
-                      src={v.listingID.listingAssets[0].secure_url}
-                      alt="Image"
-                      className="h-full w-full object-cover transition-transform hover:scale-110"
-                    />
+                  <div className="h-44 w-44 overflow-hidden rounded-md">
+                    {v.listingID.listingAssets[0]?.resource_type === "video" ? (
+                      <AdvancedImage
+                        className="h-44 w-44 object-cover transition-transform hover:scale-110"
+                        cldImg={cld
+                          .image(v.listingID.listingAssets[0]?.public_id)
+                          .setAssetType("video")
+                          .format("auto:image")}
+                      />
+                    ) : (
+                      <AdvancedImage
+                        className="h-44 w-44 object-cover transition-transform hover:scale-110"
+                        cldImg={cld.image(
+                          v.listingID.listingAssets[0].public_id,
+                        )}
+                      />
+                    )}
                   </div>
                   <div className="flex flex-col gap-2">
                     <span className="text-lg font-bold ">
@@ -227,7 +241,10 @@ function AllBookingRequests() {
                       )}
                     {v.status === "approved" && (
                       <Button size={"sm"} variant={"outline"}>
-                        View reservation details
+                        <Link to={`/reservation-details/${v.reservationID}`}>
+                          {" "}
+                          View reservation details
+                        </Link>
                       </Button>
                     )}
                   </div>
@@ -246,6 +263,16 @@ function AllBookingRequests() {
                         Cancellation Reason -
                         <span className="ml-1 capitalize">
                           {v.guestCancelReasons}
+                        </span>
+                      </Badge>
+                    </>
+                  )}
+                  {v.status === "declined" && (
+                    <>
+                      <Badge className="w-max" variant={"destructive"}>
+                        Decline Reason -
+                        <span className="ml-1 capitalize">
+                          {v.hostDeclineReasons}
                         </span>
                       </Badge>
                     </>

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
+import useEditListing from "@/hooks/useEditListing";
 import { useEffect, useState } from "react";
 
 function EditListingDescriptionCollapsible({
@@ -13,6 +14,7 @@ function EditListingDescriptionCollapsible({
   const [editListingDescriptionPressed, setEditListingDescriptionPressed] =
     useState(false);
   const [description, setDescription] = useState("");
+  const { mutate } = useEditListing();
 
   useEffect(() => {
     if (!editListingDescriptionPressed) {
@@ -59,9 +61,14 @@ function EditListingDescriptionCollapsible({
                   description.length > 30 ||
                   description.length < 10
                 }
-                className="w-max rounded-full bg-gray-950"
+                onClick={() =>
+                  mutate({
+                    serviceDescription: description,
+                  })
+                }
+                className="w-max bg-gray-950"
               >
-                Save
+                Save changes
               </Button>
             </>
           ) : (

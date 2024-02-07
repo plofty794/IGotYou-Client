@@ -1,16 +1,24 @@
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
+import useEditListing from "@/hooks/useEditListing";
 import { TFileType } from "@/root layouts/BecomeAHostLayout";
+import {
+  CloudinaryUploadResult,
+  CloudinaryUploadWidget,
+} from "@/types/createUploadWidget";
 import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen/index";
+import { useEffect, useState } from "react";
 
 const cld = new Cloudinary({
   cloud: {
@@ -23,9 +31,51 @@ function EditListingPhotosDialog({
 }: {
   listingsAssets?: TFileType[];
 }) {
+  const [listingsAssetsCopy, setListingsAssetsCopy] = useState(listingsAssets);
+  const [cloudinaryWidget, setCloudinaryWidget] =
+    useState<CloudinaryUploadWidget>();
+  const { mutate } = useEditListing();
+
+  useEffect(() => {
+    if (cloudinaryWidget) return;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const widget = window.cloudinary.createUploadWidget(
+      {
+        cloudName: "dop5kqpod",
+        uploadPreset: "s6lymwwh",
+        folder: "IGotYou-Listings",
+        resourceType: "auto",
+        multiple: true,
+      },
+      (_: unknown, result: CloudinaryUploadResult) => {
+        if (result.event === "success") {
+          setListingsAssetsCopy((prev) => [
+            ...prev!,
+            {
+              public_id: result.info.public_id,
+              secure_url: result.info.secure_url,
+              original_filename: result.info.original_filename,
+              bytes: result.info.bytes,
+              thumbnail_url: result.info.thumbnail_url,
+              resource_type: result.info.resource_type,
+              format: result.info.format,
+            },
+          ]);
+        }
+      },
+    );
+    widget && setCloudinaryWidget(widget);
+  }, [cloudinaryWidget]);
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <Drawer
+      onOpenChange={(open) => {
+        !open && setListingsAssetsCopy(listingsAssets);
+      }}
+      modal={false}
+    >
+      <DrawerTrigger asChild>
         <Button
           variant={"ghost"}
           className="gap-2 rounded-full text-base font-bold underline"
@@ -44,16 +94,26 @@ function EditListingPhotosDialog({
             />
           </svg>
         </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-5xl gap-4">
-        <DialogHeader className="mb-4">
-          <DialogTitle className="text-2xl font-bold">All assets</DialogTitle>
-        </DialogHeader>
+      </DrawerTrigger>
+      <DrawerContent className="gap-4">
+        <DrawerHeader className="mb-4 flex items-center justify-between">
+          <DrawerTitle className="text-2xl font-bold">All assets</DrawerTitle>
+          <DrawerClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DrawerClose>
+        </DrawerHeader>
         <ScrollArea className="h-64 rounded-lg shadow-inner">
           <div className="flex max-w-full flex-wrap items-center justify-center gap-2">
-            {listingsAssets?.map((asset) =>
+            {listingsAssetsCopy?.map((asset) =>
               asset.resource_type === "video" ? (
-                <div className="relative">
+                <div
+                  onClick={() =>
+                    setListingsAssetsCopy(
+                      (prev) => prev?.filter((v) => v !== asset),
+                    )
+                  }
+                  className="relative"
+                >
                   <AdvancedImage
                     className="h-48 w-48 rounded-2xl border object-contain shadow-md"
                     cldImg={cld
@@ -83,7 +143,14 @@ function EditListingPhotosDialog({
                   </Button>
                 </div>
               ) : (
-                <div className="relative">
+                <div
+                  onClick={() =>
+                    setListingsAssetsCopy(
+                      (prev) => prev?.filter((v) => v !== asset),
+                    )
+                  }
+                  className="relative"
+                >
                   <AdvancedImage
                     className="h-48 w-48 rounded-2xl border object-contain shadow-md"
                     cldImg={cld.image(asset.public_id)}
@@ -113,8 +180,13 @@ function EditListingPhotosDialog({
             )}
           </div>
         </ScrollArea>
-        <DialogFooter>
-          <Button className="gap-2" type="button" variant={"outline"}>
+        <DrawerFooter>
+          <Button
+            onClick={() => cloudinaryWidget?.open()}
+            className="gap-2"
+            type="button"
+            variant={"outline"}
+          >
             Add more
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -131,10 +203,20 @@ function EditListingPhotosDialog({
               />
             </svg>
           </Button>
-          <Button className="bg-gray-950">Save changes</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <Button
+            disabled={listingsAssetsCopy!.length < 5}
+            onClick={() =>
+              mutate({
+                listingAssets: listingsAssetsCopy,
+              })
+            }
+            className="bg-gray-950"
+          >
+            Save changes
+          </Button>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 }
 

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
+import useEditListing from "@/hooks/useEditListing";
 import { useEffect, useState } from "react";
 function EditListingTitleCollapsible({
   serviceTitle,
@@ -11,6 +12,7 @@ function EditListingTitleCollapsible({
 }) {
   const [editListingTitlePressed, setEditListingTitlePressed] = useState(false);
   const [title, setTitle] = useState("");
+  const { mutate } = useEditListing();
 
   useEffect(() => {
     if (!editListingTitlePressed) {
@@ -43,14 +45,19 @@ function EditListingTitleCollapsible({
                     ? "Title is required"
                     : title.length > 25
                       ? "Title can't exceed to 25 characters"
-                      : String(title?.length ?? 0) + "/25"}
+                      : String(title?.length ?? 0) + "/20"}
                 </Badge>
               </div>
               <Button
-                disabled={!title || title.length > 20 || title.length < 8}
-                className="w-max rounded-full bg-gray-950"
+                onClick={() =>
+                  mutate({
+                    serviceTitle: title,
+                  })
+                }
+                disabled={!title || title.length > 20 || title.length < 5}
+                className="w-max bg-gray-950"
               >
-                Save
+                Save changes
               </Button>
             </>
           ) : (

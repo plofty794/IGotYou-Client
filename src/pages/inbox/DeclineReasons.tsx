@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import useDeclineBookingRequest from "@/hooks/useDeclineBookingRequest";
 import { useState } from "react";
 
 const REASONS = [
@@ -23,13 +24,16 @@ const REASONS = [
 ];
 
 function DeclineReasons({
+  bookingRequestID,
   isExpired,
   isCancelled,
 }: {
   isExpired: boolean;
   isCancelled?: boolean;
+  bookingRequestID: string;
 }) {
   const [declineReason, setDeclineReason] = useState("");
+  const { mutate } = useDeclineBookingRequest();
 
   return (
     <Dialog onOpenChange={(isOpen) => !isOpen && setDeclineReason("")}>
@@ -54,7 +58,7 @@ function DeclineReasons({
                 >
                   <Label
                     htmlFor={reason}
-                    className="text-sm font-semibold capitalize"
+                    className="text-base font-semibold capitalize"
                   >
                     {reason}
                   </Label>
@@ -72,6 +76,9 @@ function DeclineReasons({
         <DialogFooter>
           <Button
             disabled={!declineReason}
+            onClick={() =>
+              mutate({ bookingRequestID, hostDeclineReasons: declineReason })
+            }
             className="rounded-full bg-gray-950"
           >
             Submit

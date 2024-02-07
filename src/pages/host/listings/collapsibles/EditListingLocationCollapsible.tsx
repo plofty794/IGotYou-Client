@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
 import { GEOAPIFY_KEY } from "@/constants/API_Keys";
+import useEditListing from "@/hooks/useEditListing";
 import {
   GeoapifyContext,
   GeoapifyGeocoderAutocomplete,
@@ -17,6 +18,7 @@ function EditListingLocationCollapsible({
   const [location, setLocation] = useState("");
   const [currentLocation, setCurrentLocation] =
     useState<GeolocationCoordinates>();
+  const { mutate } = useEditListing();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((pos) =>
@@ -62,10 +64,11 @@ function EditListingLocationCollapsible({
                 </GeoapifyContext>
               </div>
               <Button
+                onClick={() => mutate({ serviceLocation: location })}
                 disabled={!location}
-                className="w-max rounded-full bg-gray-950"
+                className="w-max bg-gray-950"
               >
-                Save
+                Save changes
               </Button>
             </>
           ) : (

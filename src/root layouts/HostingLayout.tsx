@@ -78,7 +78,7 @@ function HostingLayout() {
                     Insights
                   </DropdownMenuItem>
                   <DropdownMenuItem className="p-4 font-medium text-gray-600">
-                    Reservations
+                    <Link to={"/hosting-reservations"}>Reservations</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="p-4 font-medium text-gray-600">
                     Earnings

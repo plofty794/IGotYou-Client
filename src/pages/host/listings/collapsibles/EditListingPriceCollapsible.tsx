@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
 import { BASE_PRICE, PRICE_CAP } from "@/constants/price";
+import useEditListing from "@/hooks/useEditListing";
 import { useEffect, useState } from "react";
 import CurrencyInput, { formatValue } from "react-currency-input-field";
 
 function EditListingPriceCollapsible({ price }: { price: number }) {
   const [editListingPricePressed, setEditListingPricePressed] = useState(false);
   const [listingPrice, setListingPrice] = useState<number>(price);
+  const { mutate } = useEditListing();
 
   useEffect(() => {
     if (!editListingPricePressed) {
@@ -56,9 +58,14 @@ function EditListingPriceCollapsible({ price }: { price: number }) {
                   listingPrice < BASE_PRICE ||
                   listingPrice > PRICE_CAP
                 }
-                className="w-max rounded-full bg-gray-950"
+                onClick={() =>
+                  mutate({
+                    price,
+                  })
+                }
+                className="w-max bg-gray-950"
               >
-                Save
+                Save changes
               </Button>
             </>
           ) : (

@@ -3,10 +3,10 @@ import { NavLink } from "react-router-dom";
 
 function HostingTabs() {
   return (
-    <div className="w-2/4 flex items-center justify-between py-2">
+    <div className="flex w-2/4 items-center justify-between py-2">
       <NavLink to={"current-reservations"}>
         <Button variant={"outline"} className="rounded-full font-medium">
-          Current reservations
+          Current reservation
         </Button>
       </NavLink>
       <NavLink to={"upcoming-reservations"}>

@@ -34,7 +34,7 @@ function RootLayout() {
               {/* outline-1 outline outline-[#FF385C] hover:text-[#FF385C]  */}
               {auth.currentUser?.emailVerified ? (
                 <Button
-                  className="rounded-full text-sm font-semibold hover:bg-zinc-100"
+                  className="rounded-full font-semibold"
                   variant={"ghost"}
                 >
                   <Link to={"/hosting"} reloadDocument replace>

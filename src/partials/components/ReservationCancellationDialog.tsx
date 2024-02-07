@@ -3,6 +3,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -21,42 +22,38 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import useCancelBookingRequest from "@/hooks/useCancelBookingRequest";
+import { TReservationDetails } from "@/pages/PaymentDetails";
 import { useState } from "react";
 
 const REASONS = [
-  "unverified identity",
-  "unexpected events",
-  "mismatched expectations",
-  "safety concerns",
-  "no reviews",
-  "negative reviews",
-  "change of heart",
+  "personal illness or emergency",
+  "unavailability of resources",
+  "natural disasters or weather events",
+  "payment issues",
+  "safety Concerns",
+  "disputes or conflicts",
 ];
 
-function CancelRequestDialog({
-  bookingRequestID,
+function ReservationCancellationDialog({
+  reservationDetails,
 }: {
-  bookingRequestID: string;
+  reservationDetails: TReservationDetails;
 }) {
-  const [cancelReason, setCancelReason] = useState("");
-  const { mutate, isPending } = useCancelBookingRequest();
+  const [hostCancellationReason, setHostCancellationReason] = useState("");
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={(isOpen) => !isOpen && setHostCancellationReason("")}>
       <DialogTrigger asChild>
-        <Button className="p-0 text-red-600" variant={"link"}>
-          Cancel request
-        </Button>
+        <Button variant={"destructive"}>Cancel service</Button>
       </DialogTrigger>
-      <DialogContent className="gap-4">
+      <DialogContent className="max-w-lg gap-4">
         <DialogHeader>
-          <DialogTitle className="mb-2 text-2xl font-bold">
-            Why are you cancelling?
+          <DialogTitle className="mb-2 text-xl font-bold">
+            Why are you cancelling this service?
           </DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-72 pr-4">
-          <RadioGroup onValueChange={(v) => setCancelReason(v)}>
+          <RadioGroup onValueChange={(v) => setHostCancellationReason(v)}>
             {REASONS.map((reason, index) => (
               <>
                 <div
@@ -65,7 +62,7 @@ function CancelRequestDialog({
                 >
                   <Label
                     htmlFor={reason}
-                    className="text-base font-medium capitalize"
+                    className="text-base font-semibold capitalize"
                   >
                     {reason}
                   </Label>
@@ -84,37 +81,40 @@ function CancelRequestDialog({
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
-                disabled={!cancelReason}
-                className="rounded-full bg-gray-950 p-6 text-lg"
+                disabled={!hostCancellationReason}
+                className="w-max gap-2 rounded-full bg-gray-950"
               >
-                Submit
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="h-5 w-5"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="m5.965 4.904 9.131 9.131a6.5 6.5 0 0 0-9.131-9.131Zm8.07 10.192L4.904 5.965a6.5 6.5 0 0 0 9.131 9.131ZM4.343 4.343a8 8 0 1 1 11.314 11.314A8 8 0 0 1 4.343 4.343Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Cancel service
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Are you sure you want to cancel?
+                <AlertDialogTitle className="font-bold">
+                  Are you sure you want to cancel your service ?
                 </AlertDialogTitle>
               </AlertDialogHeader>
-              <p className="text-sm font-semibold text-gray-600">
-                Once you cancel, your booking request will be removed from
-                host's inbox. Are you absolutely sure you want to proceed?
-              </p>
+              <AlertDialogDescription className="font-semibold">
+                This will prevent them from messaging you and close the door on
+                any potential bookings they might make.
+              </AlertDialogDescription>
               <AlertDialogFooter>
                 <AlertDialogCancel className="rounded-full">
                   Close
                 </AlertDialogCancel>
-                <AlertDialogAction
-                  disabled={isPending}
-                  onClick={() =>
-                    mutate({
-                      bookingRequestID,
-                      guestCancelReasons: cancelReason,
-                    })
-                  }
-                  className="rounded-full bg-gray-950"
-                >
-                  Continue
+                <AlertDialogAction className="rounded-full bg-red-600 hover:bg-red-500">
+                  Block
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -125,4 +125,4 @@ function CancelRequestDialog({
   );
 }
 
-export default CancelRequestDialog;
+export default ReservationCancellationDialog;

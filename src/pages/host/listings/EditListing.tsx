@@ -11,6 +11,7 @@ import EditListingLocationCollapsible from "./collapsibles/EditListingLocationCo
 import EditListingPriceCollapsible from "./collapsibles/EditListingPriceCollapsible";
 import EditListingCancellationPolicy from "./collapsibles/EditListingCancellationPolicyCollapsible";
 import EditListingPhotosDialog from "./EditListingPhotosDialog";
+import EditListingDates from "./collapsibles/EditListingDates";
 
 type Listing = {
   listing: TListing;
@@ -71,6 +72,14 @@ function EditListing() {
                   cancellationPolicy={
                     data?.data.listing.cancellationPolicy as string
                   }
+                />
+                <Separator />
+                <EditListingDates
+                  subscriptionExpiresAt={
+                    data?.data.listing.host?.subscriptionExpiresAt
+                  }
+                  availableAt={data?.data.listing.availableAt}
+                  endsAt={data?.data.listing.endsAt}
                 />
               </div>
             </Card>

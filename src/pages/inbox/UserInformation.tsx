@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export type TGuestID = {
+export type TUserID = {
   _id: string;
   username: string;
   email: string;
@@ -25,28 +25,28 @@ export type TGuestID = {
   userStatus: string;
 };
 
-function GuestInformation({ guestID }: { guestID: TGuestID }) {
+function UserInformation({ userID }: { userID: TUserID }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button className="border-black text-xs" variant={"outline"}>
-          {guestID.username}'s information
+          {userID.username}'s information
         </Button>
       </DialogTrigger>
       <DialogContent className="flex max-w-3xl flex-col gap-2">
         <Avatar className="mx-auto h-28 w-28">
           <AvatarImage
             className="object-cover"
-            src={guestID.photoUrl}
+            src={userID.photoUrl}
             alt="@shadcn"
           />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <p className="mx-auto w-max text-base font-semibold capitalize text-gray-600">
-          {guestID.userStatus}
+          {userID.userStatus}
         </p>
         <h2 className="text-xl font-semibold">
-          {guestID.username}'s information
+          {userID.username}'s information
         </h2>
         <div className="flex w-max gap-2">
           <svg
@@ -61,7 +61,7 @@ function GuestInformation({ guestID }: { guestID: TGuestID }) {
               clipRule="evenodd"
             />
           </svg>
-          <p className="text-sm font-medium"> {guestID.email} </p>
+          <p className="text-sm font-medium"> {userID.email} </p>
         </div>
         <div className="flex w-max gap-2">
           <svg
@@ -78,7 +78,7 @@ function GuestInformation({ guestID }: { guestID: TGuestID }) {
             />
           </svg>
           <p className="text-sm font-medium">
-            {guestID.mobilePhone ?? "No mobile phone"}
+            {userID.mobilePhone ?? "No mobile phone"}
           </p>
         </div>
         <div className="flex w-full items-center justify-center gap-8">
@@ -86,40 +86,40 @@ function GuestInformation({ guestID }: { guestID: TGuestID }) {
             <AccordionItem value="item-2">
               <AccordionTrigger>Educational Attainment</AccordionTrigger>
               <AccordionContent className="capitalize">
-                {guestID.educationalAttainment ?? "N/A"}
+                {userID.educationalAttainment ?? "N/A"}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
               <AccordionTrigger>
-                Where does {guestID.username} live?
+                Where does {userID.username} live?
               </AccordionTrigger>
               <AccordionContent className="capitalize">
-                {guestID.address ?? "N/A"}
+                {userID.address ?? "N/A"}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger>
-                What is {guestID.username}
+                What is {userID.username}
                 's' work?
               </AccordionTrigger>
               <AccordionContent className="capitalize">
-                {guestID.work ?? "N/A"}
+                {userID.work ?? "N/A"}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
               <AccordionTrigger>
-                Fun fact about {guestID.username}
+                Fun fact about {userID.username}
               </AccordionTrigger>
               <AccordionContent className="capitalize">
-                {guestID.funFact ?? "N/A"}
+                {userID.funFact ?? "N/A"}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
         </div>
         <div className="mx-auto mt-4 flex w-max items-center justify-between gap-2">
-          {guestID.emailVerified ? (
+          {userID.emailVerified ? (
             <div className="flex w-max items-center justify-center gap-2 rounded-lg border p-4 shadow-md">
               {" "}
               <CheckCircledIcon
@@ -146,7 +146,7 @@ function GuestInformation({ guestID }: { guestID: TGuestID }) {
               </p>
             </div>
           )}
-          {guestID.identityVerified ? (
+          {userID.identityVerified ? (
             <div className="flex w-max items-center justify-center gap-2 rounded-lg border p-4 shadow-md">
               {" "}
               <CheckCircledIcon
@@ -173,7 +173,7 @@ function GuestInformation({ guestID }: { guestID: TGuestID }) {
               </p>
             </div>
           )}
-          {guestID.mobileVerified ? (
+          {userID.mobileVerified ? (
             <div className="flex w-max items-center justify-center gap-2 rounded-lg border p-4 shadow-md">
               {" "}
               <CheckCircledIcon
@@ -186,7 +186,7 @@ function GuestInformation({ guestID }: { guestID: TGuestID }) {
                 Mobile verified
               </p>
               <p className="text-sm font-semibold text-gray-600">
-                {guestID.mobilePhone}
+                {userID.mobilePhone}
               </p>
             </div>
           ) : (
@@ -209,4 +209,4 @@ function GuestInformation({ guestID }: { guestID: TGuestID }) {
   );
 }
 
-export default GuestInformation;
+export default UserInformation;

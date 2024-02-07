@@ -78,6 +78,12 @@ import CancelledBookingRequests from "./pages/bookings/CancelledBookingRequests"
 import BookingRequest from "./pages/inbox/BookingRequest";
 import ServiceTitle from "./pages/become a host/ServiceTitle";
 import HostCalendar from "./pages/HostCalendar";
+import Reservations from "./pages/Reservations";
+import AllReservationsTab from "./partials/components/hosting/reservations page/AllReservationsTab";
+import UpcomingReservationsTab from "./partials/components/hosting/reservations page/UpcomingReservationsTab";
+import PreviousReservationsTab from "./partials/components/hosting/reservations page/PreviousReservationsTab";
+import ReservationDetails from "./pages/ReservationDetails";
+import PaymentDetails from "./pages/PaymentDetails";
 
 function App() {
   const [User, setUser] = useState<User | null>();
@@ -359,6 +365,16 @@ function App() {
           />
         </Route>
 
+        {/* RESERVATION Route */}
+        <Route
+          path="/reservation-details/:reservationID"
+          element={<ReservationDetails />}
+        />
+        <Route
+          path="/reservation-details/:reservationID/payment-details"
+          element={<PaymentDetails />}
+        />
+
         {/* BOOKINGS Route */}
         <Route
           path="/bookings"
@@ -398,6 +414,11 @@ function App() {
             />
           </Route>
           <Route path="hosting-calendar" element={<HostCalendar />} />
+          <Route path="hosting-reservations" element={<Reservations />}>
+            <Route path="all" element={<AllReservationsTab />} />
+            <Route path="upcoming" element={<UpcomingReservationsTab />} />
+            <Route path="previous" element={<PreviousReservationsTab />} />
+          </Route>
           <Route path="hosting-inbox" element={<Inbox />}>
             <Route path="booking-request/:id" element={<BookingRequest />} />
           </Route>

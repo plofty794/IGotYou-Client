@@ -22,11 +22,11 @@ function Hosting() {
         <div className="flex items-center justify-between">
           <span className="text-xl font-medium">Your reservations</span>
           <Button className="rounded-full bg-gray-950 font-semibold">
-            <Link to={"/hosting/reservations"}>All reservations</Link>
+            <Link to={"/hosting-reservations"}>All reservations</Link>
           </Button>
         </div>
         <HostingTabs />
-        <Card className="mt-4 border-none bg-[#F5F5F5] py-4 shadow-none">
+        <Card className="mt-4 shadow-lg">
           {location.pathname.includes("reservations") ? (
             <Outlet />
           ) : (

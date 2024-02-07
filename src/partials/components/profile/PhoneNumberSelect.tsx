@@ -65,10 +65,10 @@ function PhoneNumberSelect({ mobilePhone, mobileVerified }: TMobilePhone) {
   }
 
   return (
-    <div className="w-full flex flex-col gap-1">
+    <div className="flex w-full flex-col gap-1">
       <form onSubmit={handleSubmit(mobilePhoneSubmit)}>
-        <div className="flex items-center gap-2 mb-2">
-          {<Flag country={"PH"} className="w-9 h-9" />}
+        <div className="mb-2 flex items-center gap-2">
+          {<Flag country={"PH"} className="h-9 w-9" />}
           <Input autoFocus inputMode="numeric" {...register("mobile_phone")} />
         </div>
         {errors.mobile_phone && (
@@ -77,12 +77,12 @@ function PhoneNumberSelect({ mobilePhone, mobileVerified }: TMobilePhone) {
         <div className="mt-4 flex items-center gap-2">
           <Button
             disabled={isPending || mobilePhone === watch().mobile_phone}
-            className="w-max font-semibold bg-gray-950 rounded-full text-xs"
+            className="w-max rounded-full bg-gray-950 text-xs font-semibold"
           >
             {mobilePhone ? "Change" : "Add"}
           </Button>
           {!mobileVerified && mobilePhone ? (
-            <Button className="bg-gray-950 rounded-full text-xs">
+            <Button className="rounded-full bg-gray-950 text-xs">
               <Link to={`/account/verify-phone/${id}`} reloadDocument replace>
                 Verify mobile phone
               </Link>

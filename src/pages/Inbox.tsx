@@ -76,55 +76,110 @@ function Inbox() {
                   {data?.pages.flatMap((page) =>
                     page.data.bookingRequests.map(
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (v: any) => (
-                        <NavLink
-                          key={v._id}
-                          to={`/hosting-inbox/booking-request/${v._id}`}
-                          className="rounded-md border font-bold text-gray-600 shadow-md"
-                        >
-                          <div className="flex gap-2 px-4 py-2">
-                            <Avatar>
-                              <AvatarImage
-                                className="object-cover"
-                                src={v.guestID.photoUrl}
-                                alt={v.guestID.username}
-                              />
-                              <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                            <div className="flex w-full flex-col">
-                              <div className="flex w-full items-start justify-between">
-                                <span className="text-xs">
-                                  {v.guestID.username}
-                                </span>
+                      (v: any) =>
+                        v.type === "Service-Cancellation-Request" ? (
+                          <NavLink
+                            key={v._id}
+                            to={`/hosting-inbox/booking-request/${v._id}`}
+                            className="rounded-md border font-bold text-gray-600 shadow-md"
+                          >
+                            <div className="flex gap-2 px-4 py-2">
+                              <Avatar>
+                                <AvatarImage
+                                  className="object-cover"
+                                  src={v.guestID.photoUrl}
+                                  alt={v.guestID.username}
+                                />
+                                <AvatarFallback>CN</AvatarFallback>
+                              </Avatar>
+                              <div className="flex w-full flex-col">
+                                <div className="flex w-full items-start justify-between">
+                                  <span className="text-xs">
+                                    {v.guestID.username}
+                                  </span>
 
-                                <span className="text-xs text-gray-600">
-                                  {formatDistanceToNow(new Date(v.createdAt), {
-                                    addSuffix: true,
-                                  })}
-                                </span>
-                              </div>
-                              <div className="flex w-full items-center justify-between">
-                                <div className="w-44 overflow-hidden text-ellipsis whitespace-nowrap">
-                                  <span className="max-w-xs text-xs italic">
-                                    {v.message}
+                                  <span className="text-xs text-gray-600">
+                                    {formatDistanceToNow(
+                                      new Date(v.createdAt),
+                                      {
+                                        addSuffix: true,
+                                      },
+                                    )}
                                   </span>
                                 </div>
-                                <span
-                                  className={` ${
-                                    v.status === "pending"
-                                      ? "text-amber-600 hover:text-amber-500"
-                                      : v.status === "approved"
-                                        ? "text-green-600 hover:text-green-500"
-                                        : "text-red-600 hover:text-red-500"
-                                  }  w-max text-xs font-extrabold`}
-                                >
-                                  {v.status}
-                                </span>
+                                <div className="flex w-full items-center justify-between">
+                                  <div className="w-44 overflow-hidden text-ellipsis whitespace-nowrap">
+                                    <span className="max-w-xs text-xs capitalize italic">
+                                      {String(v.type).split("-").join(" ")}
+                                    </span>
+                                  </div>
+                                  <span
+                                    className={` ${
+                                      v.status === "pending"
+                                        ? "text-amber-600 hover:text-amber-500"
+                                        : v.status === "approved"
+                                          ? "text-green-600 hover:text-green-500"
+                                          : "text-red-600 hover:text-red-500"
+                                    }  w-max text-xs font-extrabold`}
+                                  >
+                                    {v.status}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </NavLink>
-                      ),
+                          </NavLink>
+                        ) : (
+                          <NavLink
+                            key={v._id}
+                            to={`/hosting-inbox/booking-request/${v._id}`}
+                            className="rounded-md border font-bold text-gray-600 shadow-md"
+                          >
+                            <div className="flex gap-2 px-4 py-2">
+                              <Avatar>
+                                <AvatarImage
+                                  className="object-cover"
+                                  src={v.guestID.photoUrl}
+                                  alt={v.guestID.username}
+                                />
+                                <AvatarFallback>CN</AvatarFallback>
+                              </Avatar>
+                              <div className="flex w-full flex-col">
+                                <div className="flex w-full items-start justify-between">
+                                  <span className="text-xs">
+                                    {v.guestID.username}
+                                  </span>
+
+                                  <span className="text-xs text-gray-600">
+                                    {formatDistanceToNow(
+                                      new Date(v.createdAt),
+                                      {
+                                        addSuffix: true,
+                                      },
+                                    )}
+                                  </span>
+                                </div>
+                                <div className="flex w-full items-center justify-between">
+                                  <div className="w-44 overflow-hidden text-ellipsis whitespace-nowrap">
+                                    <span className="max-w-xs text-xs italic">
+                                      {v.message}
+                                    </span>
+                                  </div>
+                                  <span
+                                    className={` ${
+                                      v.status === "pending"
+                                        ? "text-amber-600 hover:text-amber-500"
+                                        : v.status === "approved"
+                                          ? "text-green-600 hover:text-green-500"
+                                          : "text-red-600 hover:text-red-500"
+                                    }  w-max text-xs font-extrabold`}
+                                  >
+                                    {v.status}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </NavLink>
+                        ),
                     ),
                   )}
                 </div>

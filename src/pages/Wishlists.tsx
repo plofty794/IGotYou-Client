@@ -45,16 +45,26 @@ function Wishlists() {
                 <div className="flex flex-col gap-2">
                   <Card className="relative h-72 w-72 overflow-hidden p-0">
                     <Link key={v._id} to={`/listings/show/${v._id}`}>
-                      <AdvancedImage
-                        cldImg={cld.image(v.listingAssets[0].public_id)}
-                        plugins={[
-                          lazyload(),
-                          responsive({
-                            steps: [800, 1000, 1400],
-                          }),
-                        ]}
-                        className="h-full w-full rounded-lg object-cover transition-transform hover:scale-105"
-                      />
+                      {v.listingAssets[0].resource_type === "video" ? (
+                        <AdvancedImage
+                          className="h-full w-full rounded-lg object-cover transition-transform hover:scale-105"
+                          cldImg={cld
+                            .image(v.listingAssets[0].public_id)
+                            .setAssetType("video")
+                            .format("auto:image")}
+                        />
+                      ) : (
+                        <AdvancedImage
+                          cldImg={cld.image(v.listingAssets[0].public_id)}
+                          plugins={[
+                            lazyload(),
+                            responsive({
+                              steps: [800, 1000, 1400],
+                            }),
+                          ]}
+                          className="h-full w-full rounded-lg object-cover transition-transform hover:scale-105"
+                        />
+                      )}
                     </Link>
                     <Button
                       onClick={() => mutate(v._id)}

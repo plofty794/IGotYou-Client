@@ -1,23 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
 import { compareAsc, formatDistance } from "date-fns";
 import Lottie from "lottie-react";
 import { formatValue } from "react-currency-input-field";
@@ -26,7 +16,16 @@ import useGetGuestPendingBookingRequests from "@/hooks/useGetGuestPendingBooking
 import { jelly } from "ldrs";
 import { useEffect } from "react";
 import CancelRequestDialog from "./components/CancelRequestDialog";
+import { Link } from "react-router-dom";
 jelly.register();
+import { Cloudinary } from "@cloudinary/url-gen/index";
+import { AdvancedImage } from "@cloudinary/react";
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: "dop5kqpod",
+  },
+});
 
 function PendingBookingRequests() {
   const { data, isPending } = useGetGuestPendingBookingRequests();
@@ -52,54 +51,38 @@ function PendingBookingRequests() {
                   {v.hostID.username}
                 </Badge>
               </CardTitle>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant={"outline"} className="rounded-full">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-6 w-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
-                      />
-                    </svg>
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <form className="flex flex-col gap-2" method="get">
-                    <DialogHeader>
-                      <DialogTitle className="text-lg font-semibold">
-                        New Message
-                      </DialogTitle>
-                      <div className="flex w-full flex-col items-center justify-center gap-2">
-                        <div className="flex w-full items-center justify-center gap-2">
-                          <Label className="text-sm font-semibold text-gray-600">
-                            To:{" "}
-                          </Label>
-                          <div className="mr-auto w-max">
-                            <span className="border-none p-2 text-sm font-semibold shadow-none outline-none focus-visible:border-none focus-visible:ring-0">
-                              {v.hostID.username}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </DialogHeader>
-                    <Textarea minLength={1} />
-                    <DialogFooter className="mt-2">
-                      <Button className="rounded-full bg-gray-950">Send</Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
-              <CardDescription className="font-semibold">
-                View profile
-              </CardDescription>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link to={"/messages"}>
+                      <Button variant={"outline"} className="rounded-full">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="h-6 w-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
+                          />
+                        </svg>
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Chat {v.hostID.username}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <Button variant={"link"} className="p-0 text-xs">
+                <Link to={`/users/visit/show/${v.hostID._id}`}>
+                  View profile
+                </Link>
+              </Button>
             </div>
             <Badge
               className={`rounded-full font-bold uppercase ${
@@ -117,12 +100,21 @@ function PendingBookingRequests() {
           <Separator />
           <CardContent className="flex w-full justify-between p-4">
             <div className="flex gap-2">
-              <div className="h-full w-44 overflow-hidden rounded-md">
-                <img
-                  src={v.listingID.listingAssets[0].secure_url}
-                  alt="Image"
-                  className="h-full w-full object-cover transition-transform hover:scale-110"
-                />
+              <div className="h-44 w-44 overflow-hidden rounded-md">
+                {v.listingID.listingAssets[0]?.resource_type === "video" ? (
+                  <AdvancedImage
+                    className="h-44 w-44 object-cover transition-transform hover:scale-110"
+                    cldImg={cld
+                      .image(v.listingID.listingAssets[0]?.public_id)
+                      .setAssetType("video")
+                      .format("auto:image")}
+                  />
+                ) : (
+                  <AdvancedImage
+                    className="h-44 w-44 object-cover transition-transform hover:scale-110"
+                    cldImg={cld.image(v.listingID.listingAssets[0].public_id)}
+                  />
+                )}
               </div>
               <div className="flex flex-col gap-2">
                 <span className="text-lg font-bold ">

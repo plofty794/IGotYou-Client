@@ -76,9 +76,15 @@ export function UserDropDownButton() {
               alt="user-avatar"
               loading="lazy"
             />
-            {data?.data.guestNotifications?.length > 0 && (
+            {data?.data.guestNotifications.filter(
+              (v: { read: boolean }) => !v.read,
+            ).length > 0 && (
               <span className="absolute left-5 top-[-5px] h-4 w-4 rounded-full bg-[#FF385C] text-xs text-white outline outline-1 outline-white">
-                {data?.data.guestNotifications?.length}
+                {
+                  data?.data.guestNotifications.filter(
+                    (v: { read: boolean }) => !v.read,
+                  ).length
+                }
               </span>
             )}
           </div>
@@ -96,11 +102,16 @@ export function UserDropDownButton() {
               className="relative w-full"
             >
               Messages
-              {data?.data.guestNotifications.find(
-                (v: string) => v === "New-Message",
-              ) && (
-                <span className="absolute h-[5px] w-[5px] rounded-full bg-[#FF385C]"></span>
-              )}
+              {data?.data.guestNotifications.filter(
+                (v: { read: boolean; notificationType: string }) =>
+                  !v.read && v.notificationType === "New-Message",
+              ).length > 0 &&
+                data?.data.guestNotifications.find(
+                  (v: { notificationType: string }) =>
+                    v.notificationType === "New-Message",
+                ) && (
+                  <span className="absolute h-[5px] w-[5px] rounded-full bg-[#FF385C]"></span>
+                )}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="p-4 font-semibold text-gray-600">
@@ -122,11 +133,17 @@ export function UserDropDownButton() {
           >
             <Link to={"/bookings"} className="relative w-full" replace>
               Bookings
-              {data?.data.guestNotifications.find(
-                (v: string) => v === "Booking-Approved",
-              ) && (
-                <span className="absolute h-[5px] w-[5px] rounded-full bg-[#FF385C]"></span>
-              )}
+              {data?.data.guestNotifications.filter(
+                (v: { read: boolean; notificationType: string }) =>
+                  v.read === false && v.notificationType !== "New-Message",
+              ).length > 0 &&
+                data?.data.guestNotifications.filter(
+                  (v: { notificationType: string }) =>
+                    v.notificationType === "Booking-Approved" ||
+                    v.notificationType === "Booking-Declined",
+                ) && (
+                  <span className="absolute h-[5px] w-[5px] rounded-full bg-[#FF385C]"></span>
+                )}
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

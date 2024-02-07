@@ -6,11 +6,6 @@ import {
 } from "@/components/ui/tooltip";
 import { SocketContextProvider } from "@/context/SocketContext";
 import { useContext, useEffect, useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Link } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { formatDistanceToNow } from "date-fns";
@@ -20,6 +15,14 @@ import { CircleIcon } from "@radix-ui/react-icons";
 import useGetHostNotifications from "@/hooks/useGetHostNotifications";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 pulsar.register();
 
 function HostNotification() {
@@ -54,6 +57,19 @@ function HostNotification() {
       });
     });
 
+    socket?.on("request-service-cancellation-hostNotification", () => {
+      queryClient.invalidateQueries({
+        queryKey: ["host-notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["host-booking-requests"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["booking-request"],
+        exact: false,
+      });
+    });
+
     socket?.on("send-booking-cancelled-hostNotification", () => {
       queryClient.invalidateQueries({
         queryKey: ["host-notifications"],
@@ -73,11 +89,11 @@ function HostNotification() {
       {hostNotifications.isPending ? (
         <l-pulsar size="10" speed="1" color="gray"></l-pulsar>
       ) : (
-        <Popover>
+        <DropdownMenu>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <PopoverTrigger asChild>
+                <DropdownMenuTrigger asChild>
                   <Button
                     variant={"outline"}
                     onClick={() => setNewNotifications([])}
@@ -105,7 +121,7 @@ function HostNotification() {
                       )}
                     </span>
                   </Button>
-                </PopoverTrigger>
+                </DropdownMenuTrigger>
               </TooltipTrigger>
               <TooltipContent>
                 {newNotifications?.length < 1
@@ -116,7 +132,7 @@ function HostNotification() {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <PopoverContent align="end" className="w-80 rounded-lg p-0">
+          <DropdownMenuContent align="end" className="w-80 rounded-lg p-0">
             <div className="flex flex-col">
               <span className="p-4 text-lg font-bold">
                 Booking Notifications
@@ -132,48 +148,50 @@ function HostNotification() {
             {notifications?.length > 0 && (
               <>
                 <Separator />
-                <ScrollArea className="h-max max-h-80">
+                <ScrollArea className="h-60">
                   <div className="flex flex-col items-center">
                     {notifications?.map((v) => (
                       <>
-                        <Link
-                          key={v._id}
-                          to={`/hosting-inbox/booking-request/${v.data._id}`}
-                          className="w-full p-4 hover:bg-[#F5F5F5]"
-                        >
-                          <div className="flex w-full items-center gap-2">
-                            <div className="w-full">
-                              <p className="text-xs font-bold text-gray-600">
-                                {v.senderID.username} has sent you a{" "}
-                                {(v.notificationType as string)
-                                  .split("-")
-                                  .join(" ")}{" "}
-                              </p>
-                              <span className="text-xs font-bold text-red-600">
-                                {formatDistanceToNow(new Date(v.createdAt), {
-                                  addSuffix: true,
-                                })}
-                              </span>
+                        <DropdownMenuItem className="w-full p-0">
+                          <Link
+                            key={v._id}
+                            to={`/hosting-inbox/booking-request/${v.data._id}`}
+                            className="w-full p-4 hover:bg-[#F5F5F5]"
+                          >
+                            <div className="flex w-full items-center gap-2">
+                              <div className="w-full">
+                                <p className="text-xs font-bold text-gray-600">
+                                  {v.senderID.username} has sent you a{" "}
+                                  {(v.notificationType as string)
+                                    .split("-")
+                                    .join(" ")}{" "}
+                                </p>
+                                <span className="text-xs font-bold text-red-600">
+                                  {formatDistanceToNow(new Date(v.createdAt), {
+                                    addSuffix: true,
+                                  })}
+                                </span>
+                              </div>
+                              {!v.read && (
+                                <CircleIcon
+                                  height={10}
+                                  width={10}
+                                  color="blue"
+                                  className="h-max w-max rounded-full bg-blue-600 fill-blue-600 p-0"
+                                />
+                              )}
                             </div>
-                            {!v.read && (
-                              <CircleIcon
-                                height={10}
-                                width={10}
-                                color="blue"
-                                className="h-max w-max rounded-full bg-blue-600 fill-blue-600 p-0"
-                              />
-                            )}
-                          </div>
-                        </Link>
-                        <Separator />
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
                       </>
                     ))}
                   </div>
                 </ScrollArea>
               </>
             )}
-          </PopoverContent>
-        </Popover>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
     </>
   );

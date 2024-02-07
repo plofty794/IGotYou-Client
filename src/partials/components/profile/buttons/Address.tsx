@@ -117,6 +117,7 @@ function Address() {
                   allowNonVerifiedHouseNumber={false}
                   skipIcons={true}
                   addDetails
+                  allowNonVerifiedStreet={false}
                   postprocessHook={(value) => {
                     setAddress(
                       `${

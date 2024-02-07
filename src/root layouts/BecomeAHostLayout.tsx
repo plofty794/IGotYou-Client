@@ -58,6 +58,11 @@ export type TListing = {
   cancellationPolicy: string;
   status?: string;
   reservedDates?: [];
+  availableAt: string;
+  endsAt: string;
+  host?: {
+    subscriptionExpiresAt: string;
+  };
 };
 
 function BecomeAHostLayout() {
@@ -74,6 +79,8 @@ function BecomeAHostLayout() {
     serviceLocation: "",
     cancellationPolicy: "",
     serviceTitle: "",
+    availableAt: "",
+    endsAt: "",
   });
 
   const {
