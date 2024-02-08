@@ -21,7 +21,7 @@ export function useRegister() {
       return await createUserWithEmailAndPassword(
         auth,
         data.email,
-        data.password
+        data.password,
       );
     },
     onSuccess: async (res, variables) => {

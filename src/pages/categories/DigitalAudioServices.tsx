@@ -1,20 +1,18 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import Lottie from "lottie-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { formatValue } from "react-currency-input-field";
 import { Link } from "react-router-dom";
-import { Keyboard, Mousewheel, Navigation, Pagination } from "swiper/modules";
+import { Mousewheel, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import noListing from "../../assets/no-listings.json";
 import useGetListingsPerCategory from "@/hooks/useGetListingsPerCategory";
 import ListingsLoader from "@/partials/loaders/ListingsLoader";
 import { auth } from "@/firebase config/config";
+import { Cloudinary } from "@cloudinary/url-gen/index";
+import UpdateWishlist from "@/partials/components/UpdateWishlist";
+import { formatDistance } from "date-fns";
+import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
 
 export type TCategories =
   | "Digital Audio Services"
@@ -25,11 +23,18 @@ export type TCategories =
   | "Live Events and Concerts"
   | "Digital Advertising and Marketing";
 
+const uid = auth.currentUser?.uid;
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: "dop5kqpod",
+  },
+});
+
 function DigitalAudioServices() {
   const { data, isPending } = useGetListingsPerCategory<TCategories>(
     "Digital Audio Services",
   );
-  const [wishlist, setWishlist] = useState(false);
 
   useEffect(() => {
     document.title = "Digital Audio Services - IGotYou";
@@ -56,15 +61,19 @@ function DigitalAudioServices() {
                               key={v._id}
                               className="w-full overflow-hidden border-none shadow-none"
                             >
-                              <Link
-                                to={`${
-                                  auth.currentUser?.uid === v.host.uid
-                                    ? `/users/show/${v.host.uid}`
-                                    : `/listings/show/${v._id}`
-                                } `}
-                              >
-                                <CardHeader className="flex flex-col gap-1 p-0">
+                              <CardHeader className="flex flex-col gap-1 p-0">
+                                <Link
+                                  to={`${
+                                    uid === v.host.uid
+                                      ? `/hosting-listings/edit/${v._id}`
+                                      : `/listings/show/${v._id}`
+                                  } `}
+                                  className="mt-2"
+                                  reloadDocument={uid === v.host.uid}
+                                  replace
+                                >
                                   <Swiper
+                                    className="rounded-xl"
                                     key={i}
                                     spaceBetween={10}
                                     cssMode={true}
@@ -73,65 +82,83 @@ function DigitalAudioServices() {
                                     }}
                                     pagination={true}
                                     mousewheel={true}
-                                    keyboard={true}
                                     modules={[
                                       Navigation,
                                       Pagination,
                                       Mousewheel,
-                                      Keyboard,
                                     ]}
                                   >
-                                    {v.listingAssets.map(
-                                      (photo: TListingPhotos) => (
-                                        <SwiperSlide key={photo.public_id}>
-                                          <img
-                                            key={photo._id}
-                                            loading="lazy"
-                                            className="mx-auto h-72 max-h-full w-full max-w-full rounded-lg object-cover"
-                                            src={photo.secure_url}
-                                          />
-                                        </SwiperSlide>
-                                      ),
+                                    {v.listingAssets?.map(
+                                      (asset: TListingAssets) =>
+                                        asset.resource_type === "video" ? (
+                                          <SwiperSlide
+                                            className="h-72 rounded-xl"
+                                            key={asset.public_id}
+                                          >
+                                            <AdvancedImage
+                                              className="mx-auto h-72 w-full rounded-xl object-cover"
+                                              cldImg={cld
+                                                .image(asset.public_id)
+                                                .setAssetType("video")
+                                                .format("auto:image")}
+                                            />
+                                          </SwiperSlide>
+                                        ) : (
+                                          <SwiperSlide key={asset.public_id}>
+                                            <AdvancedImage
+                                              key={asset._id}
+                                              cldImg={cld.image(
+                                                asset.public_id,
+                                              )}
+                                              plugins={[
+                                                lazyload(),
+                                                responsive({
+                                                  steps: [800, 1000, 1400],
+                                                }),
+                                              ]}
+                                              className="mx-auto h-72 w-full rounded-lg border object-cover"
+                                            />
+                                          </SwiperSlide>
+                                        ),
                                     )}
                                   </Swiper>
-                                </CardHeader>
-                              </Link>
-                              <CardContent className="mt-2 flex items-start justify-between px-1">
+                                </Link>
+                              </CardHeader>
+                              <CardContent className="mt-2 flex justify-between p-0">
                                 <div className="flex flex-col">
-                                  <span className="font-semibold">
-                                    {v.serviceType}
+                                  <span className="text-base font-semibold">
+                                    {v.serviceTitle}
                                   </span>
-                                  <span className="text-sm font-medium text-gray-600">
+                                  <span className="text-sm font-semibold text-gray-600">
                                     {v.host.username}
                                   </span>
 
-                                  <div className="w-full text-sm">
-                                    <span className="text-gray-600">
-                                      Ends at
-                                    </span>
-                                    <span className="text-gray-600">
-                                      {" "}
-                                      {new Date(v.endsAt).toDateString()}
+                                  <div className="w-full">
+                                    <span className="text-sm font-semibold text-gray-600">
+                                      Ends in{" "}
+                                      {formatDistance(
+                                        new Date().setHours(0, 0, 0, 0),
+                                        new Date(v.endsAt),
+                                      )}
                                     </span>
                                   </div>
                                   <div className="flex w-full items-center justify-between">
-                                    <span className="mt-1 font-semibold">
+                                    <span className="font-semibold">
                                       {formatValue({
                                         value: v.price.toString(),
-                                        prefix: "₱",
                                         intlConfig: {
-                                          locale: "PH",
-                                          currency: "php",
+                                          locale: "ph-PH",
+                                          currency: "PHP",
                                         },
                                       })}{" "}
-                                      <span className="text-sm font-normal">
+                                      <span className="text-sm font-semibold">
                                         service
                                       </span>
                                     </span>
                                   </div>
                                 </div>
-                                <div className="flex flex-col items-end  gap-10">
-                                  <div className="flex items-center justify-center gap-1">
+                                <div className="flex flex-col items-end">
+                                  <div className="mb-2 flex items-center justify-center gap-1">
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
                                       viewBox="0 0 24 24"
@@ -144,41 +171,17 @@ function DigitalAudioServices() {
                                         clipRule="evenodd"
                                       />
                                     </svg>
-                                    <span className="text-sm font-semibold">
+                                    <span className="text-xs font-semibold">
                                       {v.host.rating.length > 0
                                         ? v.host.rating.length
                                         : "No rating"}
                                     </span>
                                   </div>
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                      <TooltipTrigger>
-                                        {" "}
-                                        <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          viewBox="0 0 24 24"
-                                          strokeWidth={1.5}
-                                          className={`h-7 w-7 cursor-pointer stroke-gray-500 hover:stroke-slate-600 ${
-                                            wishlist
-                                              ? "fill-red-600"
-                                              : "fill-none"
-                                          }`}
-                                          onClick={() =>
-                                            setWishlist((prev) => !prev)
-                                          }
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                                          />
-                                        </svg>
-                                      </TooltipTrigger>
-                                      <TooltipContent className="bg-gray-950">
-                                        <p>Save to wishlist</p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
+                                  {v.host.uid !== auth.currentUser?.uid && (
+                                    <>
+                                      <UpdateWishlist listingID={v._id} />
+                                    </>
+                                  )}
                                 </div>
                               </CardContent>
                             </Card>
@@ -206,43 +209,13 @@ function DigitalAudioServices() {
   );
 }
 
-type TListingPhotos = {
+type TListingAssets = {
   original_filename: string;
   public_id: string;
   secure_url: string;
   _id: string;
+  resource_type: string;
+  thumbnail_url: string;
 };
-
-// type TListings = {
-//   hosts: [
-//     {
-//       availableAt: string;
-//       createdAt: string;
-//       endsAt: string;
-//       host: THost;
-//       listingPhotos: [TListingPhotos];
-//       price: number;
-//       serviceDescription: string;
-//       serviceType: string;
-//       updatedAt: string;
-//       _id: string;
-//     }
-//   ];
-// };
-
-// type THost = {
-//   email: string;
-//   emailVerified: boolean;
-//   listings: string[];
-//   mobileVerified: boolean;
-//   photoUrl: null | string;
-//   providerId: string;
-//   subscriptionExpiresAt: string;
-//   subscriptionStatus: string;
-//   uid: string;
-//   userStatus: string;
-//   username: string;
-//   rating: [];
-// };
 
 export default DigitalAudioServices;

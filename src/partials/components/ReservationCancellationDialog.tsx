@@ -22,7 +22,6 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { TReservationDetails } from "@/pages/PaymentDetails";
 import { useState } from "react";
 
 const REASONS = [
@@ -34,11 +33,7 @@ const REASONS = [
   "disputes or conflicts",
 ];
 
-function ReservationCancellationDialog({
-  reservationDetails,
-}: {
-  reservationDetails: TReservationDetails;
-}) {
+function ReservationCancellationDialog() {
   const [hostCancellationReason, setHostCancellationReason] = useState("");
 
   return (

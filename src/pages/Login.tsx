@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { dotPulse } from "ldrs";
 import useGoogleSignin from "@/hooks/useGoogleSignin";
 import { Label } from "@/components/ui/label";
+
 dotPulse.register();
 
 function Login() {

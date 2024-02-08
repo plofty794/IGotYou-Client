@@ -25,6 +25,7 @@ import { Cloudinary } from "@cloudinary/url-gen";
 import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
 import { formatDistance } from "date-fns";
 import { TListing } from "@/root layouts/BecomeAHostLayout";
+import ListingsNavigation from "@/partials/components/ListingsNavigation";
 
 type TOutletContext = {
   listings: InfiniteData<AxiosResponse<TListings>>;
@@ -111,6 +112,7 @@ function Home() {
         </Dialog>
       )}
       <section className="mt-2 px-8">
+        <ListingsNavigation />
         {listings.pages[0].data.listings.length > 0 ? (
           <>
             <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1">

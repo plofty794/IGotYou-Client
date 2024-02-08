@@ -10,11 +10,36 @@ function useGetListings() {
   const { dispatch } = useContext(UserStateContextProvider);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  const minPrice = location.search
+    .match(/\?(\w+)=.*/)?.[0]
+    .split("?")[1]
+    .split("&")[0]
+    .split("=")[1];
+
+  const maxPrice = location.search
+    .match(/\?(\w+)=.*/)?.[0]
+    .split("?")[1]
+    .split("&")[1]
+    .split("=")[1];
+
+  const serviceType = location.search
+    .match(/\?(\w+)=.*/)?.[0]
+    .split("?")[1]
+    .split("&")[2]
+    .split("=")[1];
+
   return useInfiniteQuery({
     queryKey: ["listings"],
     queryFn: async ({ pageParam }) => {
       try {
-        return await axiosPrivateRoute.get(`/api/listings/${pageParam}`);
+        return await axiosPrivateRoute.get(`/api/listings/${pageParam}`, {
+          params: {
+            minPrice,
+            maxPrice,
+            serviceType,
+          },
+        });
       } catch (err) {
         const error = err as AxiosError;
         if (error.response?.status === 400) {

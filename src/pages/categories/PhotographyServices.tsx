@@ -73,7 +73,7 @@ function PhotographyServices() {
                               mousewheel={true}
                               modules={[Navigation, Pagination, Mousewheel]}
                             >
-                              {v.listingAssets?.map((asset: TListingPhotos) =>
+                              {v.listingAssets?.map((asset: TListingAssets) =>
                                 asset.resource_type === "video" ? (
                                   <SwiperSlide
                                     className="h-72 rounded-xl"
@@ -189,12 +189,13 @@ function PhotographyServices() {
   );
 }
 
-type TListingPhotos = {
+type TListingAssets = {
   original_filename: string;
   public_id: string;
   secure_url: string;
   _id: string;
   resource_type: string;
+  thumbnail_url: string;
 };
 
 export default PhotographyServices;

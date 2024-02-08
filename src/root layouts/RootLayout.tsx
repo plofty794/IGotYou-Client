@@ -4,7 +4,6 @@ import { Button } from "../components/ui/button";
 import { auth } from "@/firebase config/config";
 import Loader from "@/partials/loaders/Loader";
 import { Suspense, lazy } from "react";
-import ListingsNavigation from "@/partials/components/ListingsNavigation";
 import useGetListings from "@/hooks/useGetListings";
 
 const AlertVerifyEmail = lazy(
@@ -51,9 +50,7 @@ function RootLayout() {
               <UserDropDownButton />
             </span>
           </nav>
-          {listings.data?.pages[0]?.data.listings.length > 0 && (
-            <ListingsNavigation />
-          )}
+
           {
             <Outlet
               context={{ listings: listings.data, uid: auth.currentUser.uid }}
