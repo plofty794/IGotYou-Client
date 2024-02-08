@@ -13,6 +13,9 @@ function SocketContext({ children }: { children: ReactNode }) {
   useEffect(() => {
     const _socket = io("https://i-got-you-api.vercel.app/", {
       withCredentials: true,
+      extraHeaders: {
+        "Access-Control-Allow-Origin": "*",
+      },
     });
     setSocket(_socket);
   }, []);
