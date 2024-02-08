@@ -489,11 +489,7 @@ function ReservationDetails() {
                 >
                   Leave a review
                 </Button>
-                {data?.data.isHost && (
-                  <ReservationCancellationDialog
-                    reservationDetails={data.data.reservationDetails}
-                  />
-                )}
+                {data?.data.isHost && <ReservationCancellationDialog />}
               </div>
             </div>
           </div>
