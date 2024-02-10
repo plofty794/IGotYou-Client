@@ -10,14 +10,14 @@ function useCreateConversation() {
     mutationFn: async (receiverName: string) => {
       return await axiosPrivateRoute.post(
         "/api/users/current-user/conversations/create",
-        { receiverName }
+        { receiverName },
       );
     },
     onSuccess(data) {
       console.log(data.data);
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
       return toast({
-        title: "Success!",
+        title: "Success! 🎉",
         description: "Conversation has been created.",
         className: "bg-white font-bold",
       });

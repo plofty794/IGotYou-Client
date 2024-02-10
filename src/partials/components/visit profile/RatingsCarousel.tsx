@@ -24,7 +24,7 @@ function RatingsCarousel({ rating }: { rating?: TRating[] }) {
         {rating?.map((v) => (
           <>
             {v.guestID._id != userID ? (
-              <CarouselItem key={v._id} className="md:basis-1/2 lg:basis-1/3">
+              <CarouselItem key={v._id} className="md:basis-1/2 lg:basis-1/3 ">
                 <div className="p-1">
                   <Card>
                     <CardContent className="aspect-video p-4">
@@ -45,7 +45,16 @@ function RatingsCarousel({ rating }: { rating?: TRating[] }) {
                           clipRule="evenodd"
                         />
                       </svg>
-                      {v.guestRating}
+                      <span className="text-base font-bold">
+                        {rating.length > 0
+                          ? (
+                              rating
+                                .map((v: TRating) => v.guestRating)
+                                .reduce((acc, curr) => acc + curr, 0) /
+                              rating.length
+                            ).toFixed(1)
+                          : "No rating"}
+                      </span>
                     </div>
                     <CardFooter className="gap-2">
                       <Link to={`/users/visit/show/${v.guestID._id}`}>

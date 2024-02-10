@@ -89,7 +89,7 @@ function VisitProfile() {
                           </svg>
                         </span>
                         <span className="text-xs font-bold text-gray-600">
-                          rating
+                          number of ratings
                         </span>
                       </div>
                     </div>
@@ -162,7 +162,7 @@ function VisitProfile() {
                   <CardContent className="p-0">
                     <CardHeader className="p-0 text-2xl font-semibold max-xl:mx-auto max-xl:w-2/4">
                       <CardTitle>
-                        <h2>{data?.data.user.username}'s ratings</h2>
+                        <h2>{data?.data.user.username}'s recent ratings</h2>
                       </CardTitle>
                     </CardHeader>
                     <div className="flex w-full items-center justify-center px-8 py-6">
@@ -181,7 +181,7 @@ function VisitProfile() {
                 </Card>
                 <CardHeader className="p-0 text-2xl font-semibold max-xl:mx-auto max-xl:w-2/4">
                   <CardTitle>
-                    <h2>{data?.data.user.username}'s listings</h2>
+                    <h2>{data?.data.user.username}'s recent listings</h2>
                   </CardTitle>
                   <div className="flex w-full justify-center p-4">
                     {!data?.data.user.listings.length ? (

@@ -26,6 +26,7 @@ import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
 import { formatDistance } from "date-fns";
 import { TListing } from "@/root layouts/BecomeAHostLayout";
 import ListingsNavigation from "@/partials/components/ListingsNavigation";
+import { TRating } from "./HostReviews";
 
 type TOutletContext = {
   listings: InfiniteData<AxiosResponse<TListings>>;
@@ -236,9 +237,14 @@ function Home() {
                               clipRule="evenodd"
                             />
                           </svg>
-                          <span className="text-xs font-semibold">
+                          <span className="text-xs font-bold">
                             {v.host.rating.length > 0
-                              ? v.host.rating.length
+                              ? (
+                                  v.host.rating
+                                    .map((v: TRating) => v.guestRating)
+                                    .reduce((acc, curr) => acc + curr, 0) /
+                                  v.host.rating.length
+                                ).toFixed(1)
                               : "No rating"}
                           </span>
                         </div>

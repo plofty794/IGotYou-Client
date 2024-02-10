@@ -16,6 +16,7 @@ import UpdateWishlist from "@/partials/components/UpdateWishlist";
 import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
 import { formatDistance } from "date-fns";
 import ListingsNavigation from "@/partials/components/ListingsNavigation";
+import { TRating } from "../HostReviews";
 
 const uid = auth.currentUser?.uid;
 
@@ -180,9 +181,19 @@ function DigitalAdvertisingAndMarketing() {
                                         clipRule="evenodd"
                                       />
                                     </svg>
-                                    <span className="text-xs font-semibold">
+                                    <span className="text-xs font-bold">
                                       {v.host.rating.length > 0
-                                        ? v.host.rating.length
+                                        ? (
+                                            v.host.rating
+                                              .map(
+                                                (v: TRating) => v.guestRating,
+                                              )
+                                              .reduce(
+                                                (acc: number, curr: number) =>
+                                                  acc + curr,
+                                                0,
+                                              ) / v.host.rating.length
+                                          ).toFixed(1)
                                         : "No rating"}
                                     </span>
                                   </div>

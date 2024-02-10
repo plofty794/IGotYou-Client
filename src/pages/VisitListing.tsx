@@ -23,6 +23,7 @@ import AssetsDrawer from "@/partials/components/AssetsDrawer";
 import UpdateWishlist from "@/partials/components/UpdateWishlist";
 import MessageHost from "@/partials/components/messages/MessageHost";
 import VisitListingAccordion from "@/partials/components/VisitListingAccordion";
+import { TRating } from "./HostReviews";
 
 function VisitListing() {
   const navigate = useNavigate();
@@ -88,14 +89,19 @@ function VisitListing() {
                   />
                 </svg>
                 {listing.host.rating.length ? (
-                  listing.host.rating
+                  <p className="text-lg font-bold">
+                    {" "}
+                    {(
+                      listing.host.rating
+                        .map((v: TRating) => v.guestRating)
+                        .reduce((acc: number, curr: number) => acc + curr, 0) /
+                      listing.host.rating.length
+                    ).toFixed(1)}
+                  </p>
                 ) : (
                   <p className="text-lg font-semibold">No ratings yet</p>
                 )}
               </span>
-              <div className="flex items-center">
-                <span>{listing.host.rating}</span>
-              </div>
             </div>
             <Card className="border-0 shadow-none">
               <Separator />

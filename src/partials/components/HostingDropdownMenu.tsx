@@ -10,6 +10,7 @@ import {
 import { SocketContextProvider } from "@/context/SocketContext";
 import { auth } from "@/firebase config/config";
 import useGetGuestNotifications from "@/hooks/useGetGuestNotifications";
+import useLogOutUser from "@/hooks/useLogout";
 import { useQueryClient } from "@tanstack/react-query";
 import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -18,6 +19,7 @@ function HostingDropdownMenu() {
   const { data } = useGetGuestNotifications();
   const queryClient = useQueryClient();
   const { socket } = useContext(SocketContextProvider);
+  const logOutUser = useLogOutUser();
 
   useEffect(() => {
     socket?.on("receive-message", (conversationID) => {
@@ -81,7 +83,12 @@ function HostingDropdownMenu() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator className="bg-[#e1e0e0]" />
         <DropdownMenuItem className="p-4 font-semibold text-gray-600">
-          Log out
+          <span
+            className="w-full cursor-pointer"
+            onClick={async () => await logOutUser()}
+          >
+            Log out
+          </span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

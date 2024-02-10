@@ -190,11 +190,23 @@ function App() {
           />
           <Route
             path="/digital-audio-services"
-            element={<DigitalAudioServices />}
+            element={
+              User ?? token ?? identifier ? (
+                <DigitalAudioServices />
+              ) : (
+                <Navigate replace to={"/login"} />
+              )
+            }
           />
           <Route
             path="/graphic-design&visual-arts"
-            element={<GraphicDesignAndVisualArts />}
+            element={
+              User ?? token ?? identifier ? (
+                <GraphicDesignAndVisualArts />
+              ) : (
+                <Navigate replace to={"/login"} />
+              )
+            }
           />
           <Route
             path="/photography-services"
