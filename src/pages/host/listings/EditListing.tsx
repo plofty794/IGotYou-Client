@@ -10,7 +10,7 @@ import ListingAssets from "./ListingAssets";
 import EditListingLocationCollapsible from "./collapsibles/EditListingLocationCollapsible";
 import EditListingPriceCollapsible from "./collapsibles/EditListingPriceCollapsible";
 import EditListingCancellationPolicy from "./collapsibles/EditListingCancellationPolicyCollapsible";
-import EditListingPhotosDialog from "./EditListingPhotosDialog";
+import EditListingAssetsDialog from "./EditListingAssetsDialog";
 import EditListingDates from "./collapsibles/EditListingDates";
 
 type Listing = {
@@ -34,7 +34,7 @@ function EditListing() {
               <h2 className="text-xl font-semibold">
                 {data?.data.listing.serviceTitle}'s Assets
               </h2>
-              <EditListingPhotosDialog
+              <EditListingAssetsDialog
                 listingsAssets={data?.data.listing.listingAssets}
               />
             </div>

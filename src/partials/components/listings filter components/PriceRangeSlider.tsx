@@ -69,7 +69,7 @@ function PriceRangeSlider({
           />
         </div>
       </div>
-      {minPrice[0] >= maxPrice[0] && (
+      {minPrice[0] > maxPrice[0] && (
         <div className="mt-6">
           <p className="text-center text-sm font-bold text-red-600">
             Price ranges are overlapping

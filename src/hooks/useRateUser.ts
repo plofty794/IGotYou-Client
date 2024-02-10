@@ -1,12 +1,9 @@
 import { axiosPrivateRoute } from "@/api/axiosRoute";
 import { useToast } from "@/components/ui/use-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
-import { useParams } from "react-router-dom";
 
 function useRateUser() {
-  const { reservationID } = useParams();
-  const queryClient = useQueryClient();
   const { toast } = useToast();
 
   return useMutation({
@@ -14,21 +11,27 @@ function useRateUser() {
       reservationID,
       hostID,
       guestID,
-      feedback,
-      userRating,
+      guestFeedback,
+      hostFeedback,
+      hostRating,
+      guestRating,
     }: {
       reservationID: string;
       hostID: string;
       guestID: string;
-      feedback: string;
-      userRating: number;
+      guestFeedback?: string;
+      hostFeedback?: string;
+      hostRating?: number;
+      guestRating?: number;
     }) => {
       return await axiosPrivateRoute.post("/api/users/rate-user", {
         reservationID,
         hostID,
         guestID,
-        feedback,
-        userRating,
+        guestFeedback,
+        hostFeedback,
+        hostRating,
+        guestRating,
       });
     },
     onSuccess() {
@@ -37,9 +40,7 @@ function useRateUser() {
         description: "Rating has been sent.",
         className: "bg-white",
       });
-      queryClient.invalidateQueries({
-        queryKey: ["reservation", reservationID],
-      });
+      document.location.reload();
     },
     onError(error) {
       console.error(error);

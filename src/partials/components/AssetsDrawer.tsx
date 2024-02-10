@@ -15,8 +15,10 @@ import {
 import { fadeIn, fadeOut } from "@cloudinary/url-gen/actions/effect";
 import { Cloudinary } from "@cloudinary/url-gen/index";
 import UpdateWishlist from "./UpdateWishlist";
-import { useState } from "react";
 import { TFileType, TListing } from "@/root layouts/BecomeAHostLayout";
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
+import { Badge } from "@/components/ui/badge";
 
 const cld = new Cloudinary({
   cloud: {
@@ -25,13 +27,11 @@ const cld = new Cloudinary({
 });
 
 function AssetsDrawer({ listing }: { listing: TListing }) {
-  const [viewListing, setViewListing] = useState("");
-
   return (
-    <Drawer onClose={() => setViewListing("")}>
+    <Drawer>
       <DrawerTrigger>
         <div className="mt-4 grid h-72 grid-cols-2 gap-1 overflow-hidden rounded-xl">
-          {listing.listingAssets[0].resource_type === "video" ? (
+          {listing.listingAssets[0].format === "mp4" ? (
             <AdvancedImage
               className="h-full w-full object-cover"
               cldImg={cld
@@ -44,6 +44,15 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
                   steps: [800, 1000, 1400],
                 }),
               ]}
+            />
+          ) : listing.listingAssets[0].format === "mp3" ? (
+            <img
+              className="mx-auto h-72 w-full rounded-lg border object-cover"
+              src={
+                "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
+              }
+              alt="some image"
+              loading="lazy"
             />
           ) : (
             <AdvancedImage
@@ -61,7 +70,7 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
             {listing.listingAssets.map(
               (asset: TFileType, i: number) =>
                 i != 0 &&
-                (asset.resource_type === "video" ? (
+                (asset.format === "mp4" ? (
                   <AdvancedImage
                     key={asset._id}
                     className="h-40 max-h-max w-full object-cover"
@@ -75,6 +84,15 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
                         steps: [800, 1000, 1400],
                       }),
                     ]}
+                  />
+                ) : asset.format === "mp3" ? (
+                  <img
+                    className="h-40 max-h-max w-full object-cover"
+                    src={
+                      "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
+                    }
+                    alt="some image"
+                    loading="lazy"
                   />
                 ) : (
                   <AdvancedImage
@@ -105,20 +123,8 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
           </DrawerHeader>
           <div className="flex w-full flex-col items-center justify-center gap-4 py-8">
             {listing.listingAssets.map((asset: TFileType) =>
-              asset.resource_type === "video" ? (
-                <div
-                  onClick={(e) => {
-                    e.currentTarget.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center",
-                      inline: "center",
-                    });
-                    setViewListing(asset.public_id);
-                  }}
-                  className={`relative h-4/6 w-4/5 cursor-pointer ${
-                    asset.public_id === viewListing ? "rounded-2xl outline" : ""
-                  }`}
-                >
+              asset.format === "mp4" ? (
+                <div className="relative h-4/6 w-4/5 ">
                   <AdvancedImage
                     className="relative -z-10 mx-auto h-full w-full rounded-2xl border object-contain shadow-lg"
                     cldImg={cld
@@ -134,7 +140,6 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
                   />
                   <AdvancedVideo
                     className="absolute left-[50%] top-0 z-0 h-full w-max translate-x-[-50%] rounded-2xl border object-contain opacity-0 shadow-lg hover:z-10 hover:opacity-100"
-                    muted
                     onMouseOver={(e) => {
                       e.currentTarget.play();
                     }}
@@ -159,20 +164,25 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
                       .toURL()}
                   />
                 </div>
+              ) : asset.format === "mp3" ? (
+                <span className="max-w-4xl ">
+                  <img
+                    className="rounded-2xl border object-cover shadow-xl"
+                    src={
+                      "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
+                    }
+                    alt="some image"
+                    loading="lazy"
+                  />
+                  <AudioPlayer
+                    className="rounded-md"
+                    header={<Badge>{asset.original_filename}</Badge>}
+                    src={asset.secure_url}
+                    preload="auto"
+                  />
+                </span>
               ) : (
-                <span
-                  onClick={(e) => {
-                    e.currentTarget.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center",
-                      inline: "center",
-                    });
-                    setViewListing(asset.public_id);
-                  }}
-                  className={`max-w-4xl cursor-pointer ${
-                    asset.public_id === viewListing ? "rounded-2xl outline" : ""
-                  }`}
-                >
+                <span className="max-w-4xl ">
                   <AdvancedImage
                     className="rounded-2xl border object-cover shadow-xl"
                     cldImg={cld.image(asset.public_id)}

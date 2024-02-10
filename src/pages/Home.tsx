@@ -146,7 +146,7 @@ function Home() {
                           modules={[Navigation, Pagination, Mousewheel]}
                         >
                           {v.listingAssets?.map((asset) =>
-                            asset.resource_type === "video" ? (
+                            asset.format === "mp4" ? (
                               <SwiperSlide
                                 className="h-72 rounded-xl"
                                 key={asset.public_id}
@@ -157,6 +157,17 @@ function Home() {
                                     .image(asset.public_id)
                                     .setAssetType("video")
                                     .format("auto:image")}
+                                />
+                              </SwiperSlide>
+                            ) : asset.format === "mp3" ? (
+                              <SwiperSlide key={asset.public_id}>
+                                <img
+                                  className="mx-auto h-72 w-full rounded-lg border object-cover"
+                                  src={
+                                    "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
+                                  }
+                                  alt="some image"
+                                  loading="lazy"
                                 />
                               </SwiperSlide>
                             ) : (
@@ -267,6 +278,7 @@ type TListingAssets = {
   _id: string;
   resource_type: string;
   thumbnail_url: string;
+  format: string;
 };
 
 type TListings = {

@@ -104,26 +104,51 @@ function ServiceUploader() {
               <TableBody>
                 {service.listingAssets.map((asset, i) => (
                   <>
-                    <TableRow
-                      className="text-xs font-medium text-zinc-500 hover:bg-zinc-100"
-                      key={asset.public_id}
-                    >
-                      <TableCell key={i}>
-                        <img
-                          className="max-h-full max-w-full rounded object-contain"
-                          src={asset.thumbnail_url}
-                          alt="some image"
-                          loading="lazy"
-                        />
-                      </TableCell>
-                      <TableCell>{asset.original_filename}</TableCell>
-                      <TableCell>
-                        {(asset.bytes! / 1000).toFixed(2)} kb
-                      </TableCell>
-                      <TableCell className="uppercase">
-                        {asset.format}
-                      </TableCell>
-                    </TableRow>
+                    {asset.format === "mp3" ? (
+                      <TableRow
+                        className="text-xs font-medium text-zinc-500 hover:bg-zinc-100"
+                        key={asset.public_id}
+                      >
+                        <TableCell key={i}>
+                          <img
+                            className="h-[51px] max-h-full w-[90px] max-w-full rounded object-contain shadow-md"
+                            src={
+                              "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
+                            }
+                            alt="some image"
+                            loading="lazy"
+                          />
+                        </TableCell>
+                        <TableCell>{asset.original_filename}</TableCell>
+                        <TableCell>
+                          {(asset.bytes! / 1000).toFixed(2)} kb
+                        </TableCell>
+                        <TableCell className="uppercase">
+                          {asset.format}
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      <TableRow
+                        className="text-xs font-medium text-zinc-500 hover:bg-zinc-100"
+                        key={asset.public_id}
+                      >
+                        <TableCell key={i}>
+                          <img
+                            className="max-h-full max-w-full rounded object-contain"
+                            src={asset.thumbnail_url}
+                            alt="some image"
+                            loading="lazy"
+                          />
+                        </TableCell>
+                        <TableCell>{asset.original_filename}</TableCell>
+                        <TableCell>
+                          {(asset.bytes! / 1000).toFixed(2)} kb
+                        </TableCell>
+                        <TableCell className="uppercase">
+                          {asset.format}
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </>
                 ))}
               </TableBody>

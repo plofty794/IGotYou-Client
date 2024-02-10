@@ -16,10 +16,11 @@ import ListingsCarousel from "@/partials/components/visit profile/ListingsCarous
 import BlockUserDialog from "@/partials/components/visit profile/BlockUserDialog";
 import UnblockUser from "@/partials/components/visit profile/UnblockUser";
 import { Navigate } from "react-router-dom";
+import { TRating } from "./HostReviews";
 
 function VisitProfile() {
   const { data, isPending, isError } = useVisitProfile() as UseQueryResult<
-    AxiosResponse<{ user: TUser; isBlocker: boolean }>
+    AxiosResponse<{ user: TUser; isBlocker: boolean; userRating: TRating[] }>
   >;
 
   useEffect(() => {
@@ -165,14 +166,14 @@ function VisitProfile() {
                       </CardTitle>
                     </CardHeader>
                     <div className="flex w-full items-center justify-center px-8 py-6">
-                      {!data?.data.user.rating.length ? (
+                      {!data?.data.userRating.length ? (
                         <CardHeader>
                           <CardTitle className="text-center text-xl font-bold text-gray-600">
                             No ratings yet.
                           </CardTitle>
                         </CardHeader>
                       ) : (
-                        <RatingsCarousel />
+                        <RatingsCarousel rating={data?.data.userRating} />
                       )}
                     </div>
                   </CardContent>

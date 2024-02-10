@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import useGetWishlists from "@/hooks/useGetWishlists";
 import useUpdateWishlist from "@/hooks/useUpdateWishlist";
 import ListingsLoader from "@/partials/loaders/ListingsLoader";
+import { TListing } from "@/root layouts/BecomeAHostLayout";
 import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen/index";
 import { useEffect, useMemo, useState } from "react";
@@ -41,17 +42,26 @@ function Wishlists() {
           </div>
           {wishlists?.length > 0 ? (
             <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1">
-              {wishlists?.map((v) => (
+              {wishlists?.map((v: TListing) => (
                 <div className="flex flex-col gap-2">
                   <Card className="relative h-72 w-72 overflow-hidden p-0">
                     <Link key={v._id} to={`/listings/show/${v._id}`}>
-                      {v.listingAssets[0].resource_type === "video" ? (
+                      {v.listingAssets[0].format === "mp4" ? (
                         <AdvancedImage
                           className="h-full w-full rounded-lg object-cover transition-transform hover:scale-105"
                           cldImg={cld
                             .image(v.listingAssets[0].public_id)
                             .setAssetType("video")
                             .format("auto:image")}
+                        />
+                      ) : v.listingAssets[0].format === "mp3" ? (
+                        <img
+                          className="h-full w-full rounded-lg object-cover transition-transform hover:scale-105"
+                          src={
+                            "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
+                          }
+                          alt="some image"
+                          loading="lazy"
                         />
                       ) : (
                         <AdvancedImage
@@ -67,7 +77,7 @@ function Wishlists() {
                       )}
                     </Link>
                     <Button
-                      onClick={() => mutate(v._id)}
+                      onClick={() => mutate(v._id!)}
                       className="absolute right-1 top-1 rounded-full border bg-white p-2 hover:bg-slate-200"
                     >
                       <svg
@@ -85,12 +95,14 @@ function Wishlists() {
                     </Button>
                   </Card>
                   <div className="flex flex-col">
-                    <div className="flex w-full items-center justify-between">
-                      <span className="text-lg font-semibold">
-                        {v.serviceTitle}
-                      </span>
+                    <div className="flex w-full items-center justify-between ">
+                      <div className="w-2/4 overflow-hidden text-ellipsis">
+                        <span className=" w-max text-lg font-semibold">
+                          {v.serviceTitle}
+                        </span>
+                      </div>
                       <Badge className="font-bold">
-                        Host {v.host.username}
+                        Host {v.host?.username}
                       </Badge>
                     </div>
                     <span className="text-sm font-semibold text-gray-600">

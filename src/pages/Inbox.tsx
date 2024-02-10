@@ -191,7 +191,7 @@ function Inbox() {
               {<Navigate to={"/hosting-inbox"} replace />}
               <div className="p-4">
                 <p className="text-center text-lg font-semibold text-gray-600">
-                  No booking requests.
+                  No booking requests
                 </p>
               </div>
             </>

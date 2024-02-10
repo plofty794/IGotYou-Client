@@ -54,7 +54,7 @@ const columns: ColumnDef<TListings>[] = [
     id: "listingAssets",
     cell: ({ row }) => (
       <div className="w-22">
-        {row.original.listingAssets[0]?.resource_type === "video" ? (
+        {row.original.listingAssets[0]?.format === "mp4" ? (
           <AdvancedImage
             className="h-10 w-full rounded-md object-cover shadow"
             cldImg={cld
@@ -67,6 +67,15 @@ const columns: ColumnDef<TListings>[] = [
                 steps: [800, 1000, 1400],
               }),
             ]}
+          />
+        ) : row.original.listingAssets[0]?.format === "mp3" ? (
+          <img
+            className="h-[51px] max-h-full w-[90px] max-w-full rounded object-contain shadow-md"
+            src={
+              "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
+            }
+            alt="some image"
+            loading="lazy"
           />
         ) : (
           <AdvancedImage
@@ -353,6 +362,7 @@ type TListingAssets = {
   _id: string;
   thumbnail_url: string;
   resource_type: string;
+  format: string;
 };
 
 type THost = {

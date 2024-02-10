@@ -22,7 +22,9 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import useServiceCancellationRequestApproval from "@/hooks/useServiceCancellationRequestApproval";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 const REASONS = [
   "personal illness or emergency",
@@ -33,13 +35,18 @@ const REASONS = [
   "disputes or conflicts",
 ];
 
-function ReservationCancellationDialog() {
+function ReservationCancellationDialog({ status }: { status: string }) {
+  const { reservationID } = useParams();
   const [hostCancellationReason, setHostCancellationReason] = useState("");
+
+  const { mutate, isPending } = useServiceCancellationRequestApproval();
 
   return (
     <Dialog onOpenChange={(isOpen) => !isOpen && setHostCancellationReason("")}>
       <DialogTrigger asChild>
-        <Button variant={"destructive"}>Cancel service</Button>
+        <Button disabled={status === "cancelled"} variant={"destructive"}>
+          Cancel service
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg gap-4">
         <DialogHeader>
@@ -108,8 +115,14 @@ function ReservationCancellationDialog() {
                 <AlertDialogCancel className="rounded-full">
                   Close
                 </AlertDialogCancel>
-                <AlertDialogAction className="rounded-full bg-red-600 hover:bg-red-500">
-                  Block
+                <AlertDialogAction
+                  disabled={isPending}
+                  onClick={() =>
+                    mutate({ reservationID, hostCancellationReason })
+                  }
+                  className="rounded-full bg-red-600 hover:bg-red-500"
+                >
+                  Cancel reservation
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

@@ -1,5 +1,3 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Mousewheel } from "swiper/modules";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,6 +9,8 @@ import {
 } from "@/components/ui/tooltip";
 import { auth } from "@/firebase config/config";
 import { ArchiveIcon } from "@radix-ui/react-icons";
+import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
+import { Cloudinary } from "@cloudinary/url-gen/index";
 
 type TListingProps = {
   recentListings: TListings[];
@@ -28,9 +28,16 @@ type TListings = {
       secure_url: string;
       original_filename: string;
       _id: string;
+      format: string;
     },
   ];
 };
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: "dop5kqpod",
+  },
+});
 
 function Listings({ recentListings, listingsCount }: TListingProps) {
   console.log(recentListings);
@@ -66,25 +73,42 @@ function Listings({ recentListings, listingsCount }: TListingProps) {
                 key={idx + idx}
                 className="flex flex-col items-center justify-center gap-2"
               >
-                <Swiper
-                  key={idx}
-                  cssMode={true}
-                  navigation={true}
-                  pagination={true}
-                  mousewheel={true}
-                  modules={[Navigation, Pagination, Mousewheel]}
-                >
-                  {listing.listingAssets.map((asset) => (
-                    <SwiperSlide key={asset.public_id}>
-                      <img
-                        key={asset._id}
-                        loading="lazy"
-                        className="h-[250px] max-h-full w-full max-w-full rounded-lg object-cover"
-                        src={asset.secure_url}
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+                {listing.listingAssets[0].format === "mp4" ? (
+                  <Link to={`/hosting-listings/edit/${listing._id}`}>
+                    <AdvancedImage
+                      className="h-[250px] max-h-full w-full max-w-full rounded-lg object-cover"
+                      cldImg={cld
+                        .image(listing.listingAssets[0].public_id)
+                        .setAssetType("video")
+                        .format("auto:image")}
+                    />
+                  </Link>
+                ) : listing.listingAssets[0].format === "mp3" ? (
+                  <Link to={`/hosting-listings/edit/${listing._id}`}>
+                    <img
+                      className="h-[250px] max-h-full w-full max-w-full rounded-lg object-cover"
+                      src={
+                        "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
+                      }
+                      alt="some image"
+                      loading="lazy"
+                    />
+                  </Link>
+                ) : (
+                  <Link to={`/hosting-listings/edit/${listing._id}`}>
+                    <AdvancedImage
+                      className="h-[250px] max-h-full w-full max-w-full rounded-lg object-cover"
+                      cldImg={cld.image(listing.listingAssets[0].public_id)}
+                      plugins={[
+                        lazyload(),
+                        responsive({
+                          steps: [800, 1000, 1400],
+                        }),
+                      ]}
+                    />
+                  </Link>
+                )}
+
                 <div className="h-full w-full text-sm">
                   <p className="font-semibold">{listing.serviceType}</p>
                   <p className="font-medium text-gray-600">

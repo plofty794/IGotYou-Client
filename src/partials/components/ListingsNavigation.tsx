@@ -69,7 +69,15 @@ function ListingsNavigation() {
             </SwiperSlide>
           ))}
         </Swiper>
-        <Dialog>
+        <Dialog
+          onOpenChange={(open) => {
+            if (!open) {
+              setMinPrice([500]);
+              setMaxPrice([500]);
+              setServiceType("");
+            }
+          }}
+        >
           <DialogTrigger asChild>
             <Button variant={"outline"} className="gap-2 px-3 py-6 text-xs">
               <svg
@@ -123,6 +131,7 @@ function ListingsNavigation() {
                   setMaxPrice([500]);
                   setServiceType("");
                   search[1]("");
+                  setTimeout(() => document.location.reload(), 200);
                 }}
                 variant={"outline"}
                 size={"lg"}
@@ -130,7 +139,7 @@ function ListingsNavigation() {
                 Clear all
               </Button>
               <Button
-                disabled={minPrice[0] >= maxPrice[0]}
+                disabled={minPrice[0] > maxPrice[0]}
                 onClick={() => {
                   const searchParams = createSearchParams([
                     ["minPrice", minPrice.toString()],
@@ -138,6 +147,7 @@ function ListingsNavigation() {
                     ["serviceType", serviceType],
                   ]);
                   search[1](searchParams.toString());
+                  setTimeout(() => document.location.reload(), 200);
                 }}
                 className="bg-gray-950"
                 size={"lg"}

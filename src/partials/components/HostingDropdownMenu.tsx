@@ -59,7 +59,9 @@ function HostingDropdownMenu() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="p-4 font-semibold text-gray-600">
-            Account
+            <Link to={"/hosting-subscription"} className="w-full" replace>
+              Subscription
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="p-4 font-semibold text-gray-600">
             <Link to={"/messages"} className="relative w-full">

@@ -11,11 +11,8 @@ function SocketContext({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const _socket = io("https://i-got-you-api.vercel.app/", {
+    const _socket = io("http://localhost:5050", {
       withCredentials: true,
-      extraHeaders: {
-        "Access-Control-Allow-Origin": "*",
-      },
     });
     setSocket(_socket);
   }, []);

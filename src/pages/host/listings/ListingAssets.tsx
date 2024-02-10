@@ -16,7 +16,7 @@ function ListingAssets({ listingAssets }: { listingAssets: TListingAssets[] }) {
         <ScrollArea className="w-[95%] whitespace-nowrap">
           <div className="flex w-full items-center gap-2 pb-4">
             {listingAssets?.map((asset) =>
-              asset.resource_type === "video" ? (
+              asset.format === "mp4" ? (
                 <span
                   onClick={(e) => {
                     e.currentTarget.scrollIntoView({
@@ -39,6 +39,26 @@ function ListingAssets({ listingAssets }: { listingAssets: TListingAssets[] }) {
                         steps: [800, 1000, 1400],
                       }),
                     ]}
+                  />
+                </span>
+              ) : asset.format === "mp3" ? (
+                <span
+                  onClick={(e) => {
+                    e.currentTarget.scrollIntoView({
+                      block: "end",
+                      behavior: "smooth",
+                    });
+                  }}
+                  className="h-52 w-52 rounded-xl border"
+                  key={asset.public_id}
+                >
+                  <img
+                    className="mx-auto h-full w-full rounded-lg border object-cover"
+                    src={
+                      "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
+                    }
+                    alt="some image"
+                    loading="lazy"
                   />
                 </span>
               ) : (

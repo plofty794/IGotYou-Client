@@ -343,11 +343,7 @@ function PaymentDetails() {
                           data?.data.reservationDetails.confirmServiceEnded ===
                             false ? (
                             <>
-                              {new Date().setHours(0, 0, 0, 0) ===
-                                new Date(
-                                  data?.data.reservationDetails.bookingEndsAt,
-                                ).setHours(0, 0, 0, 0) &&
-                              data?.data.reservationDetails
+                              {data?.data.reservationDetails
                                 .fullPaymentVerificationStatus === "success" ? (
                                 <ConfirmServiceEndedAlertDialog />
                               ) : (
@@ -574,11 +570,7 @@ function PaymentDetails() {
                           data?.data.reservationDetails.confirmServiceEnded ===
                             false ? (
                             <>
-                              {new Date().setHours(0, 0, 0, 0) ===
-                                new Date(
-                                  data?.data.reservationDetails.bookingEndsAt,
-                                ).setHours(0, 0, 0, 0) &&
-                              data?.data.reservationDetails
+                              {data?.data.reservationDetails
                                 .fullPaymentVerificationStatus === "success" ? (
                                 <ConfirmServiceEndedAlertDialog />
                               ) : (
@@ -809,11 +801,7 @@ function PaymentDetails() {
                         data?.data.reservationDetails.confirmServiceEnded ===
                           false ? (
                           <>
-                            {new Date().setHours(0, 0, 0, 0) ===
-                              new Date(
-                                data?.data.reservationDetails.bookingEndsAt,
-                              ).setHours(0, 0, 0, 0) &&
-                            data?.data.reservationDetails
+                            {data?.data.reservationDetails
                               .fullPaymentVerificationStatus === "success" ? (
                               <ConfirmServiceEndedAlertDialog />
                             ) : (
@@ -1044,11 +1032,7 @@ function PaymentDetails() {
                         data?.data.reservationDetails.confirmServiceEnded ===
                           false ? (
                           <>
-                            {new Date().setHours(0, 0, 0, 0) ===
-                              new Date(
-                                data?.data.reservationDetails.bookingEndsAt,
-                              ).setHours(0, 0, 0, 0) &&
-                            data?.data.reservationDetails
+                            {data?.data.reservationDetails
                               .fullPaymentVerificationStatus === "success" ? (
                               <ConfirmServiceEndedAlertDialog />
                             ) : (

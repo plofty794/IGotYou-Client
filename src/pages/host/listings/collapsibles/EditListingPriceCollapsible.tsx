@@ -60,7 +60,7 @@ function EditListingPriceCollapsible({ price }: { price: number }) {
                 }
                 onClick={() =>
                   mutate({
-                    price,
+                    price: listingPrice,
                   })
                 }
                 className="w-max bg-gray-950"

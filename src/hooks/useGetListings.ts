@@ -27,7 +27,9 @@ function useGetListings() {
     .match(/\?(\w+)=.*/)?.[0]
     .split("?")[1]
     .split("&")[2]
-    .split("=")[1];
+    .split("=")[1]
+    .split("+")
+    .join(" ");
 
   return useInfiniteQuery({
     queryKey: ["listings"],
@@ -66,6 +68,8 @@ function useGetListings() {
     },
     initialPageParam: 1,
     enabled: auth.currentUser != null && localStorage.getItem("token") != null,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 }
 

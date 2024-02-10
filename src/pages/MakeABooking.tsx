@@ -221,13 +221,22 @@ function MakeABooking() {
             <Card className="p-6">
               <CardHeader className="mb-4 flex-row gap-4 p-0">
                 <span className="h-32 w-32 overflow-hidden rounded-md border">
-                  {listing.listingAssets[0]?.resource_type === "video" ? (
+                  {listing.listingAssets[0]?.format === "mp4" ? (
                     <AdvancedImage
                       className="h-full w-full object-cover transition-transform hover:scale-110"
                       cldImg={cld
                         .image(listing.listingAssets[0]?.public_id)
                         .setAssetType("video")
                         .format("auto:image")}
+                    />
+                  ) : listing.listingAssets[0]?.format === "mp3" ? (
+                    <img
+                      className="h-full w-full object-cover transition-transform hover:scale-110"
+                      src={
+                        "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
+                      }
+                      alt="some image"
+                      loading="lazy"
                     />
                   ) : (
                     <AdvancedImage

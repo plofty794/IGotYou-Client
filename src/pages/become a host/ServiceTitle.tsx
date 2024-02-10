@@ -38,10 +38,11 @@ function ServiceTitle() {
           </div>
           <Input
             autoFocus
+            maxLength={50}
             spellCheck="true"
             placeholder={"Ex. Mang Juan's Photography Service"}
             className="mb-2 w-2/5 px-4 py-8 text-xl font-medium"
-            value={service.serviceDescription}
+            value={service.serviceTitle}
             onChange={(e) =>
               setService((prev) => ({
                 ...prev,

@@ -447,49 +447,106 @@ function ReservationDetails() {
                 <p className="text-sm font-semibold">
                   Review {data?.data.isHost ? "guest" : "host"}
                 </p>
-                <Textarea
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                  placeholder="Write a feedback"
-                />
-                <div
-                  aria-disabled
-                  className="flex flex-col items-center justify-center gap-2 py-2"
-                >
+                {data?.data.isHost &&
+                data?.data.hasRating != null &&
+                data?.data.hasRating.hostFeedback != null ? (
+                  <Textarea
+                    defaultValue={data?.data.hasRating.hostFeedback}
+                    readOnly
+                    placeholder="Write a feedback"
+                  />
+                ) : !data?.data.isHost &&
+                  data?.data.hasRating != null &&
+                  data?.data.hasRating.guestFeedback != null ? (
+                  <Textarea
+                    defaultValue={data?.data.hasRating.guestFeedback}
+                    readOnly
+                    placeholder="Write a feedback"
+                  />
+                ) : (
+                  <Textarea
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    placeholder="Write a feedback"
+                  />
+                )}
+                <div className="flex flex-col items-center justify-center gap-2 py-2">
                   <p className="text-sm font-semibold">
                     How would you rate the{" "}
                     {data?.data.isHost ? "guest" : "service"}?
                   </p>
-                  <Rating
-                    defaultValue={
-                      data?.data.hasRating == null
-                        ? 0
-                        : data?.data.hasRating.userRating
-                    }
-                    precision={1}
-                    size="30px"
-                    spacing="10px"
-                    onChange={(value) => setRating(value)}
-                  />
+                  {data?.data.isHost &&
+                  data?.data.hasRating != null &&
+                  data?.data.hasRating.hostRating != null ? (
+                    <Rating
+                      defaultValue={data?.data.hasRating.hostRating}
+                      readOnly
+                      size="30px"
+                      spacing="10px"
+                      onChange={(value) => setRating(value)}
+                    />
+                  ) : !data?.data.isHost &&
+                    data?.data.hasRating != null &&
+                    data?.data.hasRating.guestRating != null ? (
+                    <Rating
+                      defaultValue={data?.data.hasRating.guestRating}
+                      readOnly
+                      size="30px"
+                      spacing="10px"
+                      onChange={(value) => setRating(value)}
+                    />
+                  ) : (
+                    <Rating
+                      defaultValue={0}
+                      precision={1}
+                      size="30px"
+                      spacing="10px"
+                      onChange={(value) => setRating(value)}
+                    />
+                  )}
                 </div>
-                <Button
-                  onClick={() => {
-                    mutate({
-                      reservationID: data?.data.reservationDetails._id,
-                      guestID: data?.data.reservationDetails.guestID._id,
-                      hostID: data?.data.reservationDetails.hostID._id,
-                      feedback,
-                      userRating: rating,
-                    });
-                    setFeedback("");
-                    setRating(0);
-                  }}
-                  disabled={!feedback || !rating}
-                  className=" bg-gray-950"
-                >
-                  Leave a review
-                </Button>
-                {data?.data.isHost && <ReservationCancellationDialog />}
+                {data?.data.isHost ? (
+                  <Button
+                    onClick={() => {
+                      mutate({
+                        reservationID: data?.data.reservationDetails._id,
+                        guestID: data?.data.reservationDetails.guestID._id,
+                        hostID: data?.data.reservationDetails.hostID._id,
+                        hostFeedback: feedback,
+                        hostRating: rating,
+                      });
+                      setFeedback("");
+                      setRating(0);
+                    }}
+                    disabled={!feedback || !rating}
+                    className=" bg-gray-950"
+                  >
+                    Leave a review
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      mutate({
+                        reservationID: data?.data.reservationDetails._id,
+                        guestID: data?.data.reservationDetails.guestID._id,
+                        hostID: data?.data.reservationDetails.hostID._id,
+                        guestFeedback: feedback,
+                        guestRating: rating,
+                      });
+                      setFeedback("");
+                      setRating(0);
+                    }}
+                    disabled={!feedback || !rating}
+                    className=" bg-gray-950"
+                  >
+                    Leave a review
+                  </Button>
+                )}
+                {data?.data.isHost && data.data.hasRating == null && (
+                  <ReservationCancellationDialog
+                    status={data.data.reservationDetails.status}
+                  />
+                )}
               </div>
             </div>
           </div>

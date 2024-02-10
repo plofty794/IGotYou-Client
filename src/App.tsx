@@ -84,6 +84,8 @@ import UpcomingReservationsTab from "./partials/components/hosting/reservations 
 import PreviousReservationsTab from "./partials/components/hosting/reservations page/PreviousReservationsTab";
 import ReservationDetails from "./pages/ReservationDetails";
 import PaymentDetails from "./pages/PaymentDetails";
+import Subscription from "./pages/Subscription";
+import HostReviews from "./pages/HostReviews";
 
 function App() {
   const [User, setUser] = useState<User | null>();
@@ -426,6 +428,8 @@ function App() {
             <Route path="edit/:listingID" element={<EditListing />} />
           </Route>
           <Route path="hosting" element={<Hosting />} />
+          <Route path="hosting-subscription" element={<Subscription />} />
+          <Route path="hosting-reviews" element={<HostReviews />} />
         </Route>
 
         {/* MAKE SUBSCRIPTION PAYMENT Routes */}
