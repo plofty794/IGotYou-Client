@@ -145,7 +145,13 @@ function App() {
 
           <Route
             path="identity-verification/:id"
-            element={<IdentityVerification />}
+            element={
+              User ?? token ?? identifier ? (
+                <IdentityVerification />
+              ) : (
+                <Navigate replace to={"/login"} />
+              )
+            }
           />
         </Route>
 
@@ -210,19 +216,43 @@ function App() {
           />
           <Route
             path="/photography-services"
-            element={<PhotographyServices />}
+            element={
+              User ?? token ?? identifier ? (
+                <PhotographyServices />
+              ) : (
+                <Navigate replace to={"/login"} />
+              )
+            }
           />
           <Route
             path="/animation&3d-modeling"
-            element={<AnimationAnd3DModeling />}
+            element={
+              User ?? token ?? identifier ? (
+                <AnimationAnd3DModeling />
+              ) : (
+                <Navigate replace to={"/login"} />
+              )
+            }
           />
           <Route
             path="/live-events&concerts"
-            element={<LiveEventsAndConcerts />}
+            element={
+              User ?? token ?? identifier ? (
+                <LiveEventsAndConcerts />
+              ) : (
+                <Navigate replace to={"/login"} />
+              )
+            }
           />
           <Route
             path="/digital-advertising&marketing"
-            element={<DigitalAdvertisingAndMarketing />}
+            element={
+              User ?? token ?? identifier ? (
+                <DigitalAdvertisingAndMarketing />
+              ) : (
+                <Navigate replace to={"/login"} />
+              )
+            }
           />
         </Route>
 
@@ -352,7 +382,16 @@ function App() {
 
         {/* BOOKING Route */}
         <Route path="/listings" element={<ListingsLayout />}>
-          <Route path="show/:listingID" element={<VisitListing />} />
+          <Route
+            path="show/:listingID"
+            element={
+              User ?? token ?? identifier ? (
+                <VisitListing />
+              ) : (
+                <Navigate to={"/login"} replace />
+              )
+            }
+          />
           <Route path="create-booking/:listingID" element={<MakeABooking />} />
         </Route>
 
@@ -410,13 +449,27 @@ function App() {
         {/* HOSTING Route */}
         <Route
           errorElement={<RootLayoutErrorBoundary />}
-          path="/"
           element={<HostingLayout />}
         >
-          <Route path="hosting" element={<Hosting />}>
+          <Route
+            path="hosting"
+            element={
+              User ?? token ?? identifier ? (
+                <Hosting />
+              ) : (
+                <Navigate replace to={"/login"} />
+              )
+            }
+          >
             <Route
               path="current-reservations"
-              element={<CurrentReservations />}
+              element={
+                User ?? token ?? identifier ? (
+                  <CurrentReservations />
+                ) : (
+                  <Navigate replace to={"/login"} />
+                )
+              }
             />
             <Route
               path="upcoming-reservations"

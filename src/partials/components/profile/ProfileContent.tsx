@@ -68,6 +68,7 @@ type TListings = {
       secure_url: string;
       original_filename: string;
       _id: string;
+      format: string;
     },
   ];
 };

@@ -39,7 +39,7 @@ function VerifyPhone() {
   const { data } = useLoaderData() as UseQueryResult<TLoaderData>;
   const mobilePhone = data?.user.mobilePhone;
   const [confirmation, setConfirmation] = useState<ConfirmationResult | null>(
-    null
+    null,
   );
   const [OTP, setOTP] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
@@ -60,7 +60,7 @@ function VerifyPhone() {
       const confirm = await linkWithPhoneNumber(
         auth.currentUser!,
         mobilePhone!,
-        reCaptcha
+        reCaptcha,
       );
       setConfirmation(confirm);
     } catch (error) {
@@ -74,8 +74,9 @@ function VerifyPhone() {
       await confirmation?.confirm(OTP);
       mutate({ mobileVerified: true });
       toast({
-        title: "Success!",
-        description: "Your phone has been verified.",
+        title: "Success! 🎉",
+        description: "Your phone number has been verified.",
+        className: "bg-white",
       });
       setTimeout(() => {
         history.back();
@@ -99,8 +100,8 @@ function VerifyPhone() {
   return (
     <>
       {isLoaded ? (
-        <main className="bg-[#F2F2F2] min-h-screen flex flex-col gap-2 items-center justify-center">
-          <Button className="bg-gray-950 rounded-full font-medium mx-auto ">
+        <main className="flex min-h-screen flex-col items-center justify-center gap-2 bg-[#F2F2F2]">
+          <Button className="mx-auto rounded-full bg-gray-950 font-medium ">
             <Link to={`/users/show/${id}`}>Go back</Link>
           </Button>
           {!confirmation ? (
@@ -108,7 +109,7 @@ function VerifyPhone() {
               <CardHeader className="items-center justify-center p-0">
                 <CardHeader className="p-0">
                   <Lottie
-                    className="w-32 h-32"
+                    className="h-32 w-32"
                     animationData={sendingMessage}
                   />
                 </CardHeader>
@@ -133,7 +134,7 @@ function VerifyPhone() {
               <CardFooter>
                 <Button
                   onClick={sendOTP}
-                  className="p-6 bg-gray-950 font-medium mx-auto text-xl rounded-full"
+                  className="mx-auto rounded-full bg-gray-950 p-6 text-xl font-medium"
                 >
                   Send OTP
                 </Button>
@@ -147,12 +148,12 @@ function VerifyPhone() {
                   when you're done.
                 </CardTitle>
                 <Lottie
-                  className="w-[100px] h-[100px] mx-auto"
+                  className="mx-auto h-[100px] w-[100px]"
                   animationData={messageSent}
                 />
               </CardHeader>
               <CardContent>
-                <div className="space-y-1 flex flex-col items-center">
+                <div className="flex flex-col items-center space-y-1">
                   <OtpInput
                     inputStyle={
                       "text-3xl mr-2 outline-none border-b-black border-b"
@@ -169,7 +170,7 @@ function VerifyPhone() {
                 <Button
                   onClick={verifyOTP}
                   size={"lg"}
-                  className="bg-gray-950 rounded-full mx-auto"
+                  className="mx-auto rounded-full bg-gray-950"
                 >
                   Verify OTP
                 </Button>
@@ -178,7 +179,7 @@ function VerifyPhone() {
           )}
         </main>
       ) : (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="flex min-h-screen items-center justify-center">
           <l-dot-pulse size="44" speed="1.3" color="black"></l-dot-pulse>
         </div>
       )}

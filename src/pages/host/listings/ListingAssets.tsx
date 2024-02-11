@@ -2,6 +2,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { TFileType as TListingAssets } from "@/root layouts/BecomeAHostLayout";
 import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen/index";
+import imgUrl from "/audio_image.png";
 
 const cld = new Cloudinary({
   cloud: {
@@ -54,9 +55,7 @@ function ListingAssets({ listingAssets }: { listingAssets: TListingAssets[] }) {
                 >
                   <img
                     className="mx-auto h-full w-full rounded-lg border object-cover"
-                    src={
-                      "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
-                    }
+                    src={imgUrl}
                     alt="some image"
                     loading="lazy"
                   />
@@ -91,7 +90,7 @@ function ListingAssets({ listingAssets }: { listingAssets: TListingAssets[] }) {
       ) : (
         <div className="flex w-full items-center gap-2 pb-4">
           {listingAssets?.map((asset) =>
-            asset.resource_type === "video" ? (
+            asset.format === "mp4" ? (
               <span
                 className="h-52 w-full rounded-xl border"
                 key={asset.public_id}
@@ -108,6 +107,24 @@ function ListingAssets({ listingAssets }: { listingAssets: TListingAssets[] }) {
                       steps: [800, 1000, 1400],
                     }),
                   ]}
+                />
+              </span>
+            ) : asset.format === "mp3" ? (
+              <span
+                onClick={(e) => {
+                  e.currentTarget.scrollIntoView({
+                    block: "end",
+                    behavior: "smooth",
+                  });
+                }}
+                className="h-52 w-full rounded-xl border"
+                key={asset.public_id}
+              >
+                <img
+                  className="mx-auto h-full w-full rounded-xl object-cover"
+                  src={imgUrl}
+                  alt="some image"
+                  loading="lazy"
                 />
               </span>
             ) : (
