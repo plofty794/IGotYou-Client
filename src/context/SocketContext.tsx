@@ -12,7 +12,7 @@ function SocketContext({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const _socket = io(
-      "http://ec2-54-206-111-44.ap-southeast-2.compute.amazonaws.com:5050",
+      "http://ec2-13-236-193-133.ap-southeast-2.compute.amazonaws.com/api/",
       {
         withCredentials: true,
       },

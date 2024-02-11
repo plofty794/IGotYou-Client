@@ -22,6 +22,7 @@ function useLogin() {
         const { data } = await axiosPrivateRoute.post("/api/users/login", {
           ...variables,
         });
+
         const token = await user.getIdToken();
         dispatch({ type: "USER_LOGIN", payload: token });
         data.user.username &&
