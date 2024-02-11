@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 jelly.register();
 import { Cloudinary } from "@cloudinary/url-gen/index";
-import { AdvancedImage } from "@cloudinary/react";
+import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
 
 const cld = new Cloudinary({
   cloud: {
@@ -102,18 +102,33 @@ function DeclinedBookingRequests() {
           <CardContent className="flex w-full justify-between px-6 py-4">
             <div className="flex gap-2">
               <div className="h-44 w-44 overflow-hidden rounded-md">
-                {v.listingID.listingAssets[0]?.resource_type === "video" ? (
+                {v.listingID.listingAssets[0]?.format === "mp4" ? (
                   <AdvancedImage
-                    className="h-44 w-44 object-cover transition-transform hover:scale-110"
+                    className="h-full w-full rounded-lg object-cover transition-transform hover:scale-105"
                     cldImg={cld
-                      .image(v.listingID.listingAssets[0]?.public_id)
+                      .image(v.listingID.listingAssets[0].public_id)
                       .setAssetType("video")
                       .format("auto:image")}
                   />
+                ) : v.listingID.listingAssets[0]?.format === "mp3" ? (
+                  <img
+                    className="h-full w-full rounded-lg object-cover transition-transform hover:scale-105"
+                    src={
+                      "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
+                    }
+                    alt="some image"
+                    loading="lazy"
+                  />
                 ) : (
                   <AdvancedImage
-                    className="h-44 w-44 object-cover transition-transform hover:scale-110"
                     cldImg={cld.image(v.listingID.listingAssets[0].public_id)}
+                    plugins={[
+                      lazyload(),
+                      responsive({
+                        steps: [800, 1000, 1400],
+                      }),
+                    ]}
+                    className="h-full w-full rounded-lg object-cover transition-transform hover:scale-105"
                   />
                 )}
               </div>
