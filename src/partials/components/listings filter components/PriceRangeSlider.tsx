@@ -17,7 +17,7 @@ function PriceRangeSlider({
 }) {
   return (
     <Card className="p-6">
-      <div className="flex w-full justify-between">
+      <div className="flex w-full justify-between max-md:flex-col max-md:gap-4">
         <div className="flex flex-col gap-2">
           <Label htmlFor="minimum">Minimum</Label>
           <CurrencyInput

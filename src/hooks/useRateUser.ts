@@ -40,7 +40,6 @@ function useRateUser() {
         description: "Rating has been sent.",
         className: "bg-white",
       });
-      document.location.reload();
     },
     onError(error) {
       console.error(error);

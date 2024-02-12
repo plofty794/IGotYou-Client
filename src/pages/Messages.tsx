@@ -183,9 +183,11 @@ function Messages() {
               <span className="text-xl font-semibold">
                 {participant[0]?.username}
               </span>
-              <Button className="rounded-full bg-zinc-900 text-xs">
-                View profile
-              </Button>
+              <Link to={`/users/visit/show/${participant[0]?._id}`}>
+                <Button className="rounded-full bg-zinc-900 text-xs">
+                  View profile
+                </Button>
+              </Link>
             </div>
             <div className="mb-10 mt-4 flex h-max flex-col gap-2 p-4">
               {messages.map((v) =>
