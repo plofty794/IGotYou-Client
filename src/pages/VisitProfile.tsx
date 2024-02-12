@@ -10,7 +10,6 @@ import { TUser } from "./Home";
 import { AxiosResponse } from "axios";
 import { UseQueryResult } from "@tanstack/react-query";
 import UserConfirmedInformation from "@/partials/components/visit profile/UserConfirmedInformation";
-import { Button } from "@/components/ui/button";
 import RatingsCarousel from "@/partials/components/visit profile/RatingsCarousel";
 import ListingsCarousel from "@/partials/components/visit profile/ListingsCarousel";
 import BlockUserDialog from "@/partials/components/visit profile/BlockUserDialog";
@@ -120,20 +119,6 @@ function VisitProfile() {
                 </Card>
                 <UserConfirmedInformation user={data?.data.user} />
                 <div className="flex justify-between gap-1">
-                  <Button
-                    variant={"outline"}
-                    className="w-max gap-2 rounded-full "
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="h-5 w-5"
-                    >
-                      <path d="M3.5 2.75a.75.75 0 0 0-1.5 0v14.5a.75.75 0 0 0 1.5 0v-4.392l1.657-.348a6.449 6.449 0 0 1 4.271.572 7.948 7.948 0 0 0 5.965.524l2.078-.64A.75.75 0 0 0 18 12.25v-8.5a.75.75 0 0 0-.904-.734l-2.38.501a7.25 7.25 0 0 1-4.186-.363l-.502-.2a8.75 8.75 0 0 0-5.053-.439l-1.475.31V2.75Z" />
-                    </svg>
-                    Report {data?.data.user.username}
-                  </Button>
                   {data?.data.isBlocker ? (
                     <UnblockUser
                       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
