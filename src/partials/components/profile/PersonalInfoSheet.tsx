@@ -18,7 +18,7 @@ import { Suspense, lazy } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const CollapsiblePhoneNumber = lazy(
-  () => import("./collapsibles/CollapsiblePhoneNumber")
+  () => import("./collapsibles/CollapsiblePhoneNumber"),
 );
 
 type TUserData = {
@@ -47,14 +47,14 @@ function PersonalInfoSheet() {
     <Sheet>
       <SheetTrigger asChild>
         <Button
-          className="mt-2 font-semibold rounded-full text-sm bg-white text-[#222222] shadow-md"
+          className="mt-2 rounded-full bg-white text-sm font-semibold text-[#222222] shadow-md"
           variant="outline"
         >
           Edit info
         </Button>
       </SheetTrigger>
       <SheetContent
-        className="profile-sheet overflow-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-200"
+        className="profile-sheet overflow-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-thumb-rounded-full"
         side={"left"}
       >
         <SheetHeader>
@@ -78,7 +78,6 @@ function PersonalInfoSheet() {
                 <Link
                   className="w-full"
                   to={`/users/identity-verification/${data?.data?.user.uid}`}
-                  reloadDocument
                 >
                   Verify your identity
                 </Link>
@@ -89,7 +88,7 @@ function PersonalInfoSheet() {
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button className="bg-gray-950 mt-4 rounded-full" type="submit">
+            <Button className="mt-4 rounded-full bg-gray-950" type="submit">
               Close
             </Button>
           </SheetClose>

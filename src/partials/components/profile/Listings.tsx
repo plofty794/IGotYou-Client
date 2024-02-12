@@ -53,7 +53,7 @@ function Listings({ recentListings, listingsCount }: TListingProps) {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant={"ghost"} className="rounded-full p-2">
-                      <Link to={"/hosting-listings"} reloadDocument replace>
+                      <Link to={"/hosting-listings"} replace>
                         <ArchiveIcon className="h-5 w-5 stroke-2" />
                       </Link>
                     </Button>

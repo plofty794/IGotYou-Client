@@ -431,7 +431,6 @@ function BecomeAHostLayout() {
                   >
                     <Link
                       to={`/hosting-listings/edit/${data?.data.newListingID}`}
-                      reloadDocument
                       replace
                     >
                       Check your listing

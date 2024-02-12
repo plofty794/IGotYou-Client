@@ -34,7 +34,7 @@ function ListingsLayout() {
                   className="rounded-full text-sm font-semibold hover:bg-zinc-100"
                   variant={"ghost"}
                 >
-                  <Link to={"/hosting"} reloadDocument replace>
+                  <Link to={"/hosting"} replace>
                     {" "}
                     Switch to hosting
                   </Link>

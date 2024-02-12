@@ -76,7 +76,7 @@ function HostingDropdownMenu() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="p-4 font-semibold text-gray-600">
-            <Link className="w-full" to={"/"} replace reloadDocument>
+            <Link className="w-full" to={"/"} replace>
               Switch to Guest
             </Link>
           </DropdownMenuItem>

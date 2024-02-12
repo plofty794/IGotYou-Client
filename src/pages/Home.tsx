@@ -131,7 +131,6 @@ function Home() {
                             : `/listings/show/${v._id}`
                         } `}
                         className="mt-2"
-                        reloadDocument={uid === v.host.uid}
                         replace
                       >
                         <Swiper

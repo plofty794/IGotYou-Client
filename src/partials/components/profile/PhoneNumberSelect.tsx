@@ -83,7 +83,7 @@ function PhoneNumberSelect({ mobilePhone, mobileVerified }: TMobilePhone) {
           </Button>
           {!mobileVerified && mobilePhone ? (
             <Button className="rounded-full bg-gray-950 text-xs">
-              <Link to={`/account/verify-phone/${id}`} reloadDocument replace>
+              <Link to={`/account/verify-phone/${id}`} replace>
                 Verify mobile phone
               </Link>
             </Button>

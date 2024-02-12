@@ -116,7 +116,6 @@ function BookingRequest() {
               </Link>
               <Button variant={"link"}>
                 <Link
-                  reloadDocument
                   replace
                   to={`/users/visit/show/${data?.data.bookingRequest.guestID._id}`}
                 >
@@ -324,7 +323,6 @@ function BookingRequest() {
                   </Link>
                   <Button variant={"link"}>
                     <Link
-                      reloadDocument
                       replace
                       to={`/users/visit/show/${data?.data.bookingRequest.guestID._id}`}
                     >
@@ -368,7 +366,6 @@ function BookingRequest() {
                   </Link>
                   <Button variant={"link"}>
                     <Link
-                      reloadDocument
                       replace
                       to={`/users/visit/show/${data?.data.bookingRequest.guestID._id}`}
                     >

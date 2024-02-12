@@ -36,7 +36,7 @@ function RootLayout() {
                   className="rounded-full font-semibold"
                   variant={"ghost"}
                 >
-                  <Link to={"/hosting"} reloadDocument replace>
+                  <Link to={"/hosting"} replace>
                     {" "}
                     Switch to hosting
                   </Link>
