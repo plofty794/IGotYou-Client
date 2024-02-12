@@ -6,7 +6,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Link, Navigate, Outlet, useParams } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  Outlet,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CheckIcon } from "@radix-ui/react-icons";
 import useSendSubscriptionPayment from "@/hooks/useSendSubscriptionPayment";
@@ -34,6 +40,7 @@ export type TStatePaymentPhoto = {
 };
 
 function SubscriptionLayout() {
+  const navigate = useNavigate();
   const [isAgreed, setIsAgreed] = useState(false);
   const { mutate, isPending } = useSendSubscriptionPayment();
   const { id } = useParams();
@@ -67,7 +74,7 @@ function SubscriptionLayout() {
     mutate({
       ...paymentProof,
     });
-    window.location.href = `/become-a-host/${id}`;
+    navigate(`/become-a-host/${id}`, { replace: true });
   }
 
   return (
@@ -76,14 +83,14 @@ function SubscriptionLayout() {
       <section className="relative min-h-screen">
         <form className="absolute bottom-0 w-full" onSubmit={handleFormSubmit}>
           {<Outlet context={{ paymentProof, setPaymentProof }} />}
-          <div className="border-t-2 flex justify-between gap-4 p-8">
+          <div className="flex justify-between gap-4 border-t-2 p-8">
             {isFirstPage && (
               <>
                 {" "}
                 <Link to={"/"} replace>
                   <Button
                     type="button"
-                    className="rounded-full p-6 font-medium text-lg w-max bg-gray-950"
+                    className="w-max rounded-full bg-gray-950 p-6 text-lg font-medium"
                   >
                     Go back
                   </Button>
@@ -106,7 +113,7 @@ function SubscriptionLayout() {
                             viewBox="0 0 24 24"
                             strokeWidth={2}
                             stroke="blue"
-                            className="w-6 h-6"
+                            className="h-6 w-6"
                           >
                             <path
                               strokeLinecap="round"
@@ -124,7 +131,7 @@ function SubscriptionLayout() {
                         <ScrollArea className="h-72">
                           <div className="px-6 py-4">
                             <div className="flex flex-col justify-between gap-2">
-                              <div className="text-sm flex flex-col gap-2">
+                              <div className="flex flex-col gap-2 text-sm">
                                 <span className="font-bold">
                                   1. Acceptance of Terms
                                 </span>
@@ -136,7 +143,7 @@ function SubscriptionLayout() {
                                   information.
                                 </span>
                               </div>
-                              <div className="text-sm flex flex-col gap-2">
+                              <div className="flex flex-col gap-2 text-sm">
                                 <span className="font-bold">
                                   2. Collection of Information
                                 </span>
@@ -147,7 +154,7 @@ function SubscriptionLayout() {
                                   amount, and date and time of the transaction.
                                 </span>
                               </div>
-                              <div className="text-sm flex flex-col gap-2">
+                              <div className="flex flex-col gap-2 text-sm">
                                 <span className="font-bold">
                                   3. Use of Information
                                 </span>
@@ -159,7 +166,7 @@ function SubscriptionLayout() {
                                   third parties unless required by law.
                                 </span>
                               </div>
-                              <div className="text-sm flex flex-col gap-2">
+                              <div className="flex flex-col gap-2 text-sm">
                                 <span className="font-bold">
                                   4. Security Measures
                                 </span>
@@ -183,10 +190,10 @@ function SubscriptionLayout() {
                         </ScrollArea>
                       </DialogFooter>
                       <Separator />
-                      <div className="m-2 p-2 flex items-center justify-center gap-2 w-max ml-auto">
+                      <div className="m-2 ml-auto flex w-max items-center justify-center gap-2 p-2">
                         <Button
                           onClick={() => setIsAgreed(true)}
-                          className="rounded-full font-medium w-max bg-gray-950"
+                          className="w-max rounded-full bg-gray-950 font-medium"
                         >
                           Agree
                         </Button>
@@ -198,7 +205,7 @@ function SubscriptionLayout() {
                   type="button"
                   disabled={!isAgreed}
                   onClick={() => next()}
-                  className="rounded-full p-6 font-medium text-lg w-max bg-gray-950"
+                  className="w-max rounded-full bg-gray-950 p-6 text-lg font-medium"
                 >
                   {isFetching ? (
                     // Default values shown
@@ -219,14 +226,14 @@ function SubscriptionLayout() {
                   variant={"link"}
                   type="button"
                   onClick={() => previous()}
-                  className="p-6 font-medium text-sm w-max"
+                  className="w-max p-6 text-sm font-medium"
                 >
                   Back
                 </Button>
                 <Button
                   type="button"
                   onClick={() => next()}
-                  className="rounded-full p-6 font-medium text-lg w-max bg-gray-950"
+                  className="w-max rounded-full bg-gray-950 p-6 text-lg font-medium"
                 >
                   {isFetching ? (
                     // Default values shown
@@ -236,7 +243,7 @@ function SubscriptionLayout() {
                       color="white"
                     ></l-dot-pulse>
                   ) : (
-                    <CheckIcon className="w-[25px] h-[25px]" />
+                    <CheckIcon className="h-[25px] w-[25px]" />
                   )}
                 </Button>
               </>
@@ -247,7 +254,7 @@ function SubscriptionLayout() {
                   variant={"link"}
                   type="button"
                   onClick={() => previous()}
-                  className="p-6 font-medium text-sm w-max"
+                  className="w-max p-6 text-sm font-medium"
                 >
                   Back
                 </Button>
@@ -255,7 +262,7 @@ function SubscriptionLayout() {
                   disabled={!paymentProof.public_id}
                   type="button"
                   onClick={() => next()}
-                  className="rounded-full p-6 font-medium text-lg w-max bg-gray-950"
+                  className="w-max rounded-full bg-gray-950 p-6 text-lg font-medium"
                 >
                   {isFetching ? (
                     // Default values shown
@@ -274,7 +281,7 @@ function SubscriptionLayout() {
               <>
                 <Button
                   disabled={isPending}
-                  className="rounded-full p-6 font-medium text-lg w-max bg-gray-950 "
+                  className="w-max rounded-full bg-gray-950 p-6 text-lg font-medium "
                 >
                   Done
                 </Button>
