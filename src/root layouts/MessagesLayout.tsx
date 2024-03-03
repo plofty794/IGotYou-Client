@@ -170,7 +170,7 @@ function MessagesLayout() {
                                         className={`h-[0.4rem] w-[0.4rem] rounded-full  ${
                                           v.lastMessage.read
                                             ? "bg-gray-400"
-                                            : "bg-red-600"
+                                            : "bg-blue-600"
                                         }`}
                                       />
                                       {formatDistanceToNow(

@@ -213,7 +213,7 @@ function Messages() {
                     {messages.length == i + 1 ? (
                       <div
                         ref={latestChatRef}
-                        className="ml-auto w-max rounded-full bg-[#5CA8F4] px-4 py-2"
+                        className="ml-auto w-max rounded-full bg-blue-500 px-4 py-2"
                       >
                         <TooltipProvider>
                           <Tooltip>
@@ -233,7 +233,7 @@ function Messages() {
                         </TooltipProvider>
                       </div>
                     ) : (
-                      <div className="ml-auto w-max rounded-full  bg-[#5CA8F4] px-4 py-2">
+                      <div className="ml-auto w-max rounded-full  bg-blue-500 px-4 py-2">
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger>
