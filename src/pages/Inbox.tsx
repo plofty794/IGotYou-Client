@@ -33,8 +33,6 @@ function Inbox() {
     }
   }, [username, guestNames.data?.data.guestNames]);
 
-  console.log(guests);
-
   useEffect(() => {
     document.title = "Host Inbox - IGotYou";
   }, []);
@@ -197,7 +195,7 @@ function Inbox() {
             page.data.bookingRequests.length > 0 ? (
               <>
                 <ScrollArea className="mt-2 h-max max-h-[484px]">
-                  <div className="flex w-full flex-col gap-4">
+                  <div className="mt-2 flex w-full flex-col gap-4">
                     {data?.pages.flatMap((page) =>
                       page.data.bookingRequests.map(
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -206,7 +204,7 @@ function Inbox() {
                             <NavLink
                               key={v._id}
                               to={`/hosting-inbox/booking-request/${v._id}`}
-                              className="rounded-md border font-bold text-gray-600 shadow-md"
+                              className="rounded-md border font-bold shadow-md"
                             >
                               <div className="flex gap-2 px-4 py-2">
                                 <Avatar>

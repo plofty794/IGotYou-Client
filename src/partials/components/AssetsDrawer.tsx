@@ -29,8 +29,8 @@ const cld = new Cloudinary({
 function AssetsDrawer({ listing }: { listing: TListing }) {
   return (
     <Drawer>
-      <DrawerTrigger>
-        <div className="mt-4 grid h-72 grid-cols-2 gap-1 overflow-hidden rounded-xl">
+      <DrawerTrigger className="w-full">
+        <div className="mt-4 grid h-72 grid-cols-2 gap-1 overflow-hidden rounded-xl border shadow-xl">
           {listing.listingAssets[0].format === "mp4" ? (
             <AdvancedImage
               className="h-full w-full object-cover"
@@ -47,7 +47,7 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
             />
           ) : listing.listingAssets[0].format === "mp3" ? (
             <img
-              className="mx-auto h-72 w-full rounded-lg border object-cover"
+              className="h-full w-full object-cover"
               src={
                 "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
               }
@@ -87,7 +87,7 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
                   />
                 ) : asset.format === "mp3" ? (
                   <img
-                    className="h-40 max-h-max w-full object-cover"
+                    className="h-40 max-h-max w-96 object-cover"
                     src={
                       "https://png.pngtree.com/png-clipart/20230303/ourmid/pngtree-vinyl-records-png-image_6629914.png"
                     }
@@ -124,7 +124,7 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
           <div className="flex w-full flex-col items-center justify-center gap-4 py-8">
             {listing.listingAssets.map((asset: TFileType) =>
               asset.format === "mp4" ? (
-                <div className="relative h-4/6 w-4/5 ">
+                <div className="relative h-4/6 w-4/5">
                   <AdvancedImage
                     className="relative -z-10 mx-auto h-full w-full rounded-2xl border object-contain shadow-lg"
                     cldImg={cld
@@ -165,7 +165,7 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
                   />
                 </div>
               ) : asset.format === "mp3" ? (
-                <span className="max-w-4xl ">
+                <span className="max-w-[340px]">
                   <img
                     className="rounded-2xl border object-cover shadow-xl"
                     src={
@@ -175,14 +175,18 @@ function AssetsDrawer({ listing }: { listing: TListing }) {
                     loading="lazy"
                   />
                   <AudioPlayer
-                    className="rounded-md"
-                    header={<Badge>{asset.original_filename}</Badge>}
+                    className="w-full rounded-2xl border shadow-xl"
+                    header={
+                      <Badge className="w-max max-w-full">
+                        <p className="truncate">{asset.original_filename}</p>
+                      </Badge>
+                    }
                     src={asset.secure_url}
                     preload="auto"
                   />
                 </span>
               ) : (
-                <span className="max-w-4xl ">
+                <span className="max-w-4xl">
                   <AdvancedImage
                     className="rounded-2xl border object-cover shadow-xl"
                     cldImg={cld.image(asset.public_id)}

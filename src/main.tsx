@@ -22,9 +22,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           </UserStateContext>
         </SocketContext>
         <Toaster />
-        <SonnerToaster />
+        <SonnerToaster position="top-center" />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </Suspense>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

@@ -22,6 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { axiosPrivateRoute } from "@/api/axiosRoute";
 
 pulsar.register();
 
@@ -33,6 +34,17 @@ function HostNotification() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [newNotifications, setNewNotifications] = useState<any[]>([]);
   const { socket } = useContext(SocketContextProvider);
+
+  async function readHostBookingRequestNotification(notificationID: string) {
+    await axiosPrivateRoute.patch(
+      `/api/users/current-user/notifications/read-host-booking-request-notification/${notificationID}`,
+      {
+        read: true,
+      },
+    );
+    queryClient.invalidateQueries({ queryKey: ["host-booking-requests"] });
+    queryClient.invalidateQueries({ queryKey: ["host-notifications"] });
+  }
 
   useEffect(() => {
     setNotifications(hostNotifications.data?.data.hostNotifications);
@@ -154,6 +166,9 @@ function HostNotification() {
                       <>
                         <DropdownMenuItem className="w-full p-0">
                           <Link
+                            onClick={() =>
+                              readHostBookingRequestNotification(v._id)
+                            }
                             key={v._id}
                             to={`/hosting-inbox/booking-request/${v.data._id}`}
                             className="w-full p-4 hover:bg-[#F5F5F5]"

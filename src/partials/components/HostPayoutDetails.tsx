@@ -380,12 +380,26 @@ function HostPayoutDetails({
             </div>
             <div className="flex w-full flex-col gap-2">
               <div className="flex w-full gap-2">
-                {" "}
-                <Button size={"sm"} className="w-full bg-gray-950">
-                  Email {reservationDetails.guestID.username}
+                <Button
+                  type="button"
+                  size={"sm"}
+                  className="w-full bg-gray-950"
+                >
+                  <Link
+                    className="w-full"
+                    to={`mailto:${reservationDetails.guestID.email}`}
+                  >
+                    Email
+                  </Link>
                 </Button>
-                <Button size={"sm"} className="w-full bg-gray-950">
-                  Message
+                <Button
+                  type="button"
+                  size={"sm"}
+                  className="w-full bg-gray-950"
+                >
+                  <Link className="w-full" to={"/messages"}>
+                    Message
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -585,12 +599,26 @@ function HostPayoutDetails({
             </div>
             <div className="flex w-full flex-col gap-2">
               <div className="flex w-full gap-2">
-                {" "}
-                <Button size={"sm"} className="w-full bg-gray-950">
-                  Email {reservationDetails.guestID.username}
+                <Button
+                  type="button"
+                  size={"sm"}
+                  className="w-full bg-gray-950"
+                >
+                  <Link
+                    className="w-full"
+                    to={`mailto:${reservationDetails.guestID.email}`}
+                  >
+                    Email
+                  </Link>
                 </Button>
-                <Button size={"sm"} className="w-full bg-gray-950">
-                  Message
+                <Button
+                  type="button"
+                  size={"sm"}
+                  className="w-full bg-gray-950"
+                >
+                  <Link className="w-full" to={"/messages"}>
+                    Message
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -825,12 +853,26 @@ function HostPayoutDetails({
             </div>
             <div className="flex w-full flex-col gap-2">
               <div className="flex w-full gap-2">
-                {" "}
-                <Button size={"sm"} className="w-full bg-gray-950">
-                  Email {reservationDetails.guestID.username}
+                <Button
+                  type="button"
+                  size={"sm"}
+                  className="w-full bg-gray-950"
+                >
+                  <Link
+                    className="w-full"
+                    to={`mailto:${reservationDetails.guestID.email}`}
+                  >
+                    Email
+                  </Link>
                 </Button>
-                <Button size={"sm"} className="w-full bg-gray-950">
-                  Message
+                <Button
+                  type="button"
+                  size={"sm"}
+                  className="w-full bg-gray-950"
+                >
+                  <Link className="w-full" to={"/messages"}>
+                    Message
+                  </Link>
                 </Button>
               </div>
             </div>

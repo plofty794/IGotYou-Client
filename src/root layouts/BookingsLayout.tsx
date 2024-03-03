@@ -43,9 +43,9 @@ function BookingsLayout() {
     });
   }, [queryClient, socket]);
 
-  async function readBookingRequestNotification(notificationID: string) {
+  async function readGuestBookingRequestNotification(notificationID: string) {
     await axiosPrivateRoute.patch(
-      `/api/users/current-user/notifications/read-booking-request-notification/${notificationID}`,
+      `/api/users/current-user/notifications/read-guest-booking-request-notification/${notificationID}`,
       {
         read: true,
       },
@@ -158,7 +158,7 @@ function BookingsLayout() {
                           <DropdownMenuItem className="w-full p-0">
                             <Link
                               onClick={() =>
-                                readBookingRequestNotification(v._id)
+                                readGuestBookingRequestNotification(v._id)
                               }
                               key={v._id}
                               to={"/bookings/declined"}
@@ -199,7 +199,7 @@ function BookingsLayout() {
                           <DropdownMenuItem className="w-full p-0">
                             <Link
                               onClick={() =>
-                                readBookingRequestNotification(v._id)
+                                readGuestBookingRequestNotification(v._id)
                               }
                               key={v._id}
                               to={`/reservation-details/${v.data?.reservationID}`}

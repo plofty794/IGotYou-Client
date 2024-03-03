@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import UserInformation from "./inbox/UserInformation";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
-import { toast } from "@/components/ui/use-toast";
 import {
   Tooltip,
   TooltipContent,
@@ -21,6 +20,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Rating } from "react-custom-rating-component";
 import useRateUser from "@/hooks/useRateUser";
 import ReservationCancellationDialog from "@/partials/components/ReservationCancellationDialog";
+import { toast } from "sonner";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
 
 function ReservationDetails() {
   const { mutate } = useRateUser();
@@ -35,14 +36,18 @@ function ReservationDetails() {
   async function copyToClipboard(email: string) {
     try {
       await navigator.clipboard.writeText(email);
-      toast({
-        description: "Email copied to clipboard!",
-        className: "bg-white",
+      toast("Email copied to clipboard!", {
+        duration: 1000,
+        icon: (
+          <CheckCircledIcon
+            color="#FFF"
+            className="inline-block rounded-full bg-[#39c152]"
+          />
+        ),
       });
     } catch (error) {
-      toast({
+      toast("Oops! Something went wrong", {
         description: (error as Error).message as string,
-        variant: "destructive",
       });
     }
   }
@@ -245,8 +250,7 @@ function ReservationDetails() {
                 <Button size={"sm"} className="w-full rounded-full bg-gray-950">
                   <Link
                     className="w-full"
-                    to={"https://mail.google.com/mail/u/0/#inbox?compose=new"}
-                    target="_blank"
+                    to={`mailto:${data?.data.reservationDetails.guestID.email}`}
                   >
                     Email
                   </Link>

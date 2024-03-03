@@ -15,11 +15,10 @@ import ListingsCarousel from "@/partials/components/visit profile/ListingsCarous
 import BlockUserDialog from "@/partials/components/visit profile/BlockUserDialog";
 import UnblockUser from "@/partials/components/visit profile/UnblockUser";
 import { Navigate } from "react-router-dom";
-import { TRating } from "./HostReviews";
 
 function VisitProfile() {
   const { data, isPending, isError } = useVisitProfile() as UseQueryResult<
-    AxiosResponse<{ user: TUser; isBlocker: boolean; userRating: TRating[] }>
+    AxiosResponse<{ user: TUser; isBlocker: boolean }>
   >;
 
   useEffect(() => {
@@ -71,9 +70,9 @@ function VisitProfile() {
                     <div className="flex flex-col gap-2">
                       <div className="flex flex-col">
                         <span className="flex items-center gap-1 text-base font-bold capitalize ">
-                          {!data?.data.user.rating.length
+                          {!data?.data.user.rating?.length
                             ? "No ratings"
-                            : data?.data.user.rating.length}
+                            : data?.data.user.rating?.length}
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 16 16"
@@ -151,14 +150,14 @@ function VisitProfile() {
                       </CardTitle>
                     </CardHeader>
                     <div className="flex w-full items-center justify-center px-8 py-6">
-                      {!data?.data.userRating.length ? (
+                      {!data?.data.user.rating.length ? (
                         <CardHeader>
                           <CardTitle className="text-center text-xl font-bold text-gray-600">
                             No ratings yet.
                           </CardTitle>
                         </CardHeader>
                       ) : (
-                        <RatingsCarousel rating={data?.data.userRating} />
+                        <RatingsCarousel rating={data?.data.user.rating} />
                       )}
                     </div>
                   </CardContent>

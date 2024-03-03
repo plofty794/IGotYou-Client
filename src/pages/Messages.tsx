@@ -28,10 +28,11 @@ import useGetConversation from "@/hooks/useGetConversation";
 import ListingsLoader from "@/partials/loaders/ListingsLoader";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 function Messages() {
+  const latestChatRef = useRef<HTMLDivElement | null>(null);
   const { conversationID } = useParams();
   const navigate = useNavigate();
   const chatMessage = useChatMessage();
@@ -62,7 +63,22 @@ function Messages() {
     data?.data.conversation.map((v: { messages: [] }) =>
       setMessages(v.messages),
     );
+    setTimeout(
+      () =>
+        latestChatRef.current?.scrollIntoView({
+          behavior: "instant",
+        }),
+      0,
+    );
   }, [data?.data.conversation, data?.data.currentUserID]);
+
+  useEffect(() => {
+    if (chatMessage.isSuccess) {
+      latestChatRef.current?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  }, [chatMessage.isSuccess]);
 
   async function readMessage(messageId: string) {
     await axiosPrivateRoute.patch(
@@ -71,6 +87,7 @@ function Messages() {
         read: true,
       },
     );
+    queryClient.invalidateQueries({ queryKey: ["conversation", messageId] });
     queryClient.invalidateQueries({ queryKey: ["conversations"] });
     queryClient.invalidateQueries({ queryKey: ["guest-notifications"] });
   }
@@ -190,41 +207,97 @@ function Messages() {
               </Link>
             </div>
             <div className="mb-10 mt-4 flex h-max flex-col gap-2 p-4">
-              {messages.map((v) =>
+              {messages.map((v, i) =>
                 v.senderID._id === data?.data.currentUserID ? (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger className="ml-auto w-max rounded-full bg-gray-900 px-4 py-2">
-                        {" "}
-                        <span
-                          key={v._id}
-                          className="text-sm font-medium text-white"
-                        >
-                          {v.content}
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{format(new Date(v.createdAt), "p")}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <>
+                    {messages.length == i + 1 ? (
+                      <div
+                        ref={latestChatRef}
+                        className="ml-auto w-max rounded-full bg-[#5CA8F4] px-4 py-2"
+                      >
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              {" "}
+                              <span
+                                key={v._id}
+                                className="text-sm font-semibold text-white"
+                              >
+                                {v.content}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{format(new Date(v.createdAt), "p")}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    ) : (
+                      <div className="ml-auto w-max rounded-full  bg-[#5CA8F4] px-4 py-2">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              {" "}
+                              <span
+                                key={v._id}
+                                className="text-sm font-semibold text-white"
+                              >
+                                {v.content}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{format(new Date(v.createdAt), "p")}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    )}
+                  </>
                 ) : (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger className="mr-auto w-max rounded-full bg-gray-700 px-4 py-2">
-                        {" "}
-                        <span
-                          key={v._id}
-                          className="text-sm font-medium text-white"
-                        >
-                          {v.content}
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{format(new Date(v.createdAt), "p")}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <>
+                    {messages.length == i + 1 ? (
+                      <div
+                        ref={latestChatRef}
+                        className="mr-auto w-max rounded-full bg-[#E5E4E9] px-4 py-2"
+                      >
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              {" "}
+                              <span
+                                key={v._id}
+                                className="text-sm font-semibold"
+                              >
+                                {v.content}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{format(new Date(v.createdAt), "p")}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    ) : (
+                      <div className="mr-auto w-max rounded-full bg-[#E5E4E9] px-4 py-2">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              {" "}
+                              <span
+                                key={v._id}
+                                className="text-sm font-semibold"
+                              >
+                                {v.content}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{format(new Date(v.createdAt), "p")}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    )}
+                  </>
                 ),
               )}
             </div>

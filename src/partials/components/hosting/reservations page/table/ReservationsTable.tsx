@@ -1,6 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CaretSortIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
+import {
+  CaretSortIcon,
+  CheckCircledIcon,
+  DotsHorizontalIcon,
+} from "@radix-ui/react-icons";
 import {
   ColumnDef,
   flexRender,
@@ -33,7 +37,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 type TReservations = {
   _id: string;
@@ -269,14 +273,18 @@ const columns: ColumnDef<TReservations>[] = [
 async function copyToClipboard(email: string) {
   try {
     await navigator.clipboard.writeText(email);
-    toast({
-      description: "Email copied to clipboard!",
-      className: "bg-white",
+    toast("Email copied to clipboard!", {
+      duration: 1000,
+      icon: (
+        <CheckCircledIcon
+          color="#FFF"
+          className="inline-block rounded-full bg-[#39c152]"
+        />
+      ),
     });
   } catch (error) {
-    toast({
+    toast("Oops! Something went wrong", {
       description: (error as Error).message as string,
-      variant: "destructive",
     });
   }
 }

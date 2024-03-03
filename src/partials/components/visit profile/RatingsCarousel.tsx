@@ -23,7 +23,7 @@ function RatingsCarousel({ rating }: { rating?: TRating[] }) {
       <CarouselContent>
         {rating?.map((v) => (
           <>
-            {v.guestID._id != userID ? (
+            {v.hostID._id == userID ? (
               <CarouselItem key={v._id} className="md:basis-1/2 lg:basis-1/3 ">
                 <div className="p-1">
                   <Card>
@@ -63,12 +63,12 @@ function RatingsCarousel({ rating }: { rating?: TRating[] }) {
                           <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                       </Link>
-                      <p className="text-sm font-bold">{v.hostID.username}</p>
+                      <p className="text-sm font-bold">{v.guestID.username}</p>
                     </CardFooter>
                   </Card>
                 </div>
               </CarouselItem>
-            ) : v.hostID._id != userID ? (
+            ) : (
               <CarouselItem key={v._id} className="md:basis-1/2 lg:basis-1/3">
                 <div className="p-1">
                   <Card>
@@ -104,8 +104,6 @@ function RatingsCarousel({ rating }: { rating?: TRating[] }) {
                   </Card>
                 </div>
               </CarouselItem>
-            ) : (
-              ""
             )}
           </>
         ))}

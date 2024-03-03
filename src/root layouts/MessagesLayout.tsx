@@ -134,7 +134,7 @@ function MessagesLayout() {
                           participants: any[];
                           _id: string;
                         }) => (
-                          <div className="rounded-md bg-[#F5F5F5] p-2">
+                          <div className="rounded-md border bg-[#F5F5F5] p-2">
                             <NavLink
                               to={`/messages/conversation/${v._id}`}
                               key={v._id}
@@ -148,7 +148,7 @@ function MessagesLayout() {
                                       <span className="w-32 max-w-max overflow-hidden text-ellipsis whitespace-nowrap">
                                         You: {v.lastMessage.content}{" "}
                                       </span>
-                                      <CircleIcon className="h-1 w-1 rounded-full bg-gray-400" />
+                                      <CircleIcon className="h-[0.4rem] w-[0.4rem] rounded-full bg-gray-400" />
                                       {formatDistanceToNow(
                                         new Date(v.lastMessage.createdAt),
                                         { addSuffix: true },
@@ -166,7 +166,13 @@ function MessagesLayout() {
                                         {v.lastMessage.senderID.username}:{" "}
                                         {v.lastMessage.content}{" "}
                                       </span>
-                                      <CircleIcon className="h-1 w-1 rounded-full bg-gray-400" />
+                                      <CircleIcon
+                                        className={`h-[0.4rem] w-[0.4rem] rounded-full  ${
+                                          v.lastMessage.read
+                                            ? "bg-gray-400"
+                                            : "bg-red-600"
+                                        }`}
+                                      />
                                       {formatDistanceToNow(
                                         new Date(v.lastMessage.createdAt),
                                         { addSuffix: true },

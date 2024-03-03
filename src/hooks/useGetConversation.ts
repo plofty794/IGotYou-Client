@@ -9,10 +9,12 @@ function useGetConversation() {
     queryKey: ["conversation", conversationID],
     queryFn: async () => {
       return await axiosPrivateRoute.get(
-        `/api/users/current-user/conversations/${conversationID}`
+        `/api/users/current-user/conversations/${conversationID}`,
       );
     },
     enabled: conversationID != null,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 }
 
