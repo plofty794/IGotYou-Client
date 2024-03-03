@@ -1,11 +1,11 @@
 import axios from "axios";
 
 export const axiosPrivateRoute = axios.create({
-  baseURL: "http://localhost:5030",
+  baseURL: "https://igot-you.online/api",
   withCredentials: true,
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
 
-// https://igot-you.online/api
+//
