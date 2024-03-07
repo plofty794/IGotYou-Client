@@ -236,7 +236,11 @@ function BookingsLayout() {
                           <DropdownMenuSeparator />
                         </>
                       ) : (
-                        <></>
+                        <div className="p-6 pt-2">
+                          <p className="text-center text-base font-bold text-gray-600">
+                            No notifications
+                          </p>
+                        </div>
                       )}
                     </>
                   ))
