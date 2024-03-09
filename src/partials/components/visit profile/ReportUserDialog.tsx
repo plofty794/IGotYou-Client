@@ -198,8 +198,8 @@ function ReportUserDialog({
               </div>
             ) : (
               <>
-                <DialogTitle className="mb-2 text-base font-semibold">
-                  Upload evidence
+                <DialogTitle className="mb-2 text-sm font-bold text-gray-600">
+                  Upload photo evidence
                 </DialogTitle>
                 <Button
                   onClick={() => cloudinaryWidget?.open()}

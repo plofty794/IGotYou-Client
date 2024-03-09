@@ -199,7 +199,7 @@ function MessagesLayout() {
                         ),
                       )
                     ) : (
-                      <span className="mx-auto mt-8 w-max font-medium text-gray-600">
+                      <span className="mx-auto mt-8 w-max font-bold text-gray-600">
                         No messages found.
                       </span>
                     )}

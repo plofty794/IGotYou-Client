@@ -16,6 +16,7 @@ import BlockUserDialog from "@/partials/components/visit profile/BlockUserDialog
 import UnblockUserDialog from "@/partials/components/visit profile/UnblockUserDialog";
 import { Navigate } from "react-router-dom";
 import ReportUserDialog from "@/partials/components/visit profile/ReportUserDialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 function VisitProfile() {
   const { data, isPending, isError } = useVisitProfile() as UseQueryResult<
@@ -39,17 +40,30 @@ function VisitProfile() {
               <div className="flex w-max flex-col gap-8">
                 <Card className="flex h-max w-[400px] justify-center shadow-2xl max-xl:mx-auto">
                   <CardHeader className="flex w-full flex-col items-center justify-center gap-1 px-8">
-                    <Avatar className="h-24 w-24">
-                      <AvatarImage
-                        loading="lazy"
-                        className="max-h-full max-w-full object-cover"
-                        src={
-                          data?.data.user.photoUrl ??
-                          "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"
-                        }
-                      />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
+                    <Dialog>
+                      <DialogTrigger className="cursor-zoom-in">
+                        <Avatar className="h-24 w-24">
+                          <AvatarImage
+                            loading="lazy"
+                            className="max-h-full max-w-full object-cover"
+                            src={
+                              data?.data.user.photoUrl ??
+                              "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"
+                            }
+                          />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                      </DialogTrigger>
+                      <DialogContent className="p-0">
+                        <img
+                          className="max-w-lg rounded-lg"
+                          src={
+                            data?.data.user.photoUrl ??
+                            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"
+                          }
+                        />
+                      </DialogContent>
+                    </Dialog>
                     <CardTitle className="w-max max-w-md text-center">
                       <span className="text-2xl font-bold">
                         {data?.data.user.username}

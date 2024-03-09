@@ -34,6 +34,7 @@ import {
 import { Link } from "react-router-dom";
 import Loader from "@/partials/loaders/Loader";
 import { CloudinaryUploadWidget } from "@/types/createUploadWidget";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 dotPulse.register();
 
 const Listings = lazy(() => import("./Listings"));
@@ -119,7 +120,6 @@ function ProfileContent({ profileData, recentListings }: TProps) {
           setPhoto(res.info.secure_url);
           updateProfile(auth.currentUser!, { photoURL: res.info.secure_url });
         }
-        return;
       },
     );
     widget && setCloudinaryWidget(widget);
@@ -131,19 +131,34 @@ function ProfileContent({ profileData, recentListings }: TProps) {
         <div className="flex h-max w-2/4 flex-col justify-between gap-4 max-lg:w-full">
           <Card className="px-22 flex w-full flex-col items-center justify-center py-5 shadow-lg max-lg:w-full">
             <CardHeader className="relative p-4">
-              <Avatar className="h-[80px] w-[80px]">
-                <AvatarImage
-                  loading="lazy"
-                  className="max-h-full max-w-full object-cover transition-all hover:scale-105"
-                  src={
-                    auth.currentUser?.photoURL ??
-                    photo ??
-                    "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"
-                  }
-                  alt={`${profileData?.username}'s avatar`}
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+              <Dialog>
+                <DialogTrigger className="cursor-zoom-in">
+                  <Avatar className="h-[80px] w-[80px]">
+                    <AvatarImage
+                      loading="lazy"
+                      className="max-h-full max-w-full object-cover transition-all hover:scale-105"
+                      src={
+                        auth.currentUser?.photoURL ??
+                        photo ??
+                        "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"
+                      }
+                      alt={`${profileData?.username}'s avatar`}
+                    />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </DialogTrigger>
+                <DialogContent className="p-0">
+                  <img
+                    className="max-w-lg rounded-lg"
+                    src={
+                      auth.currentUser?.photoURL ??
+                      photo ??
+                      "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"
+                    }
+                    alt={`${profileData?.username}'s avatar`}
+                  />
+                </DialogContent>
+              </Dialog>
               <Button
                 onClick={() => cloudinaryWidget?.open()}
                 type="button"
