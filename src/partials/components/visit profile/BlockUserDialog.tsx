@@ -62,7 +62,7 @@ function BlockUserDialog({
           Block {username}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md gap-4">
+      <DialogContent className="max-w-lg gap-4">
         <DialogHeader>
           <DialogTitle className="mb-2 text-xl font-bold">
             Why are you blocking {username}?
@@ -78,7 +78,7 @@ function BlockUserDialog({
                 >
                   <Label
                     htmlFor={reason}
-                    className="text-sm font-semibold capitalize"
+                    className="text-base font-semibold capitalize"
                   >
                     {reason}
                   </Label>

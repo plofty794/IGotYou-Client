@@ -62,11 +62,12 @@ function CollapsibleUsername({ data }: TUser) {
       displayName: username,
     });
     mutate({ username });
+    setMessage("");
   }
 
   return (
     <Collapsible open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
-      <div className="flex justify-between items-start">
+      <div className="flex items-start justify-between">
         <div className="text-sm">
           <Label className="font-semibold" htmlFor="username">
             Username
@@ -76,7 +77,7 @@ function CollapsibleUsername({ data }: TUser) {
           </p>
         </div>
         <CollapsibleTrigger>
-          <span className="underline font-medium text-sm">
+          <span className="text-sm font-medium underline">
             {isOpen ? "Cancel" : "Edit"}
           </span>
         </CollapsibleTrigger>
@@ -87,7 +88,7 @@ function CollapsibleUsername({ data }: TUser) {
             This is the name on your IGotYou account.
           </span>
           <div className="mt-4 flex gap-2">
-            <div className="w-full flex flex-col gap-1">
+            <div className="flex w-full flex-col gap-1">
               <Input {...register("username")} autoFocus />
               {errors.username && (
                 <ErrorMessage message={errors.username.message} />
@@ -101,11 +102,11 @@ function CollapsibleUsername({ data }: TUser) {
                 setMessage("");
                 setValue("username", "");
               }}
-              className="text-xs mt-3 w-max font-semibold bg-[#222222] rounded-full"
+              className="mt-3 w-max rounded-full bg-[#222222] text-xs font-semibold"
             >
               Clear
             </Button>
-            <Button className="text-xs mt-3 w-max font-semibold bg-[#222222] rounded-full">
+            <Button className="mt-3 w-max rounded-full bg-[#222222] text-xs font-semibold">
               {isPending ? (
                 <l-dot-pulse size="35" speed="1.3" color="white"></l-dot-pulse>
               ) : (

@@ -15,6 +15,8 @@ import {
   CloudinaryUploadWidget,
   CloudinaryUploadResult,
 } from "@/types/createUploadWidget";
+import { toast } from "sonner";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
 
 type TSetServiceProps = {
   setService: Dispatch<React.SetStateAction<TListing>>;
@@ -55,6 +57,14 @@ function ServiceUploader() {
               } as TFileType,
             ],
           }));
+          toast("Asset has been uploaded!", {
+            icon: (
+              <CheckCircledIcon
+                color="#FFF"
+                className="inline-block rounded-full bg-[#39c152]"
+              />
+            ),
+          });
         }
       },
     );

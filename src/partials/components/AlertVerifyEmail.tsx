@@ -17,14 +17,14 @@ function AlertVerifyEmail({ User }: { User: User }) {
   const navigate = useNavigate();
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="text-sm font-semibold hover:bg-zinc-100 p-4 rounded-full">
+      <AlertDialogTrigger className="rounded-full p-4 text-sm font-semibold hover:bg-zinc-100">
         Want to host?
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 gap-0">
+      <AlertDialogContent className="gap-0 p-0">
         <AlertDialogHeader>
           <div className="flex items-center gap-2 p-6">
             <CircleBackslashIcon color="red" width={25} height={25} />
-            <AlertDialogTitle className="font-semibold text-base">
+            <AlertDialogTitle className="text-base font-semibold">
               Oops! Your email isn't verified yet.
             </AlertDialogTitle>
           </div>
@@ -54,12 +54,10 @@ function AlertVerifyEmail({ User }: { User: User }) {
         </div>
         <Separator />
         <AlertDialogFooter className="p-4">
-          <AlertDialogCancel className="font-medium text-sm rounded-full">
-            Close
-          </AlertDialogCancel>
+          <AlertDialogCancel className="rounded-full">Close</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => navigate(`/users/show/${User && User.uid}`)}
-            className="font-medium text-sm bg-gray-950 text-white rounded-full"
+            className="rounded-full bg-gray-950"
           >
             Go to your profile
           </AlertDialogAction>

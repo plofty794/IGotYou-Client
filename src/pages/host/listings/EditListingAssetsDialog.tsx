@@ -18,7 +18,9 @@ import {
 } from "@/types/createUploadWidget";
 import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen/index";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const cld = new Cloudinary({
   cloud: {
@@ -62,6 +64,14 @@ function EditListingAssetsDialog({
               format: result.info.format,
             },
           ]);
+          toast("Asset has been uploaded!", {
+            icon: (
+              <CheckCircledIcon
+                color="#FFF"
+                className="inline-block rounded-full bg-[#39c152]"
+              />
+            ),
+          });
         }
       },
     );
@@ -106,14 +116,7 @@ function EditListingAssetsDialog({
           <div className="flex max-w-full flex-wrap items-center justify-center gap-2">
             {listingsAssetsCopy?.map((asset) =>
               asset.format === "mp4" ? (
-                <div
-                  onClick={() =>
-                    setListingsAssetsCopy(
-                      (prev) => prev?.filter((v) => v !== asset),
-                    )
-                  }
-                  className="relative"
-                >
+                <div className="relative">
                   <AdvancedImage
                     className="h-48 w-48 rounded-2xl border object-contain shadow-md"
                     cldImg={cld
@@ -127,7 +130,22 @@ function EditListingAssetsDialog({
                       }),
                     ]}
                   />
-                  <Button className="absolute right-1 top-1 rounded-full border bg-white p-2 hover:bg-slate-200">
+                  <Button
+                    onClick={() => {
+                      setListingsAssetsCopy(
+                        (prev) => prev?.filter((v) => v !== asset),
+                      );
+                      toast("Asset has been removed!", {
+                        icon: (
+                          <CheckCircledIcon
+                            color="#FFF"
+                            className="inline-block rounded-full bg-[#39c152]"
+                          />
+                        ),
+                      });
+                    }}
+                    className="absolute right-1 top-1 rounded-full border bg-white p-2 hover:bg-slate-200"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
@@ -143,14 +161,7 @@ function EditListingAssetsDialog({
                   </Button>
                 </div>
               ) : asset.format === "mp3" ? (
-                <div
-                  onClick={() =>
-                    setListingsAssetsCopy(
-                      (prev) => prev?.filter((v) => v !== asset),
-                    )
-                  }
-                  className="relative"
-                >
+                <div className="relative">
                   <img
                     className="h-48 w-48 rounded-2xl border object-contain shadow-md"
                     src={
@@ -159,7 +170,22 @@ function EditListingAssetsDialog({
                     alt="some image"
                     loading="lazy"
                   />
-                  <Button className="absolute right-1 top-1 rounded-full border bg-white p-2 hover:bg-slate-200">
+                  <Button
+                    onClick={() => {
+                      setListingsAssetsCopy(
+                        (prev) => prev?.filter((v) => v !== asset),
+                      );
+                      toast("Asset has been removed!", {
+                        icon: (
+                          <CheckCircledIcon
+                            color="#FFF"
+                            className="inline-block rounded-full bg-[#39c152]"
+                          />
+                        ),
+                      });
+                    }}
+                    className="absolute right-1 top-1 rounded-full border bg-white p-2 hover:bg-slate-200"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
@@ -175,14 +201,7 @@ function EditListingAssetsDialog({
                   </Button>
                 </div>
               ) : (
-                <div
-                  onClick={() =>
-                    setListingsAssetsCopy(
-                      (prev) => prev?.filter((v) => v !== asset),
-                    )
-                  }
-                  className="relative"
-                >
+                <div className="relative">
                   <AdvancedImage
                     className="h-48 w-48 rounded-2xl border object-contain shadow-md"
                     cldImg={cld.image(asset.public_id)}
@@ -193,7 +212,22 @@ function EditListingAssetsDialog({
                       }),
                     ]}
                   />
-                  <Button className="absolute right-1 top-1 rounded-full border bg-white p-2 hover:bg-slate-200">
+                  <Button
+                    onClick={() => {
+                      setListingsAssetsCopy(
+                        (prev) => prev?.filter((v) => v !== asset),
+                      );
+                      toast("Asset has been removed!", {
+                        icon: (
+                          <CheckCircledIcon
+                            color="#FFF"
+                            className="inline-block rounded-full bg-[#39c152]"
+                          />
+                        ),
+                      });
+                    }}
+                    className="absolute right-1 top-1 rounded-full border bg-white p-2 hover:bg-slate-200"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"

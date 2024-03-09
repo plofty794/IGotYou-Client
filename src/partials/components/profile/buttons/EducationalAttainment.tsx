@@ -62,10 +62,10 @@ function EducationalAttainment() {
   return (
     <Dialog>
       <DialogTrigger
-        className={`hover:bg-[#e9e9e9] border w-full font-medium ${
+        className={`border font-medium hover:bg-[#e9e9e9] ${
           data?.data?.user.educationalAttainment ? "text-xs" : "text-sm"
         }
-           shadow-md flex justify-start items-center pl-4 pr-6 py-8 rounded`}
+          flex items-center rounded py-8 pl-4 pr-6 shadow-md`}
       >
         <span className="mr-2">
           <svg
@@ -74,7 +74,7 @@ function EducationalAttainment() {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="black"
-            className="w-6 h-6"
+            className="h-6 w-6"
           >
             <path
               strokeLinecap="round"
@@ -83,13 +83,13 @@ function EducationalAttainment() {
             />
           </svg>
         </span>
-        <p className="text-gray-600 capitalize">
+        <p className="capitalize text-gray-600">
           {data?.data?.user.educationalAttainment
             ? `Educational attainment: ${data?.data?.user.educationalAttainment}`
             : "Educational attainment"}
         </p>
       </DialogTrigger>
-      <DialogContent className="p-8 gap-2">
+      <DialogContent className="gap-2 p-8">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
             {data?.data?.user.educationalAttainment
@@ -99,16 +99,16 @@ function EducationalAttainment() {
         </DialogHeader>
         {data?.data?.user.educationalAttainment ? (
           <div className="flex flex-col gap-1">
-            <p className="text-sm font-semibold underline capitalize">
+            <p className="text-sm font-semibold capitalize underline">
               {data?.data?.user.educationalAttainment}
             </p>
-            <div className="flex gap-2 items-center pt-2">
+            <div className="flex items-center gap-2 pt-2">
               <Button
                 onClick={() => {
                   setValue("");
                   mutate({ educationalAttainment: "" });
                 }}
-                className="bg-gray-950 font-medium rounded-full"
+                className="rounded-full bg-gray-950 font-medium"
                 size={"lg"}
               >
                 Delete
@@ -123,12 +123,12 @@ function EducationalAttainment() {
                   variant="outline"
                   role="combobox"
                   aria-expanded={open}
-                  className="gap-2 font-medium w-3/4 mx-auto"
+                  className="w-full gap-2 font-medium"
                 >
                   {value
                     ? educationalAttainments.find(
                         (attainment) =>
-                          attainment.toLowerCase() === value.toLowerCase()
+                          attainment.toLowerCase() === value.toLowerCase(),
                       )
                     : "Select attainment"}
                   <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -150,7 +150,7 @@ function EducationalAttainment() {
                           setValue(
                             currentValue.toLowerCase() === value.toLowerCase()
                               ? ""
-                              : currentValue
+                              : currentValue,
                           );
                           setOpen(false);
                         }}
@@ -170,10 +170,10 @@ function EducationalAttainment() {
                 </Command>
               </PopoverContent>
             </Popover>
-            <div className="flex gap-2 items-center pt-2">
+            <div className="flex items-center gap-2 pt-2">
               <Button
                 disabled={!value}
-                className="bg-gray-950 font-medium rounded-full"
+                className="rounded-full bg-gray-950 font-medium"
                 size={"lg"}
               >
                 Save

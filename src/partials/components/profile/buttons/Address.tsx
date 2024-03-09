@@ -50,7 +50,7 @@ function Address() {
     e.preventDefault();
     if (!address)
       return setErrorMessage(
-        "Invalid zip code (eg. 4010 for Pila, 4010 Laguna, Philippines)",
+        "Invalid address (eg. 4010 for Pila, 4010 Laguna, Philippines)",
       );
     mutate({ address });
     setErrorMessage("");

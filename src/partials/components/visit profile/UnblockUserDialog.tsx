@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import useUnblockUser from "@/hooks/useUnblockUser";
 
-function UnblockUser({
+function UnblockUserDialog({
   username,
   blockedID,
 }: {
@@ -50,4 +50,4 @@ function UnblockUser({
   );
 }
 
-export default UnblockUser;
+export default UnblockUserDialog;

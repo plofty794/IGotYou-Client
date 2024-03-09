@@ -13,8 +13,9 @@ import UserConfirmedInformation from "@/partials/components/visit profile/UserCo
 import RatingsCarousel from "@/partials/components/visit profile/RatingsCarousel";
 import ListingsCarousel from "@/partials/components/visit profile/ListingsCarousel";
 import BlockUserDialog from "@/partials/components/visit profile/BlockUserDialog";
-import UnblockUser from "@/partials/components/visit profile/UnblockUser";
+import UnblockUserDialog from "@/partials/components/visit profile/UnblockUserDialog";
 import { Navigate } from "react-router-dom";
+import ReportUserDialog from "@/partials/components/visit profile/ReportUserDialog";
 
 function VisitProfile() {
   const { data, isPending, isError } = useVisitProfile() as UseQueryResult<
@@ -117,9 +118,9 @@ function VisitProfile() {
                   </div>
                 </Card>
                 <UserConfirmedInformation user={data?.data.user} />
-                <div className="flex justify-between gap-1">
+                <div className="flex justify-between">
                   {data?.data.isBlocker ? (
-                    <UnblockUser
+                    <UnblockUserDialog
                       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
                       blockedID={data?.data.user._id!}
                       username={data.data.user.username}
@@ -131,6 +132,10 @@ function VisitProfile() {
                       username={data?.data.user.username}
                     />
                   )}
+                  <ReportUserDialog
+                    username={data?.data.user.username}
+                    reportedUser={data?.data.user._id}
+                  />
                 </div>
               </div>
               <div className="flex w-full flex-col gap-4">
