@@ -441,7 +441,10 @@ function PaymentDetails() {
                             </>
                           ) : (
                             <Badge className="mx-auto w-max bg-green-500 hover:bg-green-600">
-                              Guest confirmed service completion
+                              {data?.data.reservationDetails
+                                .confirmServiceEnded === false
+                                ? "Awaiting Guest Service Completion"
+                                : "Confirmed Service Ended"}
                             </Badge>
                           )}
                         </div>
@@ -668,7 +671,10 @@ function PaymentDetails() {
                             </>
                           ) : (
                             <Badge className="mx-auto w-max bg-green-500 hover:bg-green-600">
-                              Guest confirmed service completion
+                              {data?.data.reservationDetails
+                                .confirmServiceEnded === false
+                                ? "Awaiting Guest Service Completion"
+                                : "Confirmed Service Ended"}
                             </Badge>
                           )}
                         </div>
@@ -898,7 +904,10 @@ function PaymentDetails() {
                           </>
                         ) : (
                           <Badge className="mx-auto w-max bg-green-500 hover:bg-green-600">
-                            Guest confirmed service completion
+                            {data?.data.reservationDetails
+                              .confirmServiceEnded === false
+                              ? "Awaiting Guest Service Completion"
+                              : "Confirmed Service Ended"}
                           </Badge>
                         )}
                       </div>
@@ -1129,7 +1138,10 @@ function PaymentDetails() {
                           </>
                         ) : (
                           <Badge className="mx-auto w-max bg-green-500 hover:bg-green-600">
-                            Guest confirmed service completion
+                            {data?.data.reservationDetails
+                              .confirmServiceEnded === false
+                              ? "Awaiting Guest Service Completion"
+                              : "Confirmed Service Ended"}
                           </Badge>
                         )}
                       </div>

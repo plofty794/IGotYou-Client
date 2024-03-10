@@ -57,6 +57,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import useRequestServiceCancellation from "@/hooks/useRequestServiceCancellation";
+import { toast } from "sonner";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
 
 function GuestPaymentDetails({
   reservationDetails,
@@ -113,6 +115,14 @@ function GuestPaymentDetails({
             public_id: result.info.public_id,
             secure_url: result.info.secure_url,
             thumbnail_url: result.info.thumbnail_url,
+          });
+          toast("Payment photo has been uploaded!", {
+            icon: (
+              <CheckCircledIcon
+                color="#FFF"
+                className="inline-block rounded-full bg-[#39c152]"
+              />
+            ),
           });
         }
       },
@@ -649,6 +659,14 @@ function GuestPaymentDetails({
                             secure_url: "",
                             thumbnail_url: "",
                           });
+                          toast("Payment photo has been removed!", {
+                            icon: (
+                              <CheckCircledIcon
+                                color="#FFF"
+                                className="inline-block rounded-full bg-[#39c152]"
+                              />
+                            ),
+                          });
                         }}
                       >
                         <svg
@@ -690,7 +708,7 @@ function GuestPaymentDetails({
                           reservationDetails.paymentAmount / 2) ||
                       sendReservationPaymentToAdmin.isPending
                     }
-                    className="w-full gap-2 bg-gray-950"
+                    className="w-full gap-2 bg-green-500 hover:bg-green-600"
                     size={"lg"}
                   >
                     Confirm and pay

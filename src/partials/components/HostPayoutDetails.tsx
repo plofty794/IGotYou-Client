@@ -113,7 +113,7 @@ function HostPayoutDetails({
       </CardHeader>
       <Avatar className="mx-auto h-max w-max">
         <AvatarImage
-          className="h-20 w-20"
+          className="h-20 w-20 object-cover"
           src={reservationDetails.guestID.photoUrl!}
         />
         <AvatarFallback>CN</AvatarFallback>

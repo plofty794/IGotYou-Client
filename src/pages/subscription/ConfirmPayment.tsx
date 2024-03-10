@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useOutletContext } from "react-router-dom";
-import { CrossCircledIcon } from "@radix-ui/react-icons";
+import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import useRemoveAsset from "@/hooks/useRemoveAsset";
 import { TStatePaymentPhoto } from "../../root layouts/SubscriptionLayout";
 import { CloudinaryUploadWidget } from "@/types/createUploadWidget";
+import { toast } from "sonner";
 
 function ConfirmPayment() {
   const [isFadingIn, setIsFadingIn] = useState(true);
@@ -34,6 +35,14 @@ function ConfirmPayment() {
           setPaymentProof({
             public_id: res.info.public_id,
             secure_url: res.info.secure_url,
+          });
+          toast("Payment photo has been uploaded!", {
+            icon: (
+              <CheckCircledIcon
+                color="#FFF"
+                className="inline-block rounded-full bg-[#39c152]"
+              />
+            ),
           });
         }
       },
@@ -68,6 +77,7 @@ function ConfirmPayment() {
           <div className="relative w-3/4 overflow-hidden rounded-lg border border-dashed border-zinc-600">
             {paymentProof?.secure_url && (
               <CrossCircledIcon
+                color="#FFF"
                 onClick={() => {
                   mutate({
                     publicId: paymentProof?.public_id,
@@ -76,18 +86,32 @@ function ConfirmPayment() {
                     public_id: "",
                     secure_url: "",
                   });
+                  toast("Payment photo has been removed!", {
+                    icon: (
+                      <CheckCircledIcon
+                        color="#FFF"
+                        className="inline-block rounded-full bg-[#39c152]"
+                      />
+                    ),
+                  });
                 }}
                 className="absolute right-0 m-1 h-[25px] w-[25px] cursor-pointer rounded-full shadow-lg transition-transform hover:scale-110"
               />
             )}
             {paymentProof?.secure_url ? (
-              <div className="mx-auto w-5/6 overflow-hidden">
-                <img
-                  src={paymentProof.secure_url}
-                  className="mx-auto h-48 max-w-full object-cover transition-transform hover:scale-110"
-                  alt="proof_of_payment"
-                  loading="lazy"
-                />
+              <div className="mx-auto h-60 bg-black">
+                <a
+                  href={paymentProof.secure_url}
+                  target="_blank"
+                  className="cursor-zoom-in"
+                >
+                  <img
+                    src={paymentProof.secure_url}
+                    className="mx-auto h-full object-contain transition-transform hover:scale-105"
+                    alt="proof_of_payment"
+                    loading="lazy"
+                  />
+                </a>
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center gap-2 p-12">

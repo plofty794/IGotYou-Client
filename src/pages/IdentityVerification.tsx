@@ -8,7 +8,7 @@ import {
 import useGetCurrentUserProfile from "@/hooks/useGetUserProfile";
 import useRemoveAsset from "@/hooks/useRemoveAsset";
 import useSendIdentityVerificationRequest from "@/hooks/useSendIdentityVerificationRequest";
-import { CrossCircledIcon } from "@radix-ui/react-icons";
+import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
@@ -24,6 +24,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CloudinaryUploadWidget } from "@/types/createUploadWidget";
+import { toast } from "sonner";
 
 type TIdentityPhoto = {
   public_id: string;
@@ -63,6 +64,14 @@ function IdentityVerification() {
           setIdentityPhoto({
             public_id: res.info.public_id,
             secure_url: res.info.secure_url,
+          });
+          toast("Identity photo has been uploaded!", {
+            icon: (
+              <CheckCircledIcon
+                color="#FFF"
+                className="inline-block rounded-full bg-[#39c152]"
+              />
+            ),
           });
         }
       },
@@ -141,6 +150,7 @@ function IdentityVerification() {
             <div className="relative w-3/4 overflow-hidden rounded-lg border border-dashed border-zinc-600">
               {identityPhoto.secure_url && (
                 <CrossCircledIcon
+                  color="#FFF"
                   onClick={() => {
                     mutate({
                       publicId: identityPhoto.public_id,
@@ -149,18 +159,32 @@ function IdentityVerification() {
                       public_id: "",
                       secure_url: "",
                     });
+                    toast("Identity photo has been removed!", {
+                      icon: (
+                        <CheckCircledIcon
+                          color="#FFF"
+                          className="inline-block rounded-full bg-[#39c152]"
+                        />
+                      ),
+                    });
                   }}
                   className="absolute right-0 m-1 h-[25px] w-[25px] cursor-pointer rounded-full shadow-lg transition-transform hover:scale-110"
                 />
               )}
               {identityPhoto?.secure_url ? (
-                <div className="mx-auto h-60 w-5/6">
-                  <img
-                    src={identityPhoto.secure_url}
-                    className="mx-auto h-full w-full object-cover transition-transform hover:scale-105"
-                    alt="proof_of_payment"
-                    loading="lazy"
-                  />
+                <div className="mx-auto h-60 bg-black">
+                  <a
+                    href={identityPhoto.secure_url}
+                    target="_blank"
+                    className="cursor-zoom-in"
+                  >
+                    <img
+                      src={identityPhoto.secure_url}
+                      className="mx-auto h-full object-contain transition-transform hover:scale-105"
+                      alt="proof_of_payment"
+                      loading="lazy"
+                    />
+                  </a>
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center gap-2 p-16">

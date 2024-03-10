@@ -2,6 +2,7 @@ import { axiosPrivateRoute } from "@/api/axiosRoute";
 import { useToast } from "@/components/ui/use-toast";
 import { SocketContextProvider } from "@/context/SocketContext";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError, AxiosResponse } from "axios";
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
 
@@ -24,7 +25,6 @@ function useRequestServiceCancellation() {
       );
     },
     onSuccess(data) {
-      console.log(data);
       socket?.emit("request-service-cancellation", {
         newHostNotification: data.data.newHostNotification,
         receiverName: data.data.receiverName,
@@ -35,8 +35,14 @@ function useRequestServiceCancellation() {
         className: "bg-white",
       });
     },
-    onError(error) {
-      console.error(error);
+    onError(e) {
+      const error = e as AxiosError;
+      const response = error.response as AxiosResponse;
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: response.data.error,
+      });
     },
   });
 }
