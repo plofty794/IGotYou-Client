@@ -63,6 +63,8 @@ function MessagesLayout() {
     document.title = "Messages - IGotYou";
   }, []);
 
+  console.log(conversations.data?.data);
+
   return (
     <>
       {conversations.isPending ? (
@@ -189,8 +191,8 @@ function MessagesLayout() {
                                 {
                                   v.participants.find(
                                     (u) =>
-                                      u.username !==
-                                      auth.currentUser?.displayName,
+                                      u._id !=
+                                      conversations.data.data.currentUserID,
                                   ).username
                                 }
                               </span>

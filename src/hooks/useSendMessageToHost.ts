@@ -28,6 +28,7 @@ function useSendMessageToHost() {
     onSuccess(data) {
       toast("Success! 🎉", {
         description: "Message has been sent.",
+        position: "bottom-right",
         action: {
           label: "View Message",
           onClick: () =>
