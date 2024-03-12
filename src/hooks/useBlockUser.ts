@@ -1,11 +1,8 @@
 import { axiosPrivateRoute } from "@/api/axiosRoute";
 import { useToast } from "@/components/ui/use-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
 function useBlockUser() {
-  const queryClient = useQueryClient();
-  const { userID } = useParams();
   const { toast } = useToast();
 
   return useMutation({
@@ -22,13 +19,12 @@ function useBlockUser() {
       );
     },
     onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: ["visit-profile", userID],
-      });
       toast({
         title: "Success! 🎉",
         description: "User has been blocked.",
+        className: "bg-white",
       });
+      setTimeout(() => window.location.reload(), 1500);
     },
     onError(error) {
       console.log(error);
