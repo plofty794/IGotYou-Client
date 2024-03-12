@@ -6,17 +6,16 @@ import {
 } from "@/components/ui/tooltip";
 import useAddToWishlist from "@/hooks/useUpdateWishlist";
 import useGetWishlists from "@/hooks/useGetWishlists";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 function UpdateWishlist({ listingID }: { listingID: string }) {
   const wishlistsData = useGetWishlists();
-  const { mutate } = useAddToWishlist();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [wishlists, setWishlists] = useState<any[]>([]);
+  const { mutate, isPending } = useAddToWishlist();
 
-  useMemo(() => {
-    setWishlists(wishlistsData.data?.data.wishlists ?? []);
-  }, [wishlistsData.data?.data.wishlists]);
+  const wishlists = useMemo<Record<string, string>[]>(
+    () => wishlistsData.data?.data.wishlists ?? [],
+    [wishlistsData.data?.data.wishlists],
+  );
 
   return (
     <TooltipProvider>
@@ -28,6 +27,8 @@ function UpdateWishlist({ listingID }: { listingID: string }) {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             className={`h-7 w-7 cursor-pointer stroke-gray-500 hover:stroke-slate-600 ${
+              isPending ? "fill-red-500" : ""
+            } ${
               wishlists.length > 0 && wishlists.find((v) => v._id === listingID)
                 ? "fill-red-600"
                 : "fill-none"
