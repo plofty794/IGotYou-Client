@@ -87,9 +87,19 @@ function Messages() {
         read: true,
       },
     );
-    queryClient.invalidateQueries({ queryKey: ["conversation", messageId] });
-    queryClient.invalidateQueries({ queryKey: ["conversations"] });
-    queryClient.invalidateQueries({ queryKey: ["guest-notifications"] });
+
+    queryClient.invalidateQueries({
+      queryKey: ["conversation", messageId],
+      refetchType: "all",
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["conversations"],
+      refetchType: "all",
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["guest-notifications"],
+      refetchType: "all",
+    });
   }
 
   useEffect(() => {

@@ -30,9 +30,11 @@ function useChatMessage() {
       socket?.emit("chat-message", data.data);
       queryClient.invalidateQueries({
         queryKey: ["conversations"],
+        refetchType: "all",
       });
       queryClient.invalidateQueries({
         queryKey: ["conversation", conversationID],
+        refetchType: "all",
       });
     },
     onError(error) {

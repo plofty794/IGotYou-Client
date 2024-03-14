@@ -27,6 +27,7 @@ function ConfirmPayment() {
         resourceType: "image",
         multiple: false,
         cropping: false,
+        sources: ["local"],
       },
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

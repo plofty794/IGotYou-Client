@@ -98,7 +98,12 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        return setUser(null);
+        if (window.location.pathname == "/login") {
+          return setUser(null);
+        } else {
+          window.location.href = "/login";
+          return setUser(null);
+        }
       } else {
         setUser(user);
         socket?.emit("user-connect", {

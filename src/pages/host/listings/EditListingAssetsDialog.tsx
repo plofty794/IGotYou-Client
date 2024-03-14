@@ -49,6 +49,7 @@ function EditListingAssetsDialog({
         folder: "IGotYou-Listings",
         resourceType: "auto",
         multiple: true,
+        sources: ["local", "google_drive"],
       },
       (_: unknown, result: CloudinaryUploadResult) => {
         if (result.event === "success") {

@@ -111,6 +111,7 @@ function ProfileContent({ profileData, recentListings }: TProps) {
         folder: "IGotYou-Avatars",
         resourceType: "image",
         cropping: true,
+        sources: ["local", "google_drive", "unsplash"],
       },
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
