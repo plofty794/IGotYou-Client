@@ -150,7 +150,7 @@ function Login() {
                     Sign up
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="border border-slate-300 p-8 max-md:min-h-screen max-md:w-full">
+                <DialogContent className="border border-slate-300 p-8 max-md:w-full">
                   <DialogHeader>
                     <DialogTitle className="flex flex-col items-center justify-center gap-4">
                       <span className="h-20 w-20 max-lg:w-32 max-md:w-20">

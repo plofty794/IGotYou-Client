@@ -38,6 +38,8 @@ function ConfirmPayment() {
             secure_url: res.info.secure_url,
           });
           toast("Payment photo has been uploaded!", {
+            dismissible: true,
+            duration: 1000,
             icon: (
               <CheckCircledIcon
                 color="#FFF"

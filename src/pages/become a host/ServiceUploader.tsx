@@ -59,6 +59,8 @@ function ServiceUploader() {
             ],
           }));
           toast("Asset has been uploaded!", {
+            dismissible: true,
+            duration: 1000,
             icon: (
               <CheckCircledIcon
                 color="#FFF"

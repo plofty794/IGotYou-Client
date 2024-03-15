@@ -67,6 +67,8 @@ function IdentityVerification() {
             secure_url: res.info.secure_url,
           });
           toast("Identity photo has been uploaded!", {
+            dismissible: true,
+            duration: 1000,
             icon: (
               <CheckCircledIcon
                 color="#FFF"

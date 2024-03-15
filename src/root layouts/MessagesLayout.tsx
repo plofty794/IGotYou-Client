@@ -63,8 +63,6 @@ function MessagesLayout() {
     document.title = "Messages - IGotYou";
   }, []);
 
-  console.log(conversations.data?.data);
-
   return (
     <>
       {conversations.isPending ? (
@@ -102,7 +100,6 @@ function MessagesLayout() {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-
               <div className="flex items-center justify-center gap-4">
                 <UserDropDownButton />
               </div>
@@ -136,18 +133,18 @@ function MessagesLayout() {
                           participants: any[];
                           _id: string;
                         }) => (
-                          <div className="rounded-md border bg-[#F5F5F5] p-2">
+                          <div className="w-full rounded-md border bg-[#F5F5F5] p-2">
                             <NavLink
                               to={`/messages/conversation/${v._id}`}
                               key={v._id}
-                              className="flex flex-col gap-2 "
+                              className="flex w-full flex-col gap-2 overflow-hidden"
                             >
                               {v.lastMessage != null ? (
                                 <span className="mx-auto w-max text-xs font-semibold">
                                   {conversations.data.data.currentUserID ===
                                   v.lastMessage.senderID._id ? (
                                     <span className="flex items-center gap-1">
-                                      <span className="w-32 max-w-max overflow-hidden text-ellipsis whitespace-nowrap">
+                                      <span className="w-28 max-w-max overflow-hidden text-ellipsis whitespace-nowrap">
                                         You: {v.lastMessage.content}{" "}
                                       </span>
                                       <CircleIcon className="h-[0.4rem] w-[0.4rem] rounded-full bg-gray-400" />
@@ -164,7 +161,7 @@ function MessagesLayout() {
                                           : "font-extrabold"
                                       }`}
                                     >
-                                      <span className="w-32 max-w-max overflow-hidden text-ellipsis whitespace-nowrap">
+                                      <span className="w-28 max-w-max overflow-hidden text-ellipsis whitespace-nowrap">
                                         {v.lastMessage.senderID.username}:{" "}
                                         {v.lastMessage.content}{" "}
                                       </span>

@@ -117,7 +117,7 @@ function Inbox() {
                             </div>
                             <div className="flex w-full items-center justify-between">
                               <div className="w-44 overflow-hidden text-ellipsis whitespace-nowrap">
-                                <span className="max-w-xs text-xs capitalize italic">
+                                <span className="max-w-xs text-xs capitalize italic text-red-700">
                                   {String(v.type).split("-").join(" ")}
                                 </span>
                               </div>
@@ -232,8 +232,8 @@ function Inbox() {
                                   </div>
                                   <div className="flex w-full items-center justify-between">
                                     <div className="w-44 overflow-hidden text-ellipsis whitespace-nowrap">
-                                      <span className="max-w-xs text-xs capitalize italic">
-                                        {String(v.type).split("-").join(" ")}
+                                      <span className="max-w-xs text-xs capitalize italic text-red-700">
+                                        {String(v.type).split("-").join(" ")}{" "}
                                       </span>
                                     </div>
                                     <span

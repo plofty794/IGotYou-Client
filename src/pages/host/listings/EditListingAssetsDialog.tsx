@@ -66,6 +66,8 @@ function EditListingAssetsDialog({
             },
           ]);
           toast("Asset has been uploaded!", {
+            dismissible: true,
+            duration: 1000,
             icon: (
               <CheckCircledIcon
                 color="#FFF"
@@ -137,6 +139,8 @@ function EditListingAssetsDialog({
                         (prev) => prev?.filter((v) => v !== asset),
                       );
                       toast("Asset has been removed!", {
+                        dismissible: true,
+                        duration: 1000,
                         icon: (
                           <CheckCircledIcon
                             color="#FFF"
@@ -219,6 +223,8 @@ function EditListingAssetsDialog({
                         (prev) => prev?.filter((v) => v !== asset),
                       );
                       toast("Asset has been removed!", {
+                        dismissible: true,
+                        duration: 1000,
                         icon: (
                           <CheckCircledIcon
                             color="#FFF"
