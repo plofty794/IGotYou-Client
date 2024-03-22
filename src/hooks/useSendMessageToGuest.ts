@@ -9,9 +9,10 @@ import { useToast } from "@/components/ui/use-toast";
 
 type TMessageHost = {
   content: string;
-  hostID: string;
+  guestID: string;
 };
-function useSendMessageToHost() {
+
+function useSendMessageToGuest() {
   const defaultToast = useToast();
   const navigate = useNavigate();
   const { socket } = useContext(SocketContextProvider);
@@ -19,7 +20,7 @@ function useSendMessageToHost() {
   return useMutation({
     mutationFn: async (data: TMessageHost) => {
       return await axiosPrivateRoute.post(
-        "/api/users/current-user/conversations/send-message-to-host/",
+        "/api/users/current-user/conversations/send-message-to-guest/",
         {
           ...data,
         },
@@ -43,7 +44,7 @@ function useSendMessageToHost() {
         duration: 5000,
         descriptionClassName: "font-semibold",
       });
-      socket?.emit("message-host", data.data);
+      socket?.emit("message-guest", data.data);
       queryClient.invalidateQueries({
         queryKey: ["conversations"],
       });
@@ -63,4 +64,4 @@ function useSendMessageToHost() {
   });
 }
 
-export default useSendMessageToHost;
+export default useSendMessageToGuest;

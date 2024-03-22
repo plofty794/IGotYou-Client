@@ -1,11 +1,8 @@
 import { axiosPrivateRoute } from "@/api/axiosRoute";
 import { toast } from "@/components/ui/use-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
 function useUnblockUser() {
-  const queryClient = useQueryClient();
-  const { userID } = useParams();
   return useMutation({
     mutationFn: async ({ blockedID }: { blockedID: string }) => {
       return await axiosPrivateRoute.patch(
@@ -13,13 +10,12 @@ function useUnblockUser() {
       );
     },
     onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: ["visit-profile", userID],
-      });
       toast({
         title: "Success! 🎉",
         description: "User has been unblocked.",
+        className: "bg-white",
       });
+      setTimeout(() => document.location.reload(), 1500);
     },
     onError(error) {
       console.log(error);

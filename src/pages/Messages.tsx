@@ -106,9 +106,11 @@ function Messages() {
     socket?.on("receive-message", () => {
       queryClient.invalidateQueries({
         queryKey: ["conversation", conversationID],
+        refetchType: "all",
       });
       queryClient.invalidateQueries({
         queryKey: ["conversations"],
+        refetchType: "all",
       });
     });
   }, [conversationID, queryClient, socket]);
