@@ -16,7 +16,7 @@ function RootLayout() {
     <>
       {auth.currentUser ? (
         <main className="min-h-screen">
-          <nav className="flex items-center justify-between bg-white px-20 py-5 shadow">
+          <nav className="sticky top-0 z-20 flex items-center justify-between bg-white px-20 py-5 shadow-md">
             <Link to={"/"}>
               <span className="h-full w-full">
                 <img
@@ -48,7 +48,6 @@ function RootLayout() {
               <UserDropDownButton />
             </span>
           </nav>
-
           {<Outlet />}
         </main>
       ) : auth.currentUser == null && token == null ? (

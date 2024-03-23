@@ -86,6 +86,7 @@ import ReservationDetails from "./pages/ReservationDetails";
 import PaymentDetails from "./pages/PaymentDetails";
 import Subscription from "./pages/Subscription";
 import HostReviews from "./pages/HostReviews";
+import WriteAFeedback from "./pages/WriteAFeedback";
 
 function App() {
   const [User, setUser] = useState<User | null>();
@@ -122,6 +123,9 @@ function App() {
           <Route path="get-started" element={<Hero />} />
           <Route path="about-us" element={<About />} />
         </Route>
+
+        {/* WRITE A FEEDBACK Route */}
+        <Route path="/write-a-feedback" element={<WriteAFeedback />} />
 
         {/* USER PROFILE & PHONE VERIFICATION Routes */}
         <Route path="/users" element={<ProfileLayout />}>

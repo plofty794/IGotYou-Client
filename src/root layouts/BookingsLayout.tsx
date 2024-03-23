@@ -60,7 +60,7 @@ function BookingsLayout() {
         <Navigate to={"/bookings/all"} />
       )}
       <main className="min-h-screen">
-        <nav className="mx-auto flex w-full max-w-screen-2xl items-center justify-between px-28 py-5 shadow 2xl:rounded-b-lg">
+        <nav className="sticky top-0 z-20 mx-auto flex w-full max-w-screen-2xl items-center justify-between bg-white px-28 py-5 shadow-md 2xl:rounded-b-lg">
           <Link to={"/"}>
             <span>
               <img

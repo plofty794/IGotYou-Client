@@ -55,13 +55,12 @@ function HostingDropdownMenu() {
             <Link
               to={`/users/show/${auth.currentUser && auth.currentUser?.uid}`}
               className="w-full"
-              replace
             >
               Profile
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="p-4 font-semibold text-gray-600">
-            <Link to={"/hosting-subscription"} className="w-full" replace>
+            <Link to={"/hosting-subscription"} className="w-full">
               Subscription
             </Link>
           </DropdownMenuItem>

@@ -122,7 +122,6 @@ export function UserDropDownButton() {
                   : `/users/show/${auth.currentUser?.uid}`
               }`}
               className="w-full"
-              replace
             >
               Wishlists
             </Link>
@@ -131,7 +130,7 @@ export function UserDropDownButton() {
             disabled={!auth.currentUser?.emailVerified}
             className="p-4 font-semibold text-gray-600"
           >
-            <Link to={"/bookings"} className="relative w-full" replace>
+            <Link to={"/bookings"} className="relative w-full">
               Bookings
               {data?.data.guestNotifications.filter(
                 (v: { read: boolean; notificationType: string }) =>
@@ -153,20 +152,22 @@ export function UserDropDownButton() {
             disabled={!auth.currentUser?.emailVerified}
             className="p-4 font-semibold text-gray-600"
           >
-            <Link to={"/hosting"} className="w-full" replace reloadDocument>
+            <Link to={"/hosting"} className="w-full" reloadDocument>
               Manage listings
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="p-4 font-semibold text-gray-600">
-            <Link
-              to={`/users/show/${User && User?.uid}`}
-              className="w-full"
-              replace
-            >
+            <Link to={`/users/show/${User && User?.uid}`} className="w-full">
               Profile
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
+        <DropdownMenuSeparator className="bg-[#e1e0e0]" />
+        <DropdownMenuItem className="p-4 font-semibold text-gray-600">
+          <Link to={"/write-a-feedback"} className="w-full">
+            Write a feedback
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator className="bg-[#e1e0e0]" />
         <DropdownMenuItem className="p-4 font-semibold text-gray-600">
           <span
