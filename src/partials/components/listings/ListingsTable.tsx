@@ -56,7 +56,7 @@ const columns: ColumnDef<TListings>[] = [
       <div className="w-22">
         {row.original.listingAssets[0]?.format === "mp4" ? (
           <AdvancedImage
-            className="h-10 w-full rounded-md object-cover shadow"
+            className="h-10 w-2/4 rounded-md object-cover shadow"
             cldImg={cld
               .image(row.original.listingAssets[0]?.public_id)
               .setAssetType("video")
@@ -86,7 +86,7 @@ const columns: ColumnDef<TListings>[] = [
                 steps: [800, 1000, 1400],
               }),
             ]}
-            className="h-10 w-full rounded-md object-cover shadow"
+            className="h-10 w-2/4 rounded-md object-cover shadow"
           />
         )}
       </div>

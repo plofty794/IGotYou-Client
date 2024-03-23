@@ -31,7 +31,7 @@ function HostingLayout() {
                 />
               </span>
             </Link>
-            <div className="flex items-center gap-5 text-sm">
+            <div className="hosting flex items-center gap-5 text-sm">
               <NavLink to={"/hosting"} className="font-medium text-gray-600">
                 Today
               </NavLink>

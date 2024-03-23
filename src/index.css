@@ -39,13 +39,13 @@
   color: rgb(0, 0, 0);
 }
 
-.active {
+.hosting > .active {
   position: relative;
   color: black;
   opacity: 1;
 }
 
-.active::after {
+.hosting > .active::after {
   content: "";
   position: absolute;
   width: 40%;
@@ -54,6 +54,16 @@
   bottom: -0.4rem;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.messages > .active {
+  color: black;
+  border: 1px dashed black;
+}
+
+.inbox > .active {
+  color: black;
+  border: 1px dashed black;
 }
 
 .profile-sheet {

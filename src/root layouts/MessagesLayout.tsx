@@ -122,8 +122,8 @@ function MessagesLayout() {
                     <l-ping size="40" speed="2" color="black"></l-ping>
                   </div>
                 ) : (
-                  <ScrollArea className="h-[28rem] pr-4">
-                    <div className="flex w-full flex-col gap-3 pt-4">
+                  <ScrollArea className="h-[28rem] pr-4  pt-4">
+                    <div className="messages flex w-full flex-col gap-4">
                       {conversations.data?.data.userConversations.length > 0 ? (
                         conversations.data?.data.userConversations.map(
                           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -134,68 +134,70 @@ function MessagesLayout() {
                             participants: any[];
                             _id: string;
                           }) => (
-                            <div className="w-full rounded-md border bg-[#F5F5F5] p-2">
-                              <NavLink
-                                to={`/messages/conversation/${v._id}`}
-                                key={v._id}
-                                className="flex w-full flex-col gap-2 overflow-hidden"
-                              >
-                                {v.lastMessage != null ? (
-                                  <span className="mx-auto w-max text-xs font-semibold">
-                                    {conversations.data.data.currentUserID ===
-                                    v.lastMessage.senderID._id ? (
-                                      <span className="flex items-center gap-1">
-                                        <span className="w-28 max-w-max overflow-hidden text-ellipsis whitespace-nowrap">
-                                          You: {v.lastMessage.content}{" "}
-                                        </span>
-                                        <CircleIcon className="h-[0.4rem] w-[0.4rem] rounded-full bg-gray-400" />
+                            <NavLink
+                              to={`/messages/conversation/${v._id}`}
+                              key={v._id}
+                              className=" flex w-full flex-col gap-2 overflow-hidden rounded-md border bg-[#F5F5F5] p-2 text-gray-600"
+                            >
+                              {v.lastMessage != null ? (
+                                <div className="mx-auto w-max">
+                                  {conversations.data.data.currentUserID ===
+                                  v.lastMessage.senderID._id ? (
+                                    <div className="flex items-center gap-1">
+                                      <p className="w-28 max-w-max overflow-hidden text-ellipsis whitespace-nowrap text-xs font-semibold">
+                                        You: {v.lastMessage.content}{" "}
+                                      </p>
+                                      <CircleIcon className="h-[0.4rem] w-[0.4rem] rounded-full bg-gray-400" />
+                                      <p className="text-xs font-semibold">
                                         {formatDistanceToNow(
                                           new Date(v.lastMessage.createdAt),
                                           { addSuffix: true },
                                         )}
-                                      </span>
-                                    ) : (
-                                      <div
-                                        className={`flex items-center gap-1 ${
+                                      </p>
+                                    </div>
+                                  ) : (
+                                    <div
+                                      className={`flex items-center gap-1 ${
+                                        v.lastMessage.read
+                                          ? ""
+                                          : "font-extrabold"
+                                      }`}
+                                    >
+                                      <p className="w-28 max-w-max overflow-hidden text-ellipsis whitespace-nowrap text-xs font-semibold">
+                                        {v.lastMessage.senderID.username}:{" "}
+                                        {v.lastMessage.content}{" "}
+                                      </p>
+                                      <CircleIcon
+                                        className={`h-[0.4rem] w-[0.4rem] rounded-full  ${
                                           v.lastMessage.read
-                                            ? ""
-                                            : "font-extrabold"
+                                            ? "bg-gray-400"
+                                            : "bg-blue-600"
                                         }`}
-                                      >
-                                        <span className="w-28 max-w-max overflow-hidden text-ellipsis whitespace-nowrap">
-                                          {v.lastMessage.senderID.username}:{" "}
-                                          {v.lastMessage.content}{" "}
-                                        </span>
-                                        <CircleIcon
-                                          className={`h-[0.4rem] w-[0.4rem] rounded-full  ${
-                                            v.lastMessage.read
-                                              ? "bg-gray-400"
-                                              : "bg-blue-600"
-                                          }`}
-                                        />
+                                      />
+                                      <p className="text-xs font-semibold">
                                         {formatDistanceToNow(
                                           new Date(v.lastMessage.createdAt),
                                           { addSuffix: true },
                                         )}
-                                      </div>
-                                    )}
-                                  </span>
-                                ) : (
-                                  <span className="mx-auto w-max text-xs font-semibold">
-                                    You are connected with{" "}
-                                  </span>
-                                )}
-                                <span className="w-full text-center text-sm font-bold">
-                                  {
-                                    v.participants.find(
-                                      (u) =>
-                                        u._id !=
-                                        conversations.data.data.currentUserID,
-                                    ).username
-                                  }
-                                </span>
-                              </NavLink>
-                            </div>
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              ) : (
+                                <p className="mx-auto w-max text-xs font-semibold">
+                                  You are connected with{" "}
+                                </p>
+                              )}
+                              <p className="w-full text-center text-sm font-bold">
+                                {
+                                  v.participants.find(
+                                    (u) =>
+                                      u._id !=
+                                      conversations.data.data.currentUserID,
+                                  ).username
+                                }
+                              </p>
+                            </NavLink>
                           ),
                         )
                       ) : (
