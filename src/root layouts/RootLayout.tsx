@@ -4,19 +4,17 @@ import { Button } from "../components/ui/button";
 import { auth } from "@/firebase config/config";
 import Loader from "@/partials/loaders/Loader";
 import { Suspense, lazy } from "react";
-import useGetListings from "@/hooks/useGetListings";
 
 const AlertVerifyEmail = lazy(
   () => import("@/partials/components/AlertVerifyEmail"),
 );
 
 function RootLayout() {
-  const listings = useGetListings();
   const token = localStorage.getItem("token");
 
   return (
     <>
-      {listings.status === "success" && auth.currentUser ? (
+      {auth.currentUser ? (
         <main className="min-h-screen">
           <nav className="flex items-center justify-between bg-white px-20 py-5 shadow">
             <Link to={"/"}>
@@ -51,11 +49,7 @@ function RootLayout() {
             </span>
           </nav>
 
-          {
-            <Outlet
-              context={{ listings: listings.data, uid: auth.currentUser.uid }}
-            />
-          }
+          {<Outlet />}
         </main>
       ) : auth.currentUser == null && token == null ? (
         <Navigate to={"/login"} replace />

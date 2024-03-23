@@ -32,6 +32,7 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import HostingDropdownMenu from "@/partials/components/HostingDropdownMenu";
 import HostNotification from "@/partials/components/notification/HostNotification";
 import { compareAsc } from "date-fns";
+import { TRating } from "@/pages/HostReviews";
 
 dotPulse.register();
 
@@ -64,6 +65,7 @@ export type TListing = {
     subscriptionExpiresAt: string;
     uid?: string;
     username?: string;
+    rating: TRating[];
   };
 };
 
