@@ -137,7 +137,7 @@ function MessagesLayout() {
                             <NavLink
                               to={`/messages/conversation/${v._id}`}
                               key={v._id}
-                              className=" flex w-full flex-col gap-2 overflow-hidden rounded-md border bg-[#F5F5F5] p-2 text-gray-600"
+                              className="flex w-full flex-col gap-2 overflow-hidden rounded-md border bg-[#F5F5F5] p-2 text-gray-600"
                             >
                               {v.lastMessage != null ? (
                                 <div className="mx-auto w-max">
@@ -156,14 +156,14 @@ function MessagesLayout() {
                                       </p>
                                     </div>
                                   ) : (
-                                    <div
-                                      className={`flex items-center gap-1 ${
-                                        v.lastMessage.read
-                                          ? ""
-                                          : "font-extrabold"
-                                      }`}
-                                    >
-                                      <p className="w-28 max-w-max overflow-hidden text-ellipsis whitespace-nowrap text-xs font-semibold">
+                                    <div className="flex items-center gap-1">
+                                      <p
+                                        className={`w-28 max-w-max overflow-hidden text-ellipsis whitespace-nowrap text-xs font-semibold ${
+                                          v.lastMessage.read
+                                            ? ""
+                                            : "!font-extrabold text-black"
+                                        }`}
+                                      >
                                         {v.lastMessage.senderID.username}:{" "}
                                         {v.lastMessage.content}{" "}
                                       </p>
@@ -174,7 +174,13 @@ function MessagesLayout() {
                                             : "bg-blue-600"
                                         }`}
                                       />
-                                      <p className="text-xs font-semibold">
+                                      <p
+                                        className={`text-xs font-semibold ${
+                                          v.lastMessage.read
+                                            ? ""
+                                            : "!font-extrabold text-black"
+                                        }`}
+                                      >
                                         {formatDistanceToNow(
                                           new Date(v.lastMessage.createdAt),
                                           { addSuffix: true },
@@ -188,7 +194,11 @@ function MessagesLayout() {
                                   You are connected with{" "}
                                 </p>
                               )}
-                              <p className="w-full text-center text-sm font-bold">
+                              <p
+                                className={
+                                  "w-full text-center text-sm font-bold"
+                                }
+                              >
                                 {
                                   v.participants.find(
                                     (u) =>

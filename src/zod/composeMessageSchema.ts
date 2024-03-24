@@ -4,7 +4,7 @@ export const ZodComposeMessageSchema = z.object({
   message: z
     .string()
     .min(1, { message: "Message is required" })
-    .min(20, { message: "Message is too short" })
+    .min(10, { message: "Message should contain at least 10 characters" })
     .max(100, { message: "Message can't exceed over 100 characters" }),
 });
 
