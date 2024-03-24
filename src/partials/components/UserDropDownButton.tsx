@@ -152,7 +152,7 @@ export function UserDropDownButton() {
             disabled={!auth.currentUser?.emailVerified}
             className="p-4 font-semibold text-gray-600"
           >
-            <Link to={"/hosting"} className="w-full" reloadDocument>
+            <Link to={"/hosting"} className="w-full" reloadDocument replace>
               Manage listings
             </Link>
           </DropdownMenuItem>

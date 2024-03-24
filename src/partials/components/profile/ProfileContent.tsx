@@ -148,9 +148,9 @@ function ProfileContent({ profileData, recentListings }: TProps) {
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </DialogTrigger>
-                <DialogContent className="p-0">
+                <DialogContent className="max-h-96 max-w-sm overflow-hidden p-0">
                   <img
-                    className="max-w-lg rounded-lg"
+                    className="aspect-square object-cover"
                     src={
                       auth.currentUser?.photoURL ??
                       photo ??

@@ -1,21 +1,40 @@
 import { axiosPrivateRoute } from "@/api/axiosRoute";
-import { useMutation } from "@tanstack/react-query";
+import { toast } from "@/components/ui/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError, AxiosResponse } from "axios";
 import { useParams } from "react-router-dom";
 
 function useRequestPayout() {
   const { reservationID } = useParams();
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (mobilePhone: string) => {
       return await axiosPrivateRoute.post(
-        `/reservations/request-service-payout/${reservationID}`,
+        `/api/reservations/request-service-payout/${reservationID}`,
+        {
+          mobilePhone,
+        },
       );
     },
     onSuccess(data) {
-      console.log(data);
+      queryClient.invalidateQueries({
+        queryKey: ["reservation", reservationID],
+      });
+      toast({
+        title: "Success! 🎉",
+        description: data.data.message,
+        className: "bg-white",
+      });
     },
-    onError(error) {
-      console.log(error);
+    onError(e) {
+      const error = e as AxiosError;
+      const response = error.response as AxiosResponse;
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Request not sent.",
+        description: response.data.error,
+      });
     },
   });
 }

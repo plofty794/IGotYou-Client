@@ -22,7 +22,7 @@ function Hosting() {
         <div className="flex items-center justify-between">
           <span className="text-xl font-medium">Your reservations</span>
           <Button className="rounded-full bg-gray-950 font-semibold">
-            <Link to={"/hosting-reservations"}>All reservations</Link>
+            <Link to={"/hosting-reservations/all"}>All reservations</Link>
           </Button>
         </div>
         <HostingTabs />

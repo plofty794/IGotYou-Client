@@ -107,6 +107,7 @@ function GuestPaymentDetails({
         uploadPreset: "s6lymwwh",
         folder: "IGotYou-Service-Payments",
         resourceType: "image",
+        sources: ["local"],
         multiple: true,
       },
       (_: unknown, result: CloudinaryUploadResult) => {

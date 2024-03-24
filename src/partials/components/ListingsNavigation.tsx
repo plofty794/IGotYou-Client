@@ -58,7 +58,7 @@ function ListingsNavigation() {
           className="max-md:text-xs"
         >
           {NavigationIcons().map((v, i) => (
-            <SwiperSlide key={i}>
+            <SwiperSlide className="navigation" key={i}>
               <NavLink
                 to={`${v.path}`}
                 className="flex flex-col items-center justify-center gap-1 text-xs font-semibold text-gray-600 opacity-70"

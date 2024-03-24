@@ -1,10 +1,13 @@
 import { axiosPrivateRoute } from "@/api/axiosRoute";
 import { useToast } from "@/components/ui/use-toast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError, AxiosResponse } from "axios";
+import { useParams } from "react-router-dom";
 
 function useRateUser() {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const { reservationID } = useParams();
 
   return useMutation({
     mutationFn: async ({
@@ -39,6 +42,9 @@ function useRateUser() {
         title: "Success! 🎉",
         description: "Rating has been sent.",
         className: "bg-white",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["reservation", reservationID],
       });
     },
     onError(error) {

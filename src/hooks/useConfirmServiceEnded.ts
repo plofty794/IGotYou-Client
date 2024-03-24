@@ -1,9 +1,13 @@
 import { axiosPrivateRoute } from "@/api/axiosRoute";
-import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@/components/ui/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
 function useConfirmServiceEnded() {
   const { reservationID } = useParams();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
   return useMutation({
     mutationFn: async () => {
       return await axiosPrivateRoute.post(
@@ -11,7 +15,14 @@ function useConfirmServiceEnded() {
       );
     },
     onSuccess(data) {
-      console.log(data);
+      queryClient.invalidateQueries({
+        queryKey: ["reservation", reservationID],
+      });
+      toast({
+        title: "Success! 🎉",
+        description: data.data.message,
+        className: "bg-white",
+      });
     },
   });
 }

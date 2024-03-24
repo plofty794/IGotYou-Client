@@ -39,6 +39,12 @@
   color: rgb(0, 0, 0);
 }
 
+.navigation > .active {
+  position: relative;
+  color: black;
+  opacity: 1;
+}
+
 .hosting > .active {
   position: relative;
   color: black;

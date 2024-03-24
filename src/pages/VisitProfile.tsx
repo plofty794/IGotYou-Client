@@ -54,9 +54,9 @@ function VisitProfile() {
                           <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                       </DialogTrigger>
-                      <DialogContent className="p-0">
+                      <DialogContent className="max-h-96 max-w-sm overflow-hidden p-0">
                         <img
-                          className="max-w-lg rounded-lg"
+                          className="aspect-square object-cover"
                           src={
                             data?.data.user.photoUrl ??
                             "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.slotcharter.net%2Fwp-content%2Fuploads%2F2020%2F02%2Fno-avatar.png&f=1&nofb=1&ipt=9e90fdb80f5dc7485d14a9754e5441d7fbcadb4db1a76173bf266e3acd9b3369&ipo=images"

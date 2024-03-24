@@ -78,7 +78,7 @@ function HostingLayout() {
                     <Link to={"/hosting-reviews"}>Reviews</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="p-4 font-medium text-gray-600">
-                    <Link to={"/hosting-reservations"}>Reservations</Link>
+                    <Link to={"/hosting-reservations/all"}>Reservations</Link>
                   </DropdownMenuItem>
                   {/* <DropdownMenuItem className="p-4 font-medium text-gray-600">
                     Earnings
