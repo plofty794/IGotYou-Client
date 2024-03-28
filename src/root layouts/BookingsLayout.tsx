@@ -149,7 +149,10 @@ function BookingsLayout() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <ScrollArea className="h-60">
-                {data?.data.guestNotifications.length > 0 ? (
+                {data?.data.guestNotifications.filter(
+                  (v: { notificationType: string }) =>
+                    v.notificationType != "New-Message",
+                ).length > 0 ? (
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   data?.data.guestNotifications.map((v: any) => (
                     <>
