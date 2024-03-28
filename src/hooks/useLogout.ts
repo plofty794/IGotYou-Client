@@ -13,10 +13,10 @@ function useLogOutUser() {
   return async () => {
     try {
       socket?.emit("user-logout", auth.currentUser?.displayName);
+      dispatch({ type: "USER_LOGOUT", payload: null });
       await axiosPrivateRoute.delete("/api/users/current-user/logout");
       await auth.signOut();
       queryClient.removeQueries();
-      dispatch({ type: "USER_LOGOUT", payload: null });
       document.location.reload();
     } catch (err) {
       const error = err as AxiosError;

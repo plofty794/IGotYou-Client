@@ -110,6 +110,7 @@ function App() {
         if (window.location.pathname == "/login") {
           return setUser(null);
         } else {
+          localStorage.clear();
           await logOut();
           window.location.href = "/login";
           return setUser(null);
