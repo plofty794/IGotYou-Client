@@ -87,8 +87,11 @@ import PaymentDetails from "./pages/PaymentDetails";
 import Subscription from "./pages/Subscription";
 import HostReviews from "./pages/HostReviews";
 import WriteAFeedback from "./pages/WriteAFeedback";
+import useLogOutUser from "./hooks/useLogout";
+import AccountDisabled from "./pages/AccountDisabled";
 
 function App() {
+  const logOut = useLogOutUser();
   const [User, setUser] = useState<User | null>();
   const { socket } = useContext(SocketContextProvider);
   const identifier = localStorage.getItem("token");
@@ -97,23 +100,29 @@ function App() {
   } = useContext(UserStateContextProvider);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
+    onAuthStateChanged(auth, async (user) => {
+      if (
+        !user &&
+        !window.location.pathname.includes("get-started") &&
+        !window.location.pathname.includes("about-us") &&
+        !window.location.pathname.includes("account-disabled")
+      ) {
         if (window.location.pathname == "/login") {
           return setUser(null);
         } else {
+          await logOut();
           window.location.href = "/login";
           return setUser(null);
         }
       } else {
         setUser(user);
         socket?.emit("user-connect", {
-          name: user.displayName,
-          uid: user.uid,
+          name: user?.displayName,
+          uid: user?.uid,
         });
       }
     });
-  }, [socket]);
+  }, [logOut, socket]);
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -123,6 +132,8 @@ function App() {
           <Route path="get-started" element={<Hero />} />
           <Route path="about-us" element={<About />} />
         </Route>
+
+        <Route path="/account-disabled" element={<AccountDisabled />} />
 
         {/* WRITE A FEEDBACK Route */}
         <Route path="/write-a-feedback" element={<WriteAFeedback />} />

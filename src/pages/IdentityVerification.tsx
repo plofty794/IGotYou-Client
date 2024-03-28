@@ -8,7 +8,7 @@ import {
 import useGetCurrentUserProfile from "@/hooks/useGetUserProfile";
 import useRemoveAsset from "@/hooks/useRemoveAsset";
 import useSendIdentityVerificationRequest from "@/hooks/useSendIdentityVerificationRequest";
-import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import { CrossCircledIcon } from "@radix-ui/react-icons";
 import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
@@ -67,15 +67,9 @@ function IdentityVerification() {
             public_id: res.info.public_id,
             secure_url: res.info.secure_url,
           });
-          toast("Identity photo has been uploaded!", {
+          toast.success("Identity photo has been uploaded!", {
             dismissible: true,
             duration: 1000,
-            icon: (
-              <CheckCircledIcon
-                color="#FFF"
-                className="inline-block rounded-full bg-[#39c152]"
-              />
-            ),
           });
         }
       },
@@ -163,13 +157,8 @@ function IdentityVerification() {
                       public_id: "",
                       secure_url: "",
                     });
-                    toast("Identity photo has been removed!", {
-                      icon: (
-                        <CheckCircledIcon
-                          color="#FFF"
-                          className="inline-block rounded-full bg-[#39c152]"
-                        />
-                      ),
+                    toast.success("Identity photo has been removed!", {
+                      duration: 1000,
                     });
                   }}
                   className="absolute right-0 m-1 h-[25px] w-[25px] cursor-pointer rounded-full shadow-lg transition-transform hover:scale-110"

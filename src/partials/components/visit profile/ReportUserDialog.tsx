@@ -76,7 +76,7 @@ function ReportUserDialog({
         uploadPreset: "s6lymwwh",
         folder: "IGotYou-Report_Evidence",
         resourceType: "image",
-        clientAllowedFormats: ["image", "video"],
+        clientAllowedFormats: ["image"],
         sources: ["local"],
         multiple: true,
       },

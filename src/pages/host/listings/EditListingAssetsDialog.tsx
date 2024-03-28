@@ -18,7 +18,6 @@ import {
 } from "@/types/createUploadWidget";
 import { AdvancedImage, lazyload, responsive } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen/index";
-import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -66,15 +65,9 @@ function EditListingAssetsDialog({
               format: result.info.format,
             },
           ]);
-          toast("Asset has been uploaded!", {
+          toast.success("Asset has been uploaded!", {
             dismissible: true,
             duration: 1000,
-            icon: (
-              <CheckCircledIcon
-                color="#FFF"
-                className="inline-block rounded-full bg-[#39c152]"
-              />
-            ),
           });
         }
       },
@@ -139,15 +132,9 @@ function EditListingAssetsDialog({
                       setListingsAssetsCopy(
                         (prev) => prev?.filter((v) => v !== asset),
                       );
-                      toast("Asset has been removed!", {
+                      toast.success("Asset has been removed!", {
                         dismissible: true,
                         duration: 1000,
-                        icon: (
-                          <CheckCircledIcon
-                            color="#FFF"
-                            className="inline-block rounded-full bg-[#39c152]"
-                          />
-                        ),
                       });
                     }}
                     className="absolute right-1 top-1 rounded-full border bg-white p-2 hover:bg-slate-200"
@@ -181,13 +168,9 @@ function EditListingAssetsDialog({
                       setListingsAssetsCopy(
                         (prev) => prev?.filter((v) => v !== asset),
                       );
-                      toast("Asset has been removed!", {
-                        icon: (
-                          <CheckCircledIcon
-                            color="#FFF"
-                            className="inline-block rounded-full bg-[#39c152]"
-                          />
-                        ),
+                      toast.success("Asset has been removed!", {
+                        dismissible: true,
+                        duration: 1000,
                       });
                     }}
                     className="absolute right-1 top-1 rounded-full border bg-white p-2 hover:bg-slate-200"
@@ -223,15 +206,9 @@ function EditListingAssetsDialog({
                       setListingsAssetsCopy(
                         (prev) => prev?.filter((v) => v !== asset),
                       );
-                      toast("Asset has been removed!", {
+                      toast.success("Asset has been removed!", {
                         dismissible: true,
                         duration: 1000,
-                        icon: (
-                          <CheckCircledIcon
-                            color="#FFF"
-                            className="inline-block rounded-full bg-[#39c152]"
-                          />
-                        ),
                       });
                     }}
                     className="absolute right-1 top-1 rounded-full border bg-white p-2 hover:bg-slate-200"

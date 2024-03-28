@@ -22,7 +22,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           </UserStateContext>
         </SocketContext>
         <Toaster />
-        <SonnerToaster position="top-center" />
+        <SonnerToaster
+          closeButton
+          theme="light"
+          richColors
+          position="top-center"
+        />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </Suspense>

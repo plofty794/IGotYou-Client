@@ -14,7 +14,6 @@ import feedbackIcon from "../assets/feedback.json";
 import useSendFeedback from "@/hooks/useSendFeedback";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 
 function WriteAFeedback() {
   const [feedback, setFeedback] = useState("");
@@ -24,23 +23,9 @@ function WriteAFeedback() {
 
   useEffect(() => {
     if (isSuccess) {
-      toast("Feedback has been sent.", {
-        icon: (
-          <CheckCircledIcon
-            color="#FFF"
-            className="inline-block rounded-full bg-[#39c152]"
-          />
-        ),
-      });
+      toast.success("Feedback has been sent.");
     } else if (isError) {
-      toast("You've already sent a feedback.", {
-        icon: (
-          <CrossCircledIcon
-            color="#FFF"
-            className="inline-block rounded-full bg-red-600"
-          />
-        ),
-      });
+      toast.warning("You've already sent a feedback.");
     }
   }, [isError, isSuccess]);
 

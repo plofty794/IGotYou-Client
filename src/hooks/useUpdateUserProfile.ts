@@ -3,6 +3,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { AxiosError, AxiosResponse } from "axios";
 import { axiosPrivateRoute } from "@/api/axiosRoute";
 import { auth } from "@/firebase config/config";
+import { toast as sonnerToast } from "sonner";
 
 type TUserUpdates = {
   email?: string;
@@ -42,10 +43,8 @@ function useUpdateUserProfile() {
         };
       });
       queryClient.invalidateQueries({ queryKey: ["profile", id] });
-      toast({
-        title: "Success! 🎉",
-        description: "Your profile has been updated.",
-        className: "bg-[#FFF] font-bold",
+      sonnerToast.success("Your profile has been updated.", {
+        duration: 1000,
       });
     },
     onError: async (err) => {

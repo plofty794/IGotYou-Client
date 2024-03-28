@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { LoginSchema, ZodLoginSchema } from "@/zod/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,19 +20,23 @@ import { useEffect } from "react";
 import { dotPulse } from "ldrs";
 import useGoogleSignin from "@/hooks/useGoogleSignin";
 import { Label } from "@/components/ui/label";
+import { FirebaseError } from "firebase/app";
+import { toast } from "sonner";
 dotPulse.register();
 
 function Login() {
+  const navigate = useNavigate();
   const googleSignIn = useGoogleSignin();
   useEffect(() => {
     document.title = "Sign in - IGotYou";
   }, []);
 
-  const { mutate, isPending } = useLogin();
+  const { mutate, isPending, error } = useLogin();
   const {
     register,
     formState: { errors },
     handleSubmit,
+    getValues,
   } = useForm<LoginSchema>({
     mode: "onChange",
     defaultValues: {
@@ -49,6 +53,34 @@ function Login() {
   function handleGoogleSignIn() {
     googleSignIn.mutate();
   }
+
+  useEffect(() => {
+    if (error) {
+      const err = error as FirebaseError;
+      const message = (
+        err.code.split("/")[1].slice(0, 1).toUpperCase() +
+        err.code.split("/")[1].slice(1)
+      )
+        .split("-")
+        .join(" ");
+      if (message == "User disabled") {
+        sessionStorage.setItem("disabledUser", getValues("email"));
+        toast.warning("Your account has been disabled!", {
+          action: {
+            label: "See why",
+            onClick: () => navigate("/account-disabled", { replace: true }),
+          },
+          actionButtonStyle: {
+            backgroundColor: "#DC7609",
+            color: "white",
+            border: "1px solid #FF9EA1",
+            borderRadius: "4px",
+          },
+          className: "font-bold",
+        });
+      }
+    }
+  }, [error, getValues, navigate]);
 
   return (
     <main className="flex min-h-screen items-center justify-center">

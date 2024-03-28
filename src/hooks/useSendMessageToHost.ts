@@ -26,22 +26,19 @@ function useSendMessageToHost() {
       );
     },
     onSuccess(data) {
-      toast("Success! 🎉", {
-        description: "Message has been sent.",
-        position: "bottom-right",
+      toast.success("Message has been sent.", {
         action: {
           label: "View Message",
           onClick: () =>
             navigate(`/messages/conversation/${data.data.conversationID}`),
         },
-        className: "bg-[#FFF] cursor-pointer",
         actionButtonStyle: {
-          backgroundColor: "white",
-          color: "black",
-          border: "1px solid black",
+          backgroundColor: "#008A2E",
+          color: "#ECFDF3",
+          border: "1px solid #ECFDF3",
+          borderRadius: "4px",
         },
-        duration: 5000,
-        descriptionClassName: "font-semibold",
+        duration: 4000,
       });
       socket?.emit("message-host", data.data);
       queryClient.invalidateQueries({

@@ -1,10 +1,9 @@
 import { axiosPrivateRoute } from "@/api/axiosRoute";
-import { useToast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 function useUpdateWishlist() {
   const queryClient = useQueryClient();
-  const { toast } = useToast();
   return useMutation({
     mutationFn: async (listingID: string) => {
       return await axiosPrivateRoute.post(
@@ -15,20 +14,15 @@ function useUpdateWishlist() {
       );
     },
     onSuccess() {
-      toast({
-        title: "Success! 🎉",
-        description: "Wishlist has been updated.",
-        className: "bg-[#FFF]",
+      toast.success("Wishlist has been updated", {
+        duration: 800,
       });
       queryClient.invalidateQueries({ queryKey: ["wishlists"] });
       queryClient.invalidateQueries({ queryKey: ["listings"] });
     },
-    onError(error) {
-      console.log(error);
-      toast({
-        title: "Oops! An error occurred.",
+    onError() {
+      toast.error("Oops! An error occurred.", {
         description: "Try again",
-        variant: "destructive",
       });
     },
   });

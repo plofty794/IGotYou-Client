@@ -6,6 +6,7 @@ import { auth } from "@/firebase config/config";
 import { FirebaseError } from "firebase/app";
 import { axiosPrivateRoute } from "@/api/axiosRoute";
 import { useParams } from "react-router-dom";
+import { toast as sonnerToast } from "sonner";
 
 type TUserUpdates = {
   emailVerified?: boolean;
@@ -41,17 +42,11 @@ function useVerifyEmail() {
     },
     onSuccess: async (_, { emailVerified }) => {
       if (!emailVerified) {
-        toast({
-          title: "Verification email has been sent",
+        sonnerToast.success("Verification email has been sent", {
           description: "After verifying your email click the reload button.",
-          className: "bg-[#FFF] ",
         });
       } else {
-        toast({
-          title: "Success! 🎉",
-          description: "Your email has been verified.",
-          className: "bg-[#FFF]",
-        });
+        sonnerToast.success("Your email has been verified.");
         queryClient.invalidateQueries({ queryKey: ["profile", id] });
       }
     },
