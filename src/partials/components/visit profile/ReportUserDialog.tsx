@@ -76,6 +76,8 @@ function ReportUserDialog({
         uploadPreset: "s6lymwwh",
         folder: "IGotYou-Report_Evidence",
         resourceType: "image",
+        clientAllowedFormats: ["image", "video"],
+        sources: ["local"],
         multiple: true,
       },
       (_: unknown, result: CloudinaryUploadResult) => {

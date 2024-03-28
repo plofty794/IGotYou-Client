@@ -110,6 +110,7 @@ function ProfileContent({ profileData, recentListings }: TProps) {
         uploadPreset: "s6lymwwh",
         folder: "IGotYou-Avatars",
         resourceType: "image",
+        clientAllowedFormats: ["image"],
         cropping: true,
         sources: ["local", "google_drive", "unsplash"],
       },

@@ -48,6 +48,7 @@ function EditListingAssetsDialog({
         uploadPreset: "s6lymwwh",
         folder: "IGotYou-Listings",
         resourceType: "auto",
+        clientAllowedFormats: ["image", "video", "audio"],
         multiple: true,
         sources: ["local", "google_drive"],
       },

@@ -25,6 +25,7 @@ function ConfirmPayment() {
         uploadPreset: "s6lymwwh",
         folder: "IGotYou-Subscriptions",
         resourceType: "image",
+        clientAllowedFormats: ["image"],
         multiple: false,
         cropping: false,
         sources: ["local"],

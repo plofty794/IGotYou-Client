@@ -54,6 +54,7 @@ function IdentityVerification() {
         uploadPreset: "s6lymwwh",
         folder: "IGotYou-GovernmentID",
         resourceType: "image",
+        clientAllowedFormats: ["image"],
         multiple: false,
         cropping: false,
         sources: ["local"],
